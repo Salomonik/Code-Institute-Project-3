@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, jsonify
+from flask import Blueprint, render_template, request, redirect, jsonify
 import requests
 import os
 
@@ -21,6 +21,10 @@ def get_access_token():
 
 access_token = get_access_token()
 
+@main.route('/')
+def index():
+    return render_template('index.html')
+
 @main.route('/login')
 def login():
     auth_url = f'https://id.twitch.tv/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=user:read:email'
@@ -40,10 +44,11 @@ def callback():
     response = requests.post(token_url, data=payload)
     response.raise_for_status()
     tokens = response.json()
-    return f'Access Token: {tokens["access_token"]}'
+    return render_template('callback.html', access_token=tokens['access_token'])
 
-@main.route('/get_games/<game_name>')
-def get_games(game_name):
+@main.route('/get_games', methods=['GET', 'POST'])
+def get_games():
+    game_name = request.args.get('game_name')
     url = 'https://api.twitch.tv/helix/games'
     headers = {
         'Client-ID': CLIENT_ID,
@@ -54,4 +59,5 @@ def get_games(game_name):
     }
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
-    return jsonify(response.json())
+    game_info = response.json()
+    return render_template('games.html', game_info=game_info['data'])
