@@ -3,6 +3,8 @@
 	/* Ustalona wysokość karty */
 	display: flex;
 	flex-direction: column;
+	position: relative; /* Dodane dla lepszego zarządzania pozycjonowaniem */
+    overflow: hidden; /* Ukryj elementy wychodzące poza kartę */
 }
 
 .card-content {
@@ -11,7 +13,10 @@
 }
 
 
-
+.card-image {
+    position: relative;
+    z-index: 1; /* Obraz ma niższy z-index */
+}
 /* Dodane style dla obrazów */
 .card-image img {
 	object-fit: contain;
@@ -37,4 +42,39 @@
 .screenshot-item img {
     width: 100%;
     height: auto;
+}
+
+.truncate-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* Liczba wierszy do wyświetlenia przed zawinięciem */
+    -webkit-box-orient: vertical;
+    position: relative;
+	
+}
+
+.truncate-text:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1.5em; /* Wysokość fade-out */
+    background: linear-gradient(to top, white, rgba(255, 255, 255, 0));
+}
+
+card-content {
+    flex-grow: 1;
+    overflow: hidden;
+    position: absolute; /* Umożliwia przesuwanie pozycją */
+    bottom: 0; /* Pozycjonowanie na dole karty */
+    width: 100%;
+    background: white; /* Tło dla lepszego widoczności */
+    transition: transform 0.3s ease-in-out; /* Animacja przesuwania */
+    z-index: 10; /* Ustal z-index aby był nad innymi elementami */
+}
+
+.card-content:hover {
+    transform: translateY(-100%); /* Przesunięcie do góry na pełną wysokość */
 }
