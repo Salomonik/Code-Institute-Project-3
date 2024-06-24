@@ -58,7 +58,7 @@ def get_games():
     }
     data = (
         f'search "{game_name}"; '
-        'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
+        'fields name, genres.name, platforms.name, summary, storyline, cover.url, '
         'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
         'game_modes.name, themes.name, first_release_date;'
     )

@@ -35,30 +35,32 @@
 			<div class="card-reveal">
 				<span class="card-title grey-text text-darken-4">{{ game.name }}<i
 						class="material-icons right">close</i></span>
-				{% if game.genres %}
-				<p><strong>Genres:</strong> {{ game.genres | map(attribute='name') | join(', ') }}</p>
+				{% if game.first_release_date %}
+				<p><strong>Release Date:</strong> {{ game.first_release_date | dateformat }}</p>
 				{% endif %}
 				{% if game.platforms %}
 				<p><strong>Platforms:</strong> {{ game.platforms | map(attribute='name') | join(', ') }}</p>
 				{% endif %}
-				{% if game.release_dates %}
-				<p><strong>Release Dates:</strong></p>
-				<ul>
-					{% for date in game.release_dates %}
-					<li>{{ date.human }}</li>
-					{% endfor %}
-				</ul>
+				{% if game.genres %}
+				<p><strong>Genre:</strong> {{ game.genres | map(attribute='name') | join(', ') }}</p>
+				{% endif %}
+				{% if game.game_modes %}
+				<p><strong>Game Modes:</strong> {{ game.game_modes | map(attribute='name') | join(', ') }}</p>
 				{% endif %}
 				{% if game.storyline %}
 				<p><strong>Storyline:</strong> {{ game.storyline }}</p>
+				{% endif %}
+				{% if game.involved_companies %}
+				<p><strong>Developer:</strong> {{ game.involved_companies | map(attribute='company.name') |
+					join(', ') }}</p>
 				{% endif %}
 				{% if game.screenshots %}
 				<p><strong>Screenshots:</strong></p>
 				<div class="screenshot-container">
 					{% for screenshot in game.screenshots %}
-						<div class="screenshot-item">
-							<img src="{{ screenshot.url }}" class="responsive-img">
-						</div>
+					<div class="screenshot-item">
+						<img src="{{ screenshot.url }}" class="responsive-img">
+					</div>
 					{% endfor %}
 				</div>
 				{% endif %}
@@ -74,22 +76,11 @@
 				{% if game.rating %}
 				<p><strong>Rating:</strong> {{ game.rating }}</p>
 				{% endif %}
-				{% if game.rating_count %}
-				<p><strong>Rating Count:</strong> {{ game.rating_count }}</p>
-				{% endif %}
-				{% if game.involved_companies %}
-				<p><strong>Involved Companies:</strong> {{ game.involved_companies | map(attribute='company.name') |
-					join(', ') }}</p>
-				{% endif %}
-				{% if game.game_modes %}
-				<p><strong>Game Modes:</strong> {{ game.game_modes | map(attribute='name') | join(', ') }}</p>
-				{% endif %}
-				{% if game.themes %}
-				<p><strong>Themes:</strong> {{ game.themes | map(attribute='name') | join(', ') }}</p>
-				{% endif %}
-				{% if game.first_release_date %}
-				<p><strong>First Release Date:</strong> {{ game.first_release_date | dateformat }}</p>
-				{% endif %}
+
+
+
+
+
 			</div>
 		</div>
 	</div>
