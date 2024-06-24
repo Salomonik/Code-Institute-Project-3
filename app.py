@@ -78,7 +78,7 @@ def get_games():
             game['cover']['url'] = modify_image_url(game['cover']['url'], 't_720p')
         if 'screenshots' in game:
             for screenshot in game['screenshots']:
-                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
+                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_mid')
 
     return render_template('games.html', game_info=game_info)
 
