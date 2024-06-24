@@ -35,6 +35,9 @@ try:
 except Exception as e:
     print(f"Error obtaining access token: {e}")  # Debugowanie: Wyświetl błąd
 
+def modify_image_url(url, size):
+    return url.replace('t_thumb', size)
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -68,6 +71,15 @@ def get_games():
     
     response.raise_for_status()
     game_info = response.json()
+    
+    # Modyfikacja URL obrazów
+    for game in game_info:
+        if 'cover' in game:
+            game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
+        if 'screenshots' in game:
+            for screenshot in game['screenshots']:
+                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
+
     return render_template('games.html', game_info=game_info)
 
 # Definiowanie filtra dateformat
