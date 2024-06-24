@@ -33,3 +33,11 @@ def get_games():
         'Authorization': f'Bearer {access_token}',
         'Accept': 'application/json'
     }
+    data = f'search "{game_name}"; fields name, genres.name, release_dates.human;'
+    response = requests.post(url, headers=headers, data=data)
+    response.raise_for_status()
+    game_info = response.json()
+    return render_template('games.html', game_info=game_info)
+
+if __name__ == '__main__':
+    app.run(host=os.environ.get("IP", "0.0.0.0"), port=int(os.environ.get("PORT", 5000)), debug=True)
