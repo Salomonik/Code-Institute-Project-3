@@ -3,91 +3,97 @@
 {% block title %}Game Info{% endblock %}
 
 {% block content %}
-    <h2>Game Information</h2>
-    <form action="/get_games" method="get" class="col s12">
-        <div class="row">
-            <div class="input-field col s6">
-                <input type="text" id="game_name" name="game_name" class="validate">
-                <label for="game_name">Game Name</label>
-            </div>
-            <div class="input-field col s6">
-                <button type="submit" class="btn waves-effect waves-light">Get Game Info</button>
-            </div>
-        </div>
-    </form>
-    {% if game_info %}
-        <div class="row">
-        {% for game in game_info %}
-            <div class="col s12 m4 l3">
-                <div class="card fixed-size">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        {% if game.cover %}
-                            <img class="activator" src="{{ game.cover.url }}">
-                        {% endif %}
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">{{ game.name }}<i class="material-icons right">more_vert</i></span>
-                        {% if game.summary %}
-                            <p class="truncate-text">{{ game.summary }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">{{ game.name }}<i class="material-icons right">close</i></span>
-                        {% if game.genres %}
-                            <p><strong>Genres:</strong> {{ game.genres | map(attribute='name') | join(', ') }}</p>
-                        {% endif %}
-                        {% if game.platforms %}
-                            <p><strong>Platforms:</strong> {{ game.platforms | map(attribute='name') | join(', ') }}</p>
-                        {% endif %}
-                        {% if game.release_dates %}
-                            <p><strong>Release Dates:</strong></p>
-                            <ul>
-                            {% for date in game.release_dates %}
-                                <li>{{ date.human }}</li>
-                            {% endfor %}
-                            </ul>
-                        {% endif %}
-                        {% if game.storyline %}
-                            <p><strong>Storyline:</strong> {{ game.storyline }}</p>
-                        {% endif %}
-						{% if game.screenshots %}
-						<p><strong>Screenshots:</strong></p>
-						<div class="carousel">
-						{% for screenshot in game.screenshots %}
-							<a class="carousel-item"><img src="{{ screenshot.url }}"></a>
-						{% endfor %}
+<h2>Game Information</h2>
+<form action="/get_games" method="get" class="col s12">
+	<div class="row">
+		<div class="input-field col s6">
+			<input type="text" id="game_name" name="game_name" class="validate">
+			<label for="game_name">Game Name</label>
+		</div>
+		<div class="input-field col s6">
+			<button type="submit" class="btn waves-effect waves-light">Get Game Info</button>
+		</div>
+	</div>
+</form>
+{% if game_info %}
+<div class="row">
+	{% for game in game_info %}
+	<div class="col s12 m4 l3">
+		<div class="card fixed-size">
+			<div class="card-image waves-effect waves-block waves-light">
+				{% if game.cover %}
+				<img class="activator" src="{{ game.cover.url }}">
+				{% endif %}
+			</div>
+			<div class="card-content">
+				<span class="card-title activator grey-text text-darken-4">{{ game.name }}<i
+						class="material-icons right">more_vert</i></span>
+				{% if game.summary %}
+				<p class="truncate-text">{{ game.summary }}</p>
+				{% endif %}
+			</div>
+			<div class="card-reveal">
+				<span class="card-title grey-text text-darken-4">{{ game.name }}<i
+						class="material-icons right">close</i></span>
+				{% if game.genres %}
+				<p><strong>Genres:</strong> {{ game.genres | map(attribute='name') | join(', ') }}</p>
+				{% endif %}
+				{% if game.platforms %}
+				<p><strong>Platforms:</strong> {{ game.platforms | map(attribute='name') | join(', ') }}</p>
+				{% endif %}
+				{% if game.release_dates %}
+				<p><strong>Release Dates:</strong></p>
+				<ul>
+					{% for date in game.release_dates %}
+					<li>{{ date.human }}</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if game.storyline %}
+				<p><strong>Storyline:</strong> {{ game.storyline }}</p>
+				{% endif %}
+				{% if game.screenshots %}
+				<p><strong>Screenshots:</strong></p>
+				<div class="screenshot-container">
+					{% for screenshot in game.screenshots %}
+						<div class="screenshot-item">
+							<img src="{{ screenshot.url }}" class="responsive-img">
 						</div>
-					{% endif %}
-                        {% if game.videos %}
-                            <p><strong>Videos:</strong></p>
-                            <div class="video-container">
-                            {% for video in game.videos %}
-                                <iframe src="https://www.youtube.com/embed/{{ video.video_id }}" frameborder="0" allowfullscreen></iframe>
-                            {% endfor %}
-                            </div>
-                        {% endif %}
-                        {% if game.rating %}
-                            <p><strong>Rating:</strong> {{ game.rating }}</p>
-                        {% endif %}
-                        {% if game.rating_count %}
-                            <p><strong>Rating Count:</strong> {{ game.rating_count }}</p>
-                        {% endif %}
-                        {% if game.involved_companies %}
-                            <p><strong>Involved Companies:</strong> {{ game.involved_companies | map(attribute='company.name') | join(', ') }}</p>
-                        {% endif %}
-                        {% if game.game_modes %}
-                            <p><strong>Game Modes:</strong> {{ game.game_modes | map(attribute='name') | join(', ') }}</p>
-                        {% endif %}
-                        {% if game.themes %}
-                            <p><strong>Themes:</strong> {{ game.themes | map(attribute='name') | join(', ') }}</p>
-                        {% endif %}
-                        {% if game.first_release_date %}
-                            <p><strong>First Release Date:</strong> {{ game.first_release_date | dateformat }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        </div>
-    {% endif %}
+					{% endfor %}
+				</div>
+				{% endif %}
+				{% if game.videos %}
+				<p><strong>Videos:</strong></p>
+				<div class="video-container">
+					{% for video in game.videos %}
+					<iframe src="https://www.youtube.com/embed/{{ video.video_id }}" frameborder="0"
+						allowfullscreen></iframe>
+					{% endfor %}
+				</div>
+				{% endif %}
+				{% if game.rating %}
+				<p><strong>Rating:</strong> {{ game.rating }}</p>
+				{% endif %}
+				{% if game.rating_count %}
+				<p><strong>Rating Count:</strong> {{ game.rating_count }}</p>
+				{% endif %}
+				{% if game.involved_companies %}
+				<p><strong>Involved Companies:</strong> {{ game.involved_companies | map(attribute='company.name') |
+					join(', ') }}</p>
+				{% endif %}
+				{% if game.game_modes %}
+				<p><strong>Game Modes:</strong> {{ game.game_modes | map(attribute='name') | join(', ') }}</p>
+				{% endif %}
+				{% if game.themes %}
+				<p><strong>Themes:</strong> {{ game.themes | map(attribute='name') | join(', ') }}</p>
+				{% endif %}
+				{% if game.first_release_date %}
+				<p><strong>First Release Date:</strong> {{ game.first_release_date | dateformat }}</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+{% endif %}
 {% endblock %}

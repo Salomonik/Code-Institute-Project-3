@@ -83,7 +83,7 @@ def get_games():
             game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
         if 'screenshots' in game:
             for screenshot in game['screenshots']:
-                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
+                screenshot['url'] = modify_image_url(screenshot['url'], 't_logo_med')
     
     # Debugowanie: Wyświetl URL-e zrzutów ekranu
     for game in game_info:
