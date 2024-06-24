@@ -24,3 +24,12 @@ access_token = get_igdb_access_token(CLIENT_ID, CLIENT_SECRET)
 def index():
     return render_template('index.html')
 
+@app.route('/get_games', methods=['GET'])
+def get_games():
+    game_name = request.args.get('game_name')
+    url = 'https://api.igdb.com/v4/games'
+    headers = {
+        'Client-ID': CLIENT_ID,
+        'Authorization': f'Bearer {access_token}',
+        'Accept': 'application/json'
+    }
