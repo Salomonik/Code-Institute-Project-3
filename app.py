@@ -1,11 +1,21 @@
 import os
+
+# Importuj plik env.py, jeśli istnieje
+if os.path.exists("env.py"):
+    import env  # noqa
+
 from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__)
 
+# Pobierz zmienne środowiskowe
 CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
+
+# Debugowanie: Sprawdź, czy zmienne środowiskowe są ustawione
+print(f"Client ID: {CLIENT_ID}")  # Powinno wyświetlać rzeczywisty Client ID
+print(f"Client Secret: {CLIENT_SECRET}")  # Powinno wyświetlać rzeczywisty Client Secret
 
 def get_igdb_access_token(client_id, client_secret):
     url = 'https://id.twitch.tv/oauth2/token'
@@ -15,10 +25,19 @@ def get_igdb_access_token(client_id, client_secret):
         'grant_type': 'client_credentials'
     }
     response = requests.post(url, data=payload)
+    
+    # Debugowanie: Wyświetl odpowiedź serwera
+    print("Response status code:", response.status_code)
+    print("Response text:", response.text)
+    
     response.raise_for_status()
     return response.json()['access_token']
 
-access_token = get_igdb_access_token(CLIENT_ID, CLIENT_SECRET)
+try:
+    access_token = get_igdb_access_token(CLIENT_ID, CLIENT_SECRET)
+    print(f"Access Token: {access_token}")  # Debugowanie: Wyświetl token dostępu
+except Exception as e:
+    print(f"Error obtaining access token: {e}")  # Debugowanie: Wyświetl błąd
 
 @app.route('/')
 def index():
@@ -35,6 +54,11 @@ def get_games():
     }
     data = f'search "{game_name}"; fields name, genres.name, release_dates.human;'
     response = requests.post(url, headers=headers, data=data)
+    
+    # Debugowanie: Wyświetl odpowiedź serwera
+    print("Response status code:", response.status_code)
+    print("Response text:", response.text)
+    
     response.raise_for_status()
     game_info = response.json()
     return render_template('games.html', game_info=game_info)
