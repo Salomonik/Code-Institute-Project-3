@@ -11,6 +11,69 @@
     </form>
     {% if game_info %}
         <h2>Results:</h2>
-        <pre>{{ game_info | tojson(indent=2) }}</pre>
+        <ul>
+        {% for game in game_info %}
+            <li>
+                <strong>Name:</strong> {{ game.name }}<br>
+                {% if game.genres %}
+                    <strong>Genres:</strong> {{ game.genres | map(attribute='name') | join(', ') }}<br>
+                {% endif %}
+                {% if game.platforms %}
+                    <strong>Platforms:</strong> {{ game.platforms | map(attribute='name') | join(', ') }}<br>
+                {% endif %}
+                {% if game.release_dates %}
+                    <strong>Release Dates:</strong> 
+                    <ul>
+                    {% for date in game.release_dates %}
+                        <li>{{ date.human }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if game.summary %}
+                    <strong>Summary:</strong> {{ game.summary }}<br>
+                {% endif %}
+                {% if game.storyline %}
+                    <strong>Storyline:</strong> {{ game.storyline }}<br>
+                {% endif %}
+                {% if game.cover %}
+                    <strong>Cover:</strong> <img src="{{ game.cover.url }}" alt="{{ game.name }} cover"><br>
+                {% endif %}
+                {% if game.screenshots %}
+                    <strong>Screenshots:</strong>
+                    <ul>
+                    {% for screenshot in game.screenshots %}
+                        <li><img src="{{ screenshot.url }}" alt="Screenshot"></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if game.videos %}
+                    <strong>Videos:</strong>
+                    <ul>
+                    {% for video in game.videos %}
+                        <li><iframe src="https://www.youtube.com/embed/{{ video.video_id }}" frameborder="0" allowfullscreen></iframe></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if game.rating %}
+                    <strong>Rating:</strong> {{ game.rating }}<br>
+                {% endif %}
+                {% if game.rating_count %}
+                    <strong>Rating Count:</strong> {{ game.rating_count }}<br>
+                {% endif %}
+                {% if game.involved_companies %}
+                    <strong>Involved Companies:</strong> {{ game.involved_companies | map(attribute='company.name') | join(', ') }}<br>
+                {% endif %}
+                {% if game.game_modes %}
+                    <strong>Game Modes:</strong> {{ game.game_modes | map(attribute='name') | join(', ') }}<br>
+                {% endif %}
+                {% if game.themes %}
+                    <strong>Themes:</strong> {{ game.themes | map(attribute='name') | join(', ') }}<br>
+                {% endif %}
+                {% if game.first_release_date %}
+                    <strong>First Release Date:</strong> {{ game.first_release_date | dateformat }}<br>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
     {% endif %}
 {% endblock %}

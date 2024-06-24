@@ -1,11 +1,7 @@
 import os
-
-# Importuj plik env.py, jeśli istnieje
-if os.path.exists("env.py"):
-    import env  # noqa
-
 from flask import Flask, render_template, request
 import requests
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -52,7 +48,18 @@ def get_games():
         'Authorization': f'Bearer {access_token}',
         'Accept': 'application/json'
     }
-    data = f'search "{game_name}"; fields name, genres.name, release_dates.human;'
+    data = (
+        f'search "{game_name}"; '
+        'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
+        'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
+        'game_modes.name, themes.name, first_release_date;'
+    )
+    
+    # Debugowanie: Wyświetl zapytanie
+    print("Request URL:", url)
+    print("Request Headers:", headers)
+    print("Request Data:", data)
+    
     response = requests.post(url, headers=headers, data=data)
     
     # Debugowanie: Wyświetl odpowiedź serwera
@@ -62,6 +69,11 @@ def get_games():
     response.raise_for_status()
     game_info = response.json()
     return render_template('games.html', game_info=game_info)
+
+# Definiowanie filtra dateformat
+@app.template_filter('dateformat')
+def dateformat(value, format='%Y-%m-%d'):
+    return datetime.fromtimestamp(value).strftime(format)
 
 if __name__ == '__main__':
     app.run(host=os.environ.get("IP", "0.0.0.0"), port=int(os.environ.get("PORT", 5000)), debug=True)
