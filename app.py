@@ -1,4 +1,9 @@
 import os
+
+# Importuj plik env.py, jeśli istnieje
+if os.path.exists("env.py"):
+    import env  # noqa
+
 from flask import Flask, render_template, request
 import requests
 from datetime import datetime
@@ -75,10 +80,16 @@ def get_games():
     # Modyfikacja URL obrazów
     for game in game_info:
         if 'cover' in game:
-            game['cover']['url'] = modify_image_url(game['cover']['url'], 't_720p')
+            game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
         if 'screenshots' in game:
             for screenshot in game['screenshots']:
-                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_mid')
+                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
+    
+    # Debugowanie: Wyświetl URL-e zrzutów ekranu
+    for game in game_info:
+        if 'screenshots' in game:
+            for screenshot in game['screenshots']:
+                print("Screenshot URL:", screenshot['url'])
 
     return render_template('games.html', game_info=game_info)
 

@@ -50,14 +50,14 @@
                         {% if game.storyline %}
                             <p><strong>Storyline:</strong> {{ game.storyline }}</p>
                         {% endif %}
-                        {% if game.screenshots %}
-                            <p><strong>Screenshots:</strong></p>
-                            <div class="carousel">
-                            {% for screenshot in game.screenshots %}
-                                <a class="carousel-item"><img src="{{ screenshot.url }}"></a>
-                            {% endfor %}
-                            </div>
-                        {% endif %}
+						{% if game.screenshots %}
+						<p><strong>Screenshots:</strong></p>
+						<div class="carousel">
+						{% for screenshot in game.screenshots %}
+							<a class="carousel-item"><img src="{{ screenshot.url }}"></a>
+						{% endfor %}
+						</div>
+					{% endif %}
                         {% if game.videos %}
                             <p><strong>Videos:</strong></p>
                             <div class="video-container">

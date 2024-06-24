@@ -18,3 +18,7 @@
 	height: 100%;
 }
 
+.fixed-size {
+    height: 500px; /* Ustalona wysokość karty */
+    display: flex;
+}
