@@ -1,0 +1,18 @@
+.fixed-size {
+    height: 500px; /* Ustalona wysokość karty */
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.truncate-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Liczba wierszy do wyświetlenia przed zawinięciem */
+    -webkit-box-orient: vertical;
+}
