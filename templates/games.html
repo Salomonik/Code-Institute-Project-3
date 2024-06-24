@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Game Info{% endblock %}
+
+{% block content %}
+    <h2>Game Information</h2>
+    <form action="/get_games" method="get">
+        <label for="game_name">Game Name:</label>
+        <input type="text" id="game_name" name="game_name">
+        <button type="submit">Get Game Info</button>
+    </form>
+    {% if game_info %}
+        <h2>Results:</h2>
+        <pre>{{ game_info | tojson(indent=2) }}</pre>
+    {% endif %}
+{% endblock %}
