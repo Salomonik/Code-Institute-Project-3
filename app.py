@@ -19,3 +19,8 @@ def get_igdb_access_token(client_id, client_secret):
     return response.json()['access_token']
 
 access_token = get_igdb_access_token(CLIENT_ID, CLIENT_SECRET)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
