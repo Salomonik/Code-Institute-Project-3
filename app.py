@@ -75,7 +75,7 @@ def get_games():
     # Modyfikacja URL obrazów
     for game in game_info:
         if 'cover' in game:
-            game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
+            game['cover']['url'] = modify_image_url(game['cover']['url'], 't_720p')
         if 'screenshots' in game:
             for screenshot in game['screenshots']:
                 screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')

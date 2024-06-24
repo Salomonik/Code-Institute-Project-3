@@ -16,3 +16,15 @@
     -webkit-line-clamp: 3; /* Liczba wierszy do wyświetlenia przed zawinięciem */
     -webkit-box-orient: vertical;
 }
+
+/* Dodane style dla obrazów */
+.card-image img {
+    object-fit:contain;
+
+    height: 100%;
+}
+
+.card-reveal {
+    overflow-y: auto;
+    max-height: 300px; /* Maksymalna wysokość zawartości karty */
+}
