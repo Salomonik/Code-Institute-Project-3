@@ -1,22 +1,17 @@
 import os
-
-# Importuj plik env.py, jeśli istnieje
-if os.path.exists("env.py"):
-    import env  # noqa
-
-from flask import Flask, render_template, request
-import requests
+import time
 from datetime import datetime
+import requests
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Pobierz zmienne środowiskowe
+# Import env.py to set environment variables
+if os.path.exists("env.py"):
+    import env  # noqa
+
 CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
-
-# Debugowanie: Sprawdź, czy zmienne środowiskowe są ustawione
-print(f"Client ID: {CLIENT_ID}")  # Powinno wyświetlać rzeczywisty Client ID
-print(f"Client Secret: {CLIENT_SECRET}")  # Powinno wyświetlać rzeczywisty Client Secret
 
 def get_igdb_access_token(client_id, client_secret):
     url = 'https://id.twitch.tv/oauth2/token'
@@ -27,25 +22,25 @@ def get_igdb_access_token(client_id, client_secret):
     }
     response = requests.post(url, data=payload)
     
-    # Debugowanie: Wyświetl odpowiedź serwera
-    print("Response status code:", response.status_code)
-    print("Response text:", response.text)
+    # Debugging: Print the request details
+    print("Request URL:", url)
+    print("Request Payload:", payload)
     
     response.raise_for_status()
     return response.json()['access_token']
 
-try:
-    access_token = get_igdb_access_token(CLIENT_ID, CLIENT_SECRET)
-    print(f"Access Token: {access_token}")  # Debugowanie: Wyświetl token dostępu
-except Exception as e:
-    print(f"Error obtaining access token: {e}")  # Debugowanie: Wyświetl błąd
+# Debugging: Print the CLIENT_ID and CLIENT_SECRET
+print("Client ID:", CLIENT_ID)
+print("Client Secret:", CLIENT_SECRET)
 
-def modify_image_url(url, size):
-    return url.replace('t_thumb', size)
+access_token = get_igdb_access_token(CLIENT_ID, CLIENT_SECRET)
 
 @app.route('/')
 def index():
-    # Fetch popular games
+    return render_template('index.html')
+
+@app.route('/popular_games', methods=['GET'])
+def popular_games():
     url = 'https://api.igdb.com/v4/games'
     headers = {
         'Client-ID': CLIENT_ID,
@@ -58,11 +53,31 @@ def index():
         'where first_release_date >= ' + str(int(time.time()) - 30 * 24 * 60 * 60) + '; '
         'limit 10;'
     )
+    
+    # Debugging: Print the request details
+    print("Request URL:", url)
+    print("Request Headers:", headers)
+    print("Request Data:", data)
+    
     response = requests.post(url, headers=headers, data=data)
+    
+    # Debugging: Print the response details
+    print("Response status code:", response.status_code)
+    print("Response text:", response.text)
+    
     response.raise_for_status()
     popular_games = response.json()
-
+    
     return render_template('index.html', popular_games=popular_games)
+
+def modify_image_url(url, size):
+    # Znajdź nazwę rozdzielczości w URL i zamień ją na nową rozdzielczość
+    sizes = ["t_thumb", "t_cover_small", "t_logo_med", "t_screenshot_med", "t_cover_big", "t_screenshot_big", "t_screenshot_huge", "t_720p", "t_1080p"]
+    for s in sizes:
+        if s in url:
+            return url.replace(s, size)
+    return url  # Jeśli nie znaleziono żadnej z powyższych nazw, zwróć URL bez zmian
+
 
 @app.route('/get_games', methods=['GET'])
 def get_games():
@@ -75,7 +90,7 @@ def get_games():
     }
     data = (
         f'search "{game_name}"; '
-        'fields name, genres.name, platforms.name, summary, storyline, cover.url, '
+        'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
         'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
         'game_modes.name, themes.name, first_release_date;'
     )
@@ -100,7 +115,7 @@ def get_games():
             game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
         if 'screenshots' in game:
             for screenshot in game['screenshots']:
-                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
+                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')
     
     # Debugowanie: Wyświetl URL-e zrzutów ekranu
     for game in game_info:
@@ -109,8 +124,6 @@ def get_games():
                 print("Screenshot URL:", screenshot['url'])
 
     return render_template('games.html', game_info=game_info)
-
-
 
 # Definiowanie filtra dateformat
 @app.template_filter('dateformat')
