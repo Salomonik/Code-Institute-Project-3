@@ -37,38 +37,49 @@ access_token = get_igdb_access_token(CLIENT_ID, CLIENT_SECRET)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
-
-@app.route('/popular_games', methods=['GET'])
-def popular_games():
-    url = 'https://api.igdb.com/v4/games'
-    headers = {
-        'Client-ID': CLIENT_ID,
-        'Authorization': f'Bearer {access_token}',
-        'Accept': 'application/json'
-    }
-    data = (
-        'fields name, popularity, rating, cover.url, first_release_date, genres.name, platforms.name; '
-        'sort popularity desc; '
-        'where first_release_date >= ' + str(int(time.time()) - 30 * 24 * 60 * 60) + '; '
-        'limit 10;'
-    )
-    
-    # Debugging: Print the request details
-    print("Request URL:", url)
-    print("Request Headers:", headers)
-    print("Request Data:", data)
-    
-    response = requests.post(url, headers=headers, data=data)
-    
-    # Debugging: Print the response details
-    print("Response status code:", response.status_code)
-    print("Response text:", response.text)
-    
-    response.raise_for_status()
-    popular_games = response.json()
-    
-    return render_template('index.html', popular_games=popular_games)
+    try:
+        # Fetch popular games
+        url = 'https://api.igdb.com/v4/games'
+        headers = {
+            'Client-ID': CLIENT_ID,
+            'Authorization': f'Bearer {access_token}',
+            'Accept': 'application/json'
+        }
+        data = (
+            'fields name, rating, cover.url, first_release_date, genres.name, platforms.name, '
+            'storyline, involved_companies.company.name, game_modes.name, screenshots.url, videos.video_id; '
+            'sort rating desc; '
+            'limit 12;'
+        )
+        
+        # Debugging: Print the request details
+        print("Request URL:", url)
+        print("Request Headers:", headers)
+        print("Request Data:", data)
+        
+        response = requests.post(url, headers=headers, data=data)
+        
+        # Debugging: Print the response details
+        print("Response status code:", response.status_code)
+        print("Response text:", response.text)
+        
+        response.raise_for_status()
+        popular_games = response.json()
+        
+        for game in popular_games:
+            if 'cover' in game:
+                game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
+            if 'screenshots' in game:
+                for screenshot in game['screenshots']:
+                    screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')  
+        
+        # Debugging: Print the popular games data
+        print("Popular games:", popular_games)
+        
+        return render_template('index.html', popular_games=popular_games)
+    except Exception as e:
+        print("Error fetching popular games:", e)
+        return render_template('error.html', error=str(e))
 
 def modify_image_url(url, size):
     # Znajdź nazwę rozdzielczości w URL i zamień ją na nową rozdzielczość
@@ -78,52 +89,55 @@ def modify_image_url(url, size):
             return url.replace(s, size)
     return url  # Jeśli nie znaleziono żadnej z powyższych nazw, zwróć URL bez zmian
 
-
 @app.route('/get_games', methods=['GET'])
 def get_games():
-    game_name = request.args.get('game_name')
-    url = 'https://api.igdb.com/v4/games'
-    headers = {
-        'Client-ID': CLIENT_ID,
-        'Authorization': f'Bearer {access_token}',
-        'Accept': 'application/json'
-    }
-    data = (
-        f'search "{game_name}"; '
-        'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
-        'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
-        'game_modes.name, themes.name, first_release_date;'
-    )
-    
-    # Debugowanie: Wyświetl zapytanie
-    print("Request URL:", url)
-    print("Request Headers:", headers)
-    print("Request Data:", data)
-    
-    response = requests.post(url, headers=headers, data=data)
-    
-    # Debugowanie: Wyświetl odpowiedź serwera
-    print("Response status code:", response.status_code)
-    print("Response text:", response.text)
-    
-    response.raise_for_status()
-    game_info = response.json()
-    
-    # Modyfikacja URL obrazów
-    for game in game_info:
-        if 'cover' in game:
-            game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
-        if 'screenshots' in game:
-            for screenshot in game['screenshots']:
-                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')
-    
-    # Debugowanie: Wyświetl URL-e zrzutów ekranu
-    for game in game_info:
-        if 'screenshots' in game:
-            for screenshot in game['screenshots']:
-                print("Screenshot URL:", screenshot['url'])
+    try:
+        game_name = request.args.get('game_name')
+        url = 'https://api.igdb.com/v4/games'
+        headers = {
+            'Client-ID': CLIENT_ID,
+            'Authorization': f'Bearer {access_token}',
+            'Accept': 'application/json'
+        }
+        data = (
+            f'search "{game_name}"; '
+            'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
+            'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
+            'game_modes.name, themes.name, first_release_date;'
+        )
+        
+        # Debugging: Print the request details
+        print("Request URL:", url)
+        print("Request Headers:", headers)
+        print("Request Data:", data)
+        
+        response = requests.post(url, headers=headers, data=data)
+        
+        # Debugging: Print the response details
+        print("Response status code:", response.status_code)
+        print("Response text:", response.text)
+        
+        response.raise_for_status()
+        game_info = response.json()
+        
+        # Modyfikacja URL obrazów
+        for game in game_info:
+            if 'cover' in game:
+                game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
+            if 'screenshots' in game:
+                for screenshot in game['screenshots']:
+                    screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')
+        
+        # Debugging: Print the screenshot URLs
+        for game in game_info:
+            if 'screenshots' in game:
+                for screenshot in game['screenshots']:
+                    print("Screenshot URL:", screenshot['url'])
 
-    return render_template('games.html', game_info=game_info)
+        return render_template('games.html', game_info=game_info)
+    except Exception as e:
+        print("Error fetching game data:", e)
+        return render_template('error.html', error=str(e))
 
 # Definiowanie filtra dateformat
 @app.template_filter('dateformat')
