@@ -93,6 +93,30 @@ def get_games():
 
     return render_template('games.html', game_info=game_info)
 
+
+def popular_games():
+    url = 'https://api.igdb.com/v4/games'
+    headers = {
+        'Client-ID': CLIENT_ID,
+        'Authorization': f'Bearer {access_token}',
+        'Accept': 'application/json'
+    }
+    data = (
+        'fields name, popularity, rating, cover.url, first_release_date, genres.name, platforms.name; '
+        'sort popularity desc; '
+        'where first_release_date >= ' + str(int(time.time()) - 30 * 24 * 60 * 60) + '; '
+        'limit 10;'
+    )
+    
+    response = requests.post(url, headers=headers, data=data)
+    response.raise_for_status()
+    games = response.json()
+    
+    # Debugging
+    print(games)
+
+    return render_template('popular_games.html', games=games)
+
 # Definiowanie filtra dateformat
 @app.template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
