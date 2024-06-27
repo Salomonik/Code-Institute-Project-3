@@ -26,11 +26,9 @@
 				{% endif %}
 			</div>
 			<div class="card-content">
-				<span class="card-title activator grey-text text-darken-4">{{ game.name }}<i
-						class="material-icons right">more_vert</i></span>
-				{% if game.summary %}
-				<p class="truncate-text">{{ game.summary }}</p>
-				{% endif %}
+				<span class="card-title center-align activator grey-text text-darken-4">{{ game.name }}
+					<i class="material-icons right">more_vert</i><i class="material-icons right">more_vert</i></span>
+					
 			</div>
 			<div class="card-reveal">
 				<span class="card-title grey-text text-darken-4">{{ game.name }}<i
@@ -59,7 +57,7 @@
 				<div class="screenshot-container">
 					{% for screenshot in game.screenshots %}
 					<div class="screenshot-item">
-						<img class="materialboxed" width="50" src="{{ screenshot.url }}"  >
+						<img class="materialboxed" width="50" src="{{ screenshot.url }}">
 					</div>
 					{% endfor %}
 				</div>
