@@ -139,6 +139,45 @@ def get_games():
         print("Error fetching game data:", e)
         return render_template('error.html', error=str(e))
 
+
+@app.route('/suggest_games', methods=['GET'])
+def suggest_games():
+    try:
+        query = request.args.get('query')
+        url = 'https://api.igdb.com/v4/games'
+        headers = {
+            'Client-ID': CLIENT_ID,
+            'Authorization': f'Bearer {access_token}',
+            'Accept': 'application/json'
+        }
+        data = (
+            f'search "{query}"; '
+            'fields name; '
+            'limit 10;'
+        )
+        
+        # Debugging: Print the request details
+        print("Request URL:", url)
+        print("Request Headers:", headers)
+        print("Request Data:", data)
+        
+        response = requests.post(url, headers=headers, data=data)
+        
+        # Debugging: Print the response details
+        print("Response status code:", response.status_code)
+        print("Response text:", response.text)
+        
+        response.raise_for_status()
+        suggestions = response.json()
+        
+        # Debugging: Print the suggestions data
+        print("Suggestions:", suggestions)
+        
+        return jsonify(suggestions)
+    except Exception as e:
+        print("Error fetching game suggestions:", e)
+        return jsonify([])
+
 # Definiowanie filtra dateformat
 @app.template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
