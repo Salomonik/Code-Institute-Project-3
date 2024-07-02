@@ -1,4 +1,8 @@
+
+
 body {
+	max-width: 1280px;
+	margin-inline: auto;
 	height: 100dvh;
 	display: flex;
 	flex-direction: column;
@@ -51,17 +55,5 @@ main {
     height: auto;
 }
 
-.carousel {
-	gap: 5px;
-}
 
-.carousel-caption {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    text-align: center;
-    padding: 5px;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
 
