@@ -1,7 +1,10 @@
 import os
-if os.path.exists('env.py'):
-    import env
-from . import create_app
+
+if os.path.exists("env.py"):
+    import env  # noqa
+
+from project import create_app
+
 app = create_app()
 
 if __name__ == '__main__':
