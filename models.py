@@ -30,15 +30,21 @@ class Favorite(db.Model):
     
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable = False)
-    game_id = db.Column(db.Integer, ForeignKey('game.id'), nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable = False)
     content = db.Column(db.Text, nullable = False)
     created_at = db.Column(db.DateTime, default = datetime.UTC)
 
 class Like(db.Model):
     id db.Column(db.Integer, primary_key = True)
-    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable = False)
-    comment_id = db.Column(db.Integer, ForeignKey('comment.id'), nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable = False)
+    created_at = db.Column(db.DateTime, defaulf = datetime.UTC)
+    
+class Friend(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    friend_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
     created_at = db.Column(db.DateTime, defaulf = datetime.UTC)
     
 
