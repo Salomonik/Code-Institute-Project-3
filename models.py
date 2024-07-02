@@ -56,4 +56,10 @@ class GameGenreAssociation(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable = False)
     genre_id = db.Column(db.Integer, db.ForeignKey('game_genre.id'), nullable = False)
     
-    
+class UserProfile(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    avatar_url = db.Column(db.String(256))
+    bio = db.Column(db.Text)
+    location = db.Column(db.String(128))
+    created_at = db.Column(db.DateTime, defaulf = datetime.UTC)
