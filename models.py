@@ -36,7 +36,7 @@ class Comment(db.Model):
     created_at = db.Column(db.DateTime, default = datetime.UTC)
 
 class Like(db.Model):
-    id db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key = True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
     comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable = False)
     created_at = db.Column(db.DateTime, defaulf = datetime.UTC)
@@ -50,6 +50,10 @@ class Friend(db.Model):
 class GameGenre(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64), unique = True, nullable = False)
-    
+
+class GameGenreAssociation(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable = False)
+    genre_id = db.Column(db.Integer, db.ForeignKey('game_genre.id'), nullable = False)
     
     
