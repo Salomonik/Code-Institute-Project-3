@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.materialboxed');
     M.Materialbox.init(elems);
 
+    var elems = document.querySelectorAll('.carousel');
+    M.Carousel.init(elems);
+
     var gameInput = document.getElementById('game_name');
     var autocompleteInstance = M.Autocomplete.init(gameInput, {
         data: {},

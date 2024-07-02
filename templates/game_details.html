@@ -32,7 +32,14 @@
         {% if game_details.cover %}
         <img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
         {% endif %}
-        {% if game_details.screenshots %}
+
+        
+    </div>
+</div>
+
+<div class="row">
+	<div >
+		{% if game_details.screenshots %}
         <h5>Screenshots</h5>
         <div class="carousel">
             {% for screenshot in game_details.screenshots %}
@@ -40,7 +47,7 @@
             {% endfor %}
         </div>
         {% endif %}
-        {% if game_details.videos %}
+		{% if game_details.videos %}
         <h5>Videos</h5>
         <div class="video-container">
             {% for video in game_details.videos %}
@@ -48,6 +55,6 @@
             {% endfor %}
         </div>
         {% endif %}
-    </div>
+	</div>
 </div>
 {% endblock %}
