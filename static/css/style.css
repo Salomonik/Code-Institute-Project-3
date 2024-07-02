@@ -39,7 +39,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: var(--body-font);
-    padding: var(--padding);
+    
 }
 
 .container {
@@ -147,7 +147,7 @@ h1,h2,h3 {
 }
 
 .carousel .carousel-item>img {
-    min-width: 200%;
+    min-width: 220%;
 	margin-left: -50%;
 }
 
