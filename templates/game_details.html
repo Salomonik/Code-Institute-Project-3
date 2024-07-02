@@ -4,57 +4,59 @@
 
 {% block content %}
 <div class="row">
-    <div class="col s12 m8">
-        <h3>{{ game_details.name }}</h3>
-        {% if game_details.first_release_date %}
-        <p><strong>Release Date:</strong> {{ game_details.first_release_date | dateformat }}</p>
-        {% endif %}
-        {% if game_details.platforms %}
-        <p><strong>Platforms:</strong> {{ game_details.platforms | map(attribute='name') | join(', ') }}</p>
-        {% endif %}
-        {% if game_details.genres %}
-        <p><strong>Genre:</strong> {{ game_details.genres | map(attribute='name') | join(', ') }}</p>
-        {% endif %}
-        {% if game_details.game_modes %}
-        <p><strong>Game Modes:</strong> {{ game_details.game_modes | map(attribute='name') | join(', ') }}</p>
-        {% endif %}
-        {% if game_details.storyline %}
-        <p><strong>Storyline:</strong> {{ game_details.storyline }}</p>
-        {% endif %}
-        {% if game_details.involved_companies %}
-        <p><strong>Developer:</strong> {{ game_details.involved_companies | map(attribute='company.name') | join(', ') }}</p>
-        {% endif %}
-        {% if game_details.rating %}
-        <p><strong>Rating:</strong> {{ game_details.rating }}</p>
-        {% endif %}
-    </div>
-    <div class="col s12 m4">
-        {% if game_details.cover %}
-        <img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
-        {% endif %}
+	<div class="col s12 m4 center-align">
+		{% if game_details.cover %}
+		<img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
+		{% endif %}
+	</div>
+	<div class="col s12 m8">
+		<h3>{{ game_details.name }}</h3>
+		{% if game_details.first_release_date %}
+		<p><strong>Release Date:</strong> {{ game_details.first_release_date | dateformat }}</p>
+		{% endif %}
+		{% if game_details.platforms %}
+		<p><strong>Platforms:</strong> {{ game_details.platforms | map(attribute='name') | join(', ') }}</p>
+		{% endif %}
+		{% if game_details.genres %}
+		<p><strong>Genre:</strong> {{ game_details.genres | map(attribute='name') | join(', ') }}</p>
+		{% endif %}
+		{% if game_details.game_modes %}
+		<p><strong>Game Modes:</strong> {{ game_details.game_modes | map(attribute='name') | join(', ') }}</p>
+		{% endif %}
+		{% if game_details.storyline %}
+		<p><strong>Storyline:</strong> {{ game_details.storyline }}</p>
+		{% endif %}
+		{% if game_details.involved_companies %}
+		<p><strong>Developer:</strong> {{ game_details.involved_companies | map(attribute='company.name') | join(', ')
+			}}</p>
+		{% endif %}
+		{% if game_details.rating %}
+		<p><strong>Rating:</strong> {{ game_details.rating }}</p>
+		{% endif %}
+	</div>
 
-        
-    </div>
 </div>
 
 <div class="row">
-	<div >
+	<div class="col s12 m6">
 		{% if game_details.screenshots %}
-        <h5>Screenshots</h5>
-        <div class="carousel">
-            {% for screenshot in game_details.screenshots %}
-            <a class="carousel-item" href="#{{ screenshot.url }}"><img src="{{ screenshot.url }}"></a>
-            {% endfor %}
-        </div>
-        {% endif %}
+		<h5>Screenshots</h5>
+		<div class="carousel">
+			{% for screenshot in game_details.screenshots %}
+			<a class="carousel-item" href="#{{ screenshot.url }}"><img src="{{ screenshot.url }}"></a>
+			{% endfor %}
+		</div>
+		{% endif %}
+	</div>
+	<div class="col s12 m6">
 		{% if game_details.videos %}
-        <h5>Videos</h5>
-        <div class="video-container">
-            {% for video in game_details.videos %}
-            <iframe src="https://www.youtube.com/embed/{{ video.video_id }}" frameborder="0" allowfullscreen></iframe>
-            {% endfor %}
-        </div>
-        {% endif %}
+		<h5>Videos</h5>
+		<div class="video-container">
+			{% for video in game_details.videos %}
+			<iframe src="https://www.youtube.com/embed/{{ video.video_id }}" frameborder="0" allowfullscreen></iframe>
+			{% endfor %}
+		</div>
+		{% endif %}
 	</div>
 </div>
 {% endblock %}
