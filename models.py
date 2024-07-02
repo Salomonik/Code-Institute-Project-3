@@ -22,5 +22,11 @@ class Game(db.Model):
     def __repr__(self):
         return f'<Game {self.name}'
     
-
+class Favorite(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable = False)
+    created_at = db.Column(db.DateTime, default = datetime.UTC)
+    
+    
     
