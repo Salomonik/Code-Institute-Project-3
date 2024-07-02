@@ -28,5 +28,12 @@ class Favorite(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable = False)
     created_at = db.Column(db.DateTime, default = datetime.UTC)
     
-    
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable = False)
+    game_id = db.Column(db.Integer, ForeignKey('game.id'), nullable = False)
+    content = db.Column(db.Text, nullable = False)
+    created_at = db.Column(db.DateTime, default = datetime.UTC)
+
+
     
