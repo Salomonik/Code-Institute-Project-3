@@ -49,7 +49,7 @@ def index():
             'fields name, rating, cover.url, first_release_date, genres.name, platforms.name, '
             'storyline, involved_companies.company.name, game_modes.name, screenshots.url, videos.video_id; '
             'sort rating desc; '
-            'limit 12;'
+            'limit 10;'
         )
         
         # Debugging: Print the request details
@@ -65,13 +65,6 @@ def index():
         
         response.raise_for_status()
         popular_games = response.json()
-        
-        for game in popular_games:
-            if 'cover' in game:
-                game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
-            if 'screenshots' in game:
-                for screenshot in game['screenshots']:
-                    screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')  
         
         # Debugging: Print the popular games data
         print("Popular games:", popular_games)
@@ -93,6 +86,7 @@ def modify_image_url(url, size):
 def get_games():
     try:
         game_name = request.args.get('game_name')
+        platform = request.args.get('platform')
         url = 'https://api.igdb.com/v4/games'
         headers = {
             'Client-ID': CLIENT_ID,
@@ -105,6 +99,10 @@ def get_games():
             'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
             'game_modes.name, themes.name, first_release_date;'
         )
+        
+        # Dodanie warunku dla platformy
+        if platform:
+            data += f' where platforms = [{platform}];'
         
         # Debugging: Print the request details
         print("Request URL:", url)
