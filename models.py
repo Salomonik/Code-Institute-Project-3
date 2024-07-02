@@ -35,5 +35,11 @@ class Comment(db.Model):
     content = db.Column(db.Text, nullable = False)
     created_at = db.Column(db.DateTime, default = datetime.UTC)
 
+class Like(db.Model):
+    id db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable = False)
+    comment_id = db.Column(db.Integer, ForeignKey('comment.id'), nullable = False)
+    created_at = db.Column(db.DateTime, defaulf = datetime.UTC)
+    
 
     
