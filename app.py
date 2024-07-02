@@ -139,6 +139,54 @@ def get_games():
         print("Error fetching game data:", e)
         return render_template('error.html', error=str(e))
 
+@app.route('/game_details/<int:game_id>', methods=['GET'])
+def game_details(game_id):
+    try:
+        url = 'https://api.igdb.com/v4/games'
+        headers = {
+            'Client-ID': CLIENT_ID,
+            'Authorization': f'Bearer {access_token}',
+            'Accept': 'application/json'
+        }
+        data = (
+            f'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
+            'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
+            'game_modes.name, themes.name, first_release_date; '
+            f'where id = {game_id};'
+        )
+        
+        # Debugging: Print the request details
+        print("Request URL:", url)
+        print("Request Headers:", headers)
+        print("Request Data:", data)
+        
+        response = requests.post(url, headers=headers, data=data)
+        
+        # Debugging: Print the response details
+        print("Response status code:", response.status_code)
+        print("Response text:", response.text)
+        
+        response.raise_for_status()
+        game_details = response.json()
+        
+        # Modyfikacja URL obrazów
+        for game in game_details:
+            if 'cover' in game:
+                game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
+            if 'screenshots' in game:
+                for screenshot in game['screenshots']:
+                    screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')
+        
+        # Debugging: Print the screenshot URLs
+        for game in game_details:
+            if 'screenshots' in game:
+                for screenshot in game['screenshots']:
+                    print("Screenshot URL:", screenshot['url'])
+
+        return render_template('game_details.html', game_details=game_details[0])
+    except Exception as e:
+        print("Error fetching game details:", e)
+        return render_template('error.html', error=str(e))
 
 @app.route('/suggest_games', methods=['GET'])
 def suggest_games():
