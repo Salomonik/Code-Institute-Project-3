@@ -141,13 +141,14 @@ h1,h2,h3 {
 
 
 /* Game Details */
-.carousel .carousel-item img {
-    width: 100%; /* Szerokość obrazka na pełną szerokość elementu karuzeli */
-    height: auto; /* Zachowanie proporcji obrazka */
-    max-height: 300px; /* Maksymalna wysokość obrazka */
-    object-fit: cover; /* Przycięcie obrazka, aby wypełnić element karuzeli */
-}
 
 .carousel {
-    height: 300px; /* Ustawienie wysokości karuzeli */
+	max-height: 300px;
 }
+
+.carousel .carousel-item>img {
+    min-width: 200%;
+	margin-left: -50%;
+}
+
+
