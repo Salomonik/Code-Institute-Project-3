@@ -48,7 +48,7 @@ def index():
         data = (
             'fields name, cover.url, first_release_date, genres.name, platforms.name, '
             'storyline, involved_companies.company.name, game_modes.name, screenshots.url, videos.video_id; '
-            'sort aggregated_rating desc; '
+            'sort hypes desc; '
             'limit 12;'
         )
         
