@@ -11,5 +11,16 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.username}>'
     
+class Game(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(128), nullable = False)
+    description = db.Column(db.Text)
+    release_date = db.Column(db.Date)
+    cover_url = db.Column(db.String(256))
+    created_at = db.Column(db.DateTime, default = datetime.UTC)
+    
+    def __repr__(self):
+        return f'<Game {self.name}'
+    
 
     
