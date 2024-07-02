@@ -1,8 +1,11 @@
 import os
 import requests
-from flask import render_template, request, jsonify
-from . import app, db
+from datetime import datetime
+from flask import render_template, request, jsonify, Blueprint
+from . import db
 from .models import Game
+
+routes = Blueprint('routes', __name__)
 
 CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
@@ -29,7 +32,7 @@ print("Client Secret:", CLIENT_SECRET)
 
 access_token = get_igdb_access_token(CLIENT_ID, CLIENT_SECRET)
 
-@app.route('/')
+@routes.route('/')
 def index():
     try:
         # Fetch popular games
@@ -86,7 +89,7 @@ def modify_images(game_details):
             for screenshot in game['screenshots']:
                 screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')
 
-@app.route('/get_games', methods=['GET'])
+@routes.route('/get_games', methods=['GET'])
 def get_games():
     try:
         game_name = request.args.get('game_name')
@@ -118,7 +121,7 @@ def get_games():
         print("Error fetching game data:", e)
         return render_template('error.html', error=str(e))
 
-@app.route('/game_details/<int:game_id>', methods=['GET'])
+@routes.route('/game_details/<int:game_id>', methods=['GET'])
 def game_details(game_id):
     try:
         url = 'https://api.igdb.com/v4/games'
@@ -145,7 +148,7 @@ def game_details(game_id):
         print("Error fetching game details:", e)
         return render_template('error.html', error=str(e))
 
-@app.route('/suggest_games', methods=['GET'])
+@routes.route('/suggest_games', methods=['GET'])
 def suggest_games():
     try:
         query = request.args.get('query')
@@ -186,6 +189,6 @@ def suggest_games():
         return jsonify([])
 
 # Definiowanie filtra dateformat
-@app.template_filter('dateformat')
+@routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
     return datetime.fromtimestamp(value).strftime(format)
