@@ -13,6 +13,6 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app,db)
     
-    import routes, models
+    from . import routes, models
     
     return app
