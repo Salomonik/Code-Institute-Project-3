@@ -71,7 +71,6 @@ img {
     max-width: 100%;
     height: auto;
     border-radius: var(--border-radius);
-    
     margin-bottom: 1rem;
 }
 
@@ -106,6 +105,9 @@ h1,h2,h3 {
 	flex-direction: column;
 	position: relative; /* Dodane dla lepszego zarządzania pozycjonowaniem */
     overflow: hidden; /* Ukryj elementy wychodzące poza kartę */
+}
+.card {
+	border-radius: var(--border-radius);
 }
 
 .card-content {

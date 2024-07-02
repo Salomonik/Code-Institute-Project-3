@@ -46,10 +46,10 @@ def index():
             'Accept': 'application/json'
         }
         data = (
-            'fields name, rating, cover.url, first_release_date, genres.name, platforms.name, '
+            'fields name, cover.url, first_release_date, genres.name, platforms.name, '
             'storyline, involved_companies.company.name, game_modes.name, screenshots.url, videos.video_id; '
-            'sort rating desc; '
-            'limit 10;'
+            'sort aggregated_rating desc; '
+            'limit 12;'
         )
         
         # Debugging: Print the request details
@@ -69,6 +69,8 @@ def index():
         # Debugging: Print the popular games data
         print("Popular games:", popular_games)
         
+        modify_images(popular_games)
+         
         return render_template('index.html', popular_games=popular_games)
     except Exception as e:
         print("Error fetching popular games:", e)
@@ -81,6 +83,14 @@ def modify_image_url(url, size):
         if s in url:
             return url.replace(s, size)
     return url  # Jeśli nie znaleziono żadnej z powyższych nazw, zwróć URL bez zmian
+
+def modify_images(game_details):
+    for game in game_details:
+        if 'cover' in game:
+            game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
+        if 'screenshots' in game:
+            for screenshot in game['screenshots']:
+                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')
 
 @app.route('/get_games', methods=['GET'])
 def get_games():
@@ -100,38 +110,15 @@ def get_games():
             'game_modes.name, themes.name, first_release_date;'
         )
         
-        # Dodanie warunku dla platformy
         if platform:
             data += f' where platforms = [{platform}];'
         
-        # Debugging: Print the request details
-        print("Request URL:", url)
-        print("Request Headers:", headers)
-        print("Request Data:", data)
-        
         response = requests.post(url, headers=headers, data=data)
-        
-        # Debugging: Print the response details
-        print("Response status code:", response.status_code)
-        print("Response text:", response.text)
-        
         response.raise_for_status()
         game_info = response.json()
         
-        # Modyfikacja URL obrazów
-        for game in game_info:
-            if 'cover' in game:
-                game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
-            if 'screenshots' in game:
-                for screenshot in game['screenshots']:
-                    screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')
+        modify_images(game_info)
         
-        # Debugging: Print the screenshot URLs
-        for game in game_info:
-            if 'screenshots' in game:
-                for screenshot in game['screenshots']:
-                    print("Screenshot URL:", screenshot['url'])
-
         return render_template('games.html', game_info=game_info)
     except Exception as e:
         print("Error fetching game data:", e)
@@ -153,34 +140,12 @@ def game_details(game_id):
             f'where id = {game_id};'
         )
         
-        # Debugging: Print the request details
-        print("Request URL:", url)
-        print("Request Headers:", headers)
-        print("Request Data:", data)
-        
         response = requests.post(url, headers=headers, data=data)
-        
-        # Debugging: Print the response details
-        print("Response status code:", response.status_code)
-        print("Response text:", response.text)
-        
         response.raise_for_status()
         game_details = response.json()
         
-        # Modyfikacja URL obrazów
-        for game in game_details:
-            if 'cover' in game:
-                game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
-            if 'screenshots' in game:
-                for screenshot in game['screenshots']:
-                    screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')
+        modify_images(game_details)
         
-        # Debugging: Print the screenshot URLs
-        for game in game_details:
-            if 'screenshots' in game:
-                for screenshot in game['screenshots']:
-                    print("Screenshot URL:", screenshot['url'])
-
         return render_template('game_details.html', game_details=game_details[0])
     except Exception as e:
         print("Error fetching game details:", e)
@@ -218,6 +183,8 @@ def suggest_games():
         
         # Debugging: Print the suggestions data
         print("Suggestions:", suggestions)
+        
+        modify_images(suggestions)
         
         return jsonify(suggestions)
     except Exception as e:
