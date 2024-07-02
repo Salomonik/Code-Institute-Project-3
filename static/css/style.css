@@ -1,3 +1,16 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
 body {
 	max-width: 1280px;
 	margin-inline: auto;
@@ -9,6 +22,10 @@ body {
 
 main {
 	flex: 1 0 0;
+}
+
+h1,h2,h3 {
+	margin: 0;
 }
 
 
@@ -52,9 +69,13 @@ main {
 
 
 /* Game Details */
-
-
-.carousel {
-    height: 400px; /* Ustawia wysokość karuzeli */
+.carousel .carousel-item img {
+    width: 100%; /* Szerokość obrazka na pełną szerokość elementu karuzeli */
+    height: auto; /* Zachowanie proporcji obrazka */
+    max-height: 300px; /* Maksymalna wysokość obrazka */
+    object-fit: cover; /* Przycięcie obrazka, aby wypełnić element karuzeli */
 }
 
+.carousel {
+    height: 300px; /* Ustawienie wysokości karuzeli */
+}
