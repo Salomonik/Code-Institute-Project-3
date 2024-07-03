@@ -18,20 +18,9 @@ def get_igdb_access_token(client_id, client_secret):
         'client_secret': client_secret,
         'grant_type': 'client_credentials'
     }
-    response = request.post(url, data=payload)
-    
-    # Debugging: Print the request details
-    print("Request URL:", url)
-    print("Request Payload:", payload)
-    
+    response = requests.post(url, data=payload)
     response.raise_for_status()
     return response.json()['access_token']
-
-# Debugging: Print the CLIENT_ID and CLIENT_SECRET
-print("Client ID:", CLIENT_ID)
-print("Client Secret:", CLIENT_SECRET)
-
-access_token = get_igdb_access_token(CLIENT_ID, CLIENT_SECRET)
 
 @routes.route('/')
 def index():
@@ -203,6 +192,21 @@ def register():
         flash('Your account has been created!','success')
         return redirect(url_for('routes.login'))
     return render_template('register.html', title='Register', form=form)
+
+@routes.route('/login', methods = ['GET','POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('routes.index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and check_password_hash(user.password_hash, form. password.data):
+            login_user(user, remember = form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('routes.index'))
+        else:
+            flash('Login Unsuccessful, Please check email and password', 'danger')
+    return render_template('login.html', title='Login', form=form)
 
 
     
