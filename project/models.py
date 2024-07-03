@@ -6,11 +6,18 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(64), unique = True, nullable = False)
     email = db.Column(db.String(120), unique = True, nullable = False)
-    password_hash = db.Column(db.String(128), nullable = False)
+    password_hash = db.Column(db.String(256), nullable = False)
     created_at = db.Column(db.DateTime, default = datetime.now)
+    comments = db.relationship('Comment', backref='author', lazy=True)
     favorites = db.relationship('Favorite', backref='user', lazy=True)
-    comments = db.relationship('Comment', backref='user', lazy=True)
-    friends = db.relationship('Friend', backref='user', lazy=True)
+    friends = db.relationship('Friend', 
+                              foreign_keys='[Friend.user_id]', 
+                              backref='user', 
+                              lazy=True)
+    friend_of = db.relationship('Friend', 
+                                foreign_keys='[Friend.friend_id]', 
+                                backref='friend', 
+                                lazy=True)
     profile = db.relationship('UserProfile', uselist=False, backref='user')
     
     def __repr__(self):

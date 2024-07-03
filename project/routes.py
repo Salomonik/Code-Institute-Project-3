@@ -6,6 +6,7 @@ from project.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
+from datetime import datetime 
 
 routes = Blueprint('routes', __name__)
 
@@ -196,12 +197,16 @@ def register():
         return redirect(url_for('routes.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data)
-        user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created!','success')
-        return redirect(url_for('routes.login'))
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is None:
+            hashed_password = generate_password_hash(form.password.data)
+            user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
+            db.session.add(user)
+            db.session.commit()
+            flash('Your account has been created! You can now log in.', 'success')
+            return redirect(url_for('routes.login'))
+        else:
+            flash('Email address already exists.', 'danger')
     return render_template('register.html', title='Register', form=form)
 
 @routes.route('/login', methods = ['GET','POST'])
