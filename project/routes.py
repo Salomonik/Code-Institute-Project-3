@@ -1,9 +1,9 @@
-import os
-import requests
-from datetime import datetime
-from flask import render_template, request, jsonify, Blueprint
-from . import db
-from .models import Game
+from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash
+from project import db
+from project.forms import RegistrationForm, LoginForm
+from project.models import User
+from flask_login import login_user, current_user, logout_user, login_required
+from werkzeug.security import generate_password_hash, check_password_hash
 
 routes = Blueprint('routes', __name__)
 
