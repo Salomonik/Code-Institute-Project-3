@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, render_template, requests, jsonify, url_for, redirect, flash
+from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash
 from project import db
 from project.forms import RegistrationForm, LoginForm
 from project.models import User
@@ -18,7 +18,7 @@ def get_igdb_access_token(client_id, client_secret):
         'client_secret': client_secret,
         'grant_type': 'client_credentials'
     }
-    response = requests.post(url, data=payload)
+    response = request.post(url, data=payload)
     
     # Debugging: Print the request details
     print("Request URL:", url)
