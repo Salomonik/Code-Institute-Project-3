@@ -2,7 +2,7 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col">  <h2>{{ user.username }}</h2>
+		<div class="col s12 m6">  <h2>{{ user.username }}</h2>
 			<form method="POST" enctype="multipart/form-data">
 				{{ form.hidden_tag() }}
 				<div class="form-group">
@@ -24,6 +24,18 @@
 					{{ form.submit(class="btn btn-primary") }}
 				</div>
 			</form></div>
-		<div class="col"></div>
+		<div class="col s12 m6"> <form method="POST" enctype="multipart/form-data">
+			{{ form.hidden_tag() }}
+			<div class="file-field input-field">
+				<div class="btn">
+					<span>File</span>
+					{{ form.avatar }}
+				</div>
+				<div class="file-path-wrapper">
+					<input class="file-path validate" type="text">
+				</div>
+			</div>
+			<button type="submit" class="btn waves-effect waves-light">{{ form.submit }}</button>
+		</form></div>
 	</div>
 {% endblock %}

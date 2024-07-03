@@ -30,6 +30,7 @@ class Game(db.Model):
     release_date = db.Column(db.Date)
     cover_url = db.Column(db.String(256))
     created_at = db.Column(db.DateTime, default = datetime.now)
+    favorites = db.relationship('Favorite', backref='game', lazy=True)
     
     def __repr__(self):
         return f'<Game {self.name}>'
@@ -39,8 +40,8 @@ class Favorite(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable = False)
     created_at = db.Column(db.DateTime, default = datetime.now)
-    user = db.relationship('User', backref=db.backref('favorites', lazy=True))
-    game = db.relationship('Game', backref=db.backref('favorites', lazy=True))
+    user = db.relationship('User', backref=db.backref('user_favorites', lazy=True))
+    game = db.relationship('Game', backref=db.backref('game_favorites', lazy=True))
     
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key = True)
