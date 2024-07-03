@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash
+import os
+from flask import Blueprint, render_template, requests, jsonify, url_for, redirect, flash
 from project import db
 from project.forms import RegistrationForm, LoginForm
 from project.models import User
