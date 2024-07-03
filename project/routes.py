@@ -2,11 +2,13 @@ import os
 from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash, current_app
 from project import db
 from project.forms import RegistrationForm, LoginForm
-from project.models import User
+from project.models import User, Game, Favorite, Comment, Like, Friend, GameGenre, GameGenreAssociation, UserProfile
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
-from datetime import datetime 
+from datetime import datetime
+from sqlalchemy.exc import IntegrityError
+
 
 routes = Blueprint('routes', __name__)
 
@@ -190,7 +192,6 @@ def suggest_games():
         print("Error fetching game suggestions:", e)
         return jsonify([])
 
-
 @routes.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -201,10 +202,14 @@ def register():
         if user is None:
             hashed_password = generate_password_hash(form.password.data)
             user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
-            db.session.add(user)
-            db.session.commit()
-            flash('Your account has been created! You can now log in.', 'success')
-            return redirect(url_for('routes.login'))
+            try:
+                db.session.add(user)
+                db.session.commit()
+                flash('Your account has been created! You can now log in.', 'success')
+                return redirect(url_for('routes.login'))
+            except IntegrityError:
+                db.session.rollback()
+                flash('Email address already exists.', 'danger')
         else:
             flash('Email address already exists.', 'danger')
     return render_template('register.html', title='Register', form=form)
@@ -216,20 +221,18 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password_hash, form. password.data):
-            login_user(user, remember = form.remember.data)
+        if user and check_password_hash(user.password_hash, form.password.data):
+            login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('routes.index'))
         else:
-            flash('Login Unsuccessful, Please check email and password', 'danger')
+            flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
 @routes.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('routes.index'))
-    
-
 
 # Definiowanie filtra dateformat
 @routes.app_template_filter('dateformat')
