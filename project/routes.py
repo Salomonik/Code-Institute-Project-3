@@ -256,6 +256,24 @@ def profile():
     return render_template('profile.html', title='Profile', form=form, user=current_user)
 
 
+
+@routes.route('/add_to_favorites', methods=['POST'])
+@login_required
+def add_to_favorites():
+    game_id = request.form.get('game_id')
+    if game_id:
+        favorite = Favorite(user_id=current_user.id, game_id=game_id)
+        db.session.add(favorite)
+        try:
+            db.session.commit()
+            flash('Game added to favorites!', 'success')
+        except IntegrityError:
+            db.session.rollback()
+            flash('This game is already in your favorites.', 'danger')
+    return redirect(url_for('routes.get_games'))
+
+
+
 # Definiowanie filtra dateformat
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):

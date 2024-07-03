@@ -39,6 +39,8 @@ class Favorite(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable = False)
     created_at = db.Column(db.DateTime, default = datetime.now)
+    user = db.relationship('User', backref=db.backref('favorites', lazy=True))
+    game = db.relationship('Game', backref=db.backref('favorites', lazy=True))
     
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key = True)
