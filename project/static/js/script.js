@@ -32,7 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     var elems = document.querySelectorAll('.sidenav');
-    M.Sidenav.init(elems);
+    M.Sidenav.init(elems, {
+        edge: 'right' // Ustawienie bocznego menu po prawej stronie
+    });
 
 
 });
