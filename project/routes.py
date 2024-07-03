@@ -1,7 +1,8 @@
 import os
 from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash, current_app
+from werkzeug.utils import secure_filename
 from project import db
-from project.forms import RegistrationForm, LoginForm
+from project.forms import RegistrationForm, LoginForm, UpdateProfileForm
 from project.models import User, Game, Favorite, Comment, Like, Friend, GameGenre, GameGenreAssociation, UserProfile
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -239,7 +240,7 @@ def logout():
 @routes.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    form = UpdateAvatarForm()
+    form = UpdateProfileForm()
     if form.validate_on_submit():
         if form.avatar.data:
             avatar_filename = secure_filename(form.avatar.data.filename)

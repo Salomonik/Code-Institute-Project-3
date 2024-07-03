@@ -152,3 +152,20 @@ h1,h2,h3 {
 }
 
 
+/* Avatar */
+
+
+.nav-profile-picture {
+    max-width: 50px; /* Maksymalna szerokość kontenera na obrazek w nawigacji */
+    display: flex !important;
+    align-items: center !important; /* Wyrównanie w pionie */
+    justify-items: center !important; /* Wyrównanie w poziomie */
+   
+}
+
+.nav-profile-picture img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%; /* Zaokrąglenie rogów obrazka */
+}
+

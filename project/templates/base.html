@@ -19,16 +19,26 @@
 					<li><a href="{{ url_for('routes.index') }}">Home</a></li>
 					{% if current_user.is_authenticated %}
 					<li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
-					<li><a href="{{ url_for('routes.logout') }}"><img src="" alt=""></a></li>
+					<li><a class="avatar-img" href="{{ url_for('routes.profile') }}">
+						<div class="nav-profile-picture">
+							{% if current_user.profile and current_user.profile.avatar_url %}
+							<img src="{{ current_user.profile.avatar_url }}" alt="Profile Picture" class="responsive-img">
+							{% else %}
+							<img src="{{ url_for('static', filename='profile_pics/default-avatar.jpeg') }}" alt="Default Profile Picture" class="responsive-img">
+							{% endif %}
+						</div>
+						</a>
+					</li>
 					{% else %}
 					<li><a href="{{ url_for('routes.login') }}">Login</a></li>
 					<li><a href="{{ url_for('routes.register') }}">Register</a></li>
 					{% endif %}
 				</ul>
-				<a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
+				<a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i
+						class="material-icons">menu</i></a>
 			</div>
 		</nav>
-		
+
 		<ul class="sidenav right-aligned" id="mobile-demo">
 			<li><a href="{{ url_for('routes.index') }}">Home</a></li>
 			{% if current_user.is_authenticated %}
@@ -38,8 +48,8 @@
 			<li><a href="{{ url_for('routes.register') }}">Register</a></li>
 			{% endif %}
 		</ul>
-		
-		
+
+
 	</header>
 	<main>
 		<form action="/get_games" method="get" class="col s12">
