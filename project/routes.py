@@ -1,10 +1,11 @@
 import os
-from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash
+from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash, current_app
 from project import db
 from project.forms import RegistrationForm, LoginForm
 from project.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
+import requests
 
 routes = Blueprint('routes', __name__)
 
@@ -25,10 +26,20 @@ def get_igdb_access_token(client_id, client_secret):
 @routes.route('/')
 def index():
     try:
+        # Pobierz client_id i client_secret z konfiguracji aplikacji
+        
+        client_id = current_app.config['TWITCH_CLIENT_ID']
+        client_secret = current_app.config['TWITCH_CLIENT_SECRET']
+        
+        # Uzyskaj access_token i przechowaj go w konfiguracji aplikacji
+        
+        access_token = get_igdb_access_token(client_id, client_secret)
+        current_app.config['ACCESS_TOKEN'] = access_token
+        
         # Fetch popular games
         url = 'https://api.igdb.com/v4/games'
         headers = {
-            'Client-ID': CLIENT_ID,
+            'Client-ID': client_id,
             'Authorization': f'Bearer {access_token}',
             'Accept': 'application/json'
         }
@@ -86,8 +97,8 @@ def get_games():
         platform = request.args.get('platform')
         url = 'https://api.igdb.com/v4/games'
         headers = {
-            'Client-ID': CLIENT_ID,
-            'Authorization': f'Bearer {access_token}',
+            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],  # Używaj client_id z konfiguracji aplikacji
+            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',  # Użyj access_token z current_app.config
             'Accept': 'application/json'
         }
         data = (
@@ -116,8 +127,8 @@ def game_details(game_id):
     try:
         url = 'https://api.igdb.com/v4/games'
         headers = {
-            'Client-ID': CLIENT_ID,
-            'Authorization': f'Bearer {access_token}',
+            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],  # Używaj client_id z konfiguracji aplikacji
+            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',  # Użyj access_token z current_app.config
             'Accept': 'application/json'
         }
         data = (
@@ -144,8 +155,8 @@ def suggest_games():
         query = request.args.get('query')
         url = 'https://api.igdb.com/v4/games'
         headers = {
-            'Client-ID': CLIENT_ID,
-            'Authorization': f'Bearer {access_token}',
+            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],  # Używaj client_id z konfiguracji aplikacji
+            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',  # Użyj access_token z current_app.config
             'Accept': 'application/json'
         }
         data = (
@@ -184,7 +195,7 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('routes.index'))
     form = RegistrationForm()
-    if form.validate_on_dubmit():
+    if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data)
         user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
         db.session.add(user)
