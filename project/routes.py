@@ -188,6 +188,25 @@ def suggest_games():
         print("Error fetching game suggestions:", e)
         return jsonify([])
 
+
+@routes.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('routes.index'))
+    form = RegistrationForm()
+    if form.validate_on_dubmit():
+        hashed_password = generate_password_hash(form.password.data)
+        user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created!','success')
+        return redirect(url_for('routes.login'))
+    return render_template('register.html', title='Register', form=form)
+
+
+    
+
+
 # Definiowanie filtra dateformat
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
