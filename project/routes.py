@@ -243,17 +243,16 @@ def profile():
     form = UpdateProfileForm()
     if form.validate_on_submit():
         if form.avatar.data:
-            avatar_filename = secure_filename(form.avatar.data.filename)
-            avatar_path = os.path.join(current_app.root_path, 'static/profile_pics', avatar_filename)
-            form.avatar.data.save(avatar_path)
-            if current_user.profile is None:
-                current_user.profile = UserProfile(user_id=current_user.id, avatar_url=url_for('static', filename='profile_pics/' + avatar_filename))
-            else:
-                current_user.profile.avatar_url = url_for('static', filename='profile_pics/' + avatar_filename)
+            avatar_file = form.avatar.data
+            filename = secure_filename(avatar_file.filename)
+            avatar_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            avatar_file.save(avatar_path)
+            current_user.profile.avatar_url = url_for('static', filename='avatars/' + filename)
             db.session.commit()
-            flash('Your profile picture has been updated!', 'success')
-            return redirect(url_for('routes.profile'))
-    return render_template('profile.html', title='Profile', form=form, user=current_user)
+            flash('Your profile has been updated!', 'success')
+        return redirect(url_for('routes.profile'))
+    return render_template('profile.html', form=form)
+
 
 
 
