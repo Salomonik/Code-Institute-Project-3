@@ -1,12 +1,17 @@
 from . import db
 from datetime import datetime
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(64), unique = True, nullable = False)
     email = db.Column(db.String(120), unique = True, nullable = False)
     password_hash = db.Column(db.String(128), nullable = False)
     created_at = db.Column(db.DateTime, default = datetime.now)
+    favorites = db.relationship('Favorite', backref='user', lazy=True)
+    comments = db.relationship('Comment', backref='user', lazy=True)
+    friends = db.relationship('Friend', backref='user', lazy=True)
+    profile = db.relationship('UserProfile', uselist=False, backref='user')
     
     def __repr__(self):
         return f'<User {self.username}>'
@@ -20,7 +25,7 @@ class Game(db.Model):
     created_at = db.Column(db.DateTime, default = datetime.now)
     
     def __repr__(self):
-        return f'<Game {self.name}'
+        return f'<Game {self.name}>'
     
 class Favorite(db.Model):
     id = db.Column(db.Integer, primary_key = True)
