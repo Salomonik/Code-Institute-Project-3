@@ -5,6 +5,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{% block title %}Flask IGDB API{% endblock %}</title>
+	
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -21,11 +23,12 @@
 					<li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
 					<li><a class="avatar-img" href="{{ url_for('routes.profile') }}">
 						<div class="nav-profile-picture">
-							{% if current_user.profile and current_user.profile.avatar_url %}
+							{% if current_user.profile and current_user.profile.avatar_url and current_user.profile.avatar_url.strip() %}
 							<img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}" alt="Profile Picture" class="responsive-img">
 							{% else %}
-							<img src="{{ url_for('static', filename='profile_pics/default-avatar.jpeg') }}" alt="Default Profile Picture" class="responsive-img">
+							<img src="{{ url_for('static', filename='profile_pics/default-avatar.png') }}" alt="Default Profile Picture" class="responsive-img">
 							{% endif %}
+							
 						</div>
 						</a>
 					</li>
@@ -38,6 +41,8 @@
 						class="material-icons">menu</i></a>
 			</div>
 		</nav>
+
+
 
 		<ul class="sidenav right-aligned" id="mobile-demo">
 			<li><a href="{{ url_for('routes.index') }}">Home</a></li>
@@ -68,6 +73,7 @@
 	<footer>
 		<p>&copy; 2024 Flask IGDB API Integration</p>
 	</footer>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

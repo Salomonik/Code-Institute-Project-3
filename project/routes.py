@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash, current_app, Flask, app
+from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash, current_app
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from project import db
@@ -9,10 +9,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
-from werkzeug.utils import secure_filename
-
-
-
 
 routes = Blueprint('routes', __name__)
 
@@ -30,22 +26,22 @@ def get_igdb_access_token(client_id, client_secret):
     response.raise_for_status()
     return response.json()['access_token']
 
-
-
 @routes.route('/')
 def index():
     try:
-        # Pobierz client_id i client_secret z konfiguracji aplikacji
-        
         client_id = current_app.config['TWITCH_CLIENT_ID']
         client_secret = current_app.config['TWITCH_CLIENT_SECRET']
         
-        # Uzyskaj access_token i przechowaj go w konfiguracji aplikacji
-        
+        # Debugging prints
+        print("Client ID:", client_id)
+        print("Client Secret:", client_secret)
+
         access_token = get_igdb_access_token(client_id, client_secret)
         current_app.config['ACCESS_TOKEN'] = access_token
         
-        # Fetch popular games
+        # Debugging prints
+        print("Access Token:", access_token)
+        
         url = 'https://api.igdb.com/v4/games'
         headers = {
             'Client-ID': client_id,
@@ -59,37 +55,23 @@ def index():
             'limit 12;'
         )
         
-        # Debugging: Print the request details
-        print("Request URL:", url)
-        print("Request Headers:", headers)
-        print("Request Data:", data)
-        
         response = requests.post(url, headers=headers, data=data)
-        
-        # Debugging: Print the response details
-        print("Response status code:", response.status_code)
-        print("Response text:", response.text)
-        
         response.raise_for_status()
         popular_games = response.json()
         
-        # Debugging: Print the popular games data
-        print("Popular games:", popular_games)
-        
         modify_images(popular_games)
-         
+        
         return render_template('index.html', popular_games=popular_games)
     except Exception as e:
         print("Error fetching popular games:", e)
         return render_template('error.html', error=str(e))
 
 def modify_image_url(url, size):
-    # Znajdź nazwę rozdzielczości w URL i zamień ją na nową rozdzielczość
     sizes = ["t_thumb", "t_cover_small", "t_logo_med", "t_screenshot_med", "t_cover_big", "t_screenshot_big", "t_screenshot_huge", "t_720p", "t_1080p"]
     for s in sizes:
         if s in url:
             return url.replace(s, size)
-    return url  # Jeśli nie znaleziono żadnej z powyższych nazw, zwróć URL bez zmian
+    return url
 
 def modify_images(game_details):
     for game in game_details:
@@ -102,12 +84,15 @@ def modify_images(game_details):
 @routes.route('/get_games', methods=['GET'])
 def get_games():
     try:
+        # Debugging print
+        print("Access Token:", current_app.config.get('ACCESS_TOKEN'))
+        
         game_name = request.args.get('game_name')
         platform = request.args.get('platform')
         url = 'https://api.igdb.com/v4/games'
         headers = {
-            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],  # Używaj client_id z konfiguracji aplikacji
-            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',  # Użyj access_token z current_app.config
+            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
+            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
             'Accept': 'application/json'
         }
         data = (
@@ -136,8 +121,8 @@ def game_details(game_id):
     try:
         url = 'https://api.igdb.com/v4/games'
         headers = {
-            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],  # Używaj client_id z konfiguracji aplikacji
-            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',  # Użyj access_token z current_app.config
+            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
+            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
             'Accept': 'application/json'
         }
         data = (
@@ -164,8 +149,8 @@ def suggest_games():
         query = request.args.get('query')
         url = 'https://api.igdb.com/v4/games'
         headers = {
-            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],  # Używaj client_id z konfiguracji aplikacji
-            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',  # Użyj access_token z current_app.config
+            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
+            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
             'Accept': 'application/json'
         }
         data = (
@@ -174,24 +159,9 @@ def suggest_games():
             'limit 10;'
         )
         
-        # Debugging: Print the request details
-        print("Request URL:", url)
-        print("Request Headers:", headers)
-        print("Request Data:", data)
-        
         response = requests.post(url, headers=headers, data=data)
-        
-        # Debugging: Print the response details
-        print("Response status code:", response.status_code)
-        print("Response text:", response.text)
-        
         response.raise_for_status()
         suggestions = response.json()
-        
-        # Debugging: Print the suggestions data
-        print("Suggestions:", suggestions)
-        
-        modify_images(suggestions)
         
         return jsonify(suggestions)
     except Exception as e:
@@ -220,7 +190,7 @@ def register():
             flash('Email address already exists.', 'danger')
     return render_template('register.html', title='Register', form=form)
 
-@routes.route('/login', methods = ['GET','POST'])
+@routes.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('routes.index'))
@@ -240,24 +210,16 @@ def logout():
     logout_user()
     return redirect(url_for('routes.index'))
 
-
-
 @routes.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     form = UpdateProfileForm()
     avatars = os.listdir(os.path.join(current_app.static_folder, 'profile_pics'))
 
-    if request.method == 'POST':
-        print("Form submitted")  # Debugging
-
     if form.validate_on_submit():
-        print("Form validated")  # Debugging
         avatar = form.selected_avatar.data
-        print("Selected avatar:", avatar)  # Debugging
         if avatar:
-            avatar_url = 'profile_pics/' + avatar  # Use forward slash
-            print("Setting avatar URL:", avatar_url)  # Debugging
+            avatar_url = 'profile_pics/' + avatar
             if current_user.profile:
                 current_user.profile.avatar_url = avatar_url
             else:
@@ -266,63 +228,85 @@ def profile():
             db.session.commit()
             flash('Your profile has been updated!', 'success')
             return redirect(url_for('routes.profile'))
-        else:
-            print("No avatar selected")  # Debugging
-    else:
-        if request.method == 'POST':
-            print("Form not validated. Errors:", form.errors)  # Debugging
-
+    
     num_favorites = len(current_user.favorites) if current_user.favorites else 0
     num_comments = len(current_user.comments) if current_user.comments else 0
 
-    # Debugging: Print the avatar URL and check if the file exists
     if current_user.profile and current_user.profile.avatar_url:
         avatar_path = os.path.join(current_app.static_folder, current_user.profile.avatar_url.replace('/', os.sep))
-        print("Avatar URL:", url_for('static', filename=current_user.profile.avatar_url))
-        print("Avatar Path Exists:", os.path.exists(avatar_path))
 
     return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars)
 
 
+def fetch_game_from_igdb(game_id):
+    url = 'https://api.igdb.com/v4/games'
+    headers = {
+        'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
+        'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
+        'Accept': 'application/json'
+    }
+    data = f'fields id, name, cover.url, first_release_date, genres.name, platforms.name, summary; where id = {game_id};'
+    response = requests.post(url, headers=headers, data=data)
+    response.raise_for_status()
+    games = response.json()
+    if games:
+        return games[0]
+    else:
+        return None
 
-
-
-
-
-
+def add_game_to_db(game_details):
+    game = Game(
+        id=game_details['id'],
+        name=game_details['name'],
+        description=game_details.get('summary', ''),
+        release_date=datetime.utcfromtimestamp(game_details['first_release_date']).date() if 'first_release_date' in game_details else None,
+        cover_url=game_details['cover']['url'] if 'cover' in game_details and 'url' in game_details['cover'] else None
+    )
+    db.session.add(game)
+    db.session.commit()
+    return game
 
 @routes.route('/add_to_favorites', methods=['POST'])
 @login_required
 def add_to_favorites():
-    data = request.get_json()
-    game_id = data.get('game_id')
-    print(f"Received game_id: {game_id}")  # Debugging
+    try:
+        print("Received request to add to favorites")  # Debugging
+        data = request.get_json()
+        print("Request data:", data)  # Debugging
+        if not data or 'game_id' not in data:
+            print("Missing game_id in request data")  # Debugging
+            return jsonify({'error': 'Game ID is required!'}), 400
 
-    if game_id:
-        # Check if the favorite already exists
+        game_id = int(data['game_id'])
+        print("Game ID:", game_id)  # Debugging
+
+        # Verify the existence of the game
+        game = Game.query.get(game_id)
+        if not game:
+            print("Game not found in local DB, fetching from IGDB")  # Debugging
+            game_details = fetch_game_from_igdb(game_id)
+            if not game_details:
+                print("Game not found in IGDB")  # Debugging
+                return jsonify({'error': 'Game not found'}), 404
+            print("Game fetched from IGDB, adding to local DB")  # Debugging
+            game = add_game_to_db(game_details)
+            print(f"Game {game.name} added to local DB")  # Debugging
+
         existing_favorite = Favorite.query.filter_by(user_id=current_user.id, game_id=game_id).first()
         if existing_favorite:
-            print("This game is already in your favorites.")  # Debugging
-            return jsonify({'status': 'error', 'message': 'This game is already in your favorites.'})
-        
+            print("Game is already in favorites")  # Debugging
+            return jsonify({'message': 'Game is already in your favorites!'}), 200
+
         favorite = Favorite(user_id=current_user.id, game_id=game_id)
         db.session.add(favorite)
-        try:
-            db.session.commit()
-            print("Game added to favorites!")  # Debugging
-            return jsonify({'status': 'success', 'message': 'Game added to favorites!'})
-        except IntegrityError as e:
-            db.session.rollback()
-            print(f"Database error: {e}")  # Debugging
-            return jsonify({'status': 'error', 'message': 'An error occurred. Please try again.'})
-    else:
-        print("Invalid game ID.")  # Debugging
-        return jsonify({'status': 'error', 'message': 'Invalid game ID.'})
+        db.session.commit()
+        print("Game added to favorites")  # Debugging
+        return jsonify({'message': 'Game added to favorites!'}), 200
 
-
-# Definiowanie filtra dateformat
+    except Exception as e:
+        db.session.rollback()
+        print("Error adding game to favorites:", str(e))  # Debugging
+        return jsonify({'error': 'Error adding game to favorites: ' + str(e)}), 500
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
     return datetime.fromtimestamp(value).strftime(format)
-
-

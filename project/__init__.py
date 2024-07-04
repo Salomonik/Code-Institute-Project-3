@@ -3,14 +3,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from config import Config
 from flask_wtf import CSRFProtect
+from config import Config
 
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
 login.login_view = 'routes.login'
-
 csrf = CSRFProtect()
 
 def create_app():
@@ -20,15 +19,17 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
+    csrf.init_app(app)
 
-    # Importowanie blueprintu
-    from .routes import routes
-    app.register_blueprint(routes)
+    # Importing and registering the blueprint
+    from .routes import routes as routes_blueprint
+    app.register_blueprint(routes_blueprint)
 
+    # Configuring Twitch API credentials
     app.config['TWITCH_CLIENT_ID'] = os.environ.get('TWITCH_CLIENT_ID')
     app.config['TWITCH_CLIENT_SECRET'] = os.environ.get('TWITCH_CLIENT_SECRET')
 
-    # Importowanie modelu User tutaj, aby uniknąć cyklicznych zależności
+    # Importing the User model to avoid circular dependencies
     from .models import User
 
     @login.user_loader
