@@ -182,3 +182,16 @@ h1,h2,h3 {
     right: 10px; /* Adjust as necessary */
     z-index: 10; /* Ensure it appears above the image */
 }
+
+/* Game Cards in games.html" */
+.game-card {
+    position: relative;
+    display: block; /* Make sure the container fits the image */
+}
+
+.game-card-btn {
+    position: absolute;
+    top: 20px; /* Adjust as necessary */
+    right: 10px; /* Adjust as necessary */
+    z-index: 10; /* Ensure it appears above the image */   
+}
