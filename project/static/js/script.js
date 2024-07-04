@@ -61,39 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.querySelectorAll('.btn-add-favorite').forEach(button => {
-        button.addEventListener('click', function() {
-            const gameId = this.getAttribute('data-game-id');
-            document.getElementById('game_id').value = gameId;
-
-            const formData = new FormData(document.getElementById('add-to-favorites-form'));
-
-            fetch('{{ url_for('routes.add_to_favorites') }}', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("Server response:", data);  // Debugging
-                if (data.status === 'success') {
-                    M.toast({html: data.message, classes: 'green'});
-                } else {
-                    M.toast({html: data.message, classes: 'red'});
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                M.toast({html: 'An error occurred. Please try again.', classes: 'red'});
-            });
-        });
-    });
+    
 
 });

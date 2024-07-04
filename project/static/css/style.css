@@ -23,10 +23,10 @@ body {
 }
 
 :root {
-    --primary-color: #ff6f61;
-    --secondary-color: #655650;
-    --background-color: #271D2A;
-    --text-color: #CCC4AA;
+    --primary-color: #F1DCBC;
+    --secondary-color: #2C6169;
+    --background-color: #19242F;
+    --text-color: white;
     --header-font: 'Helvetica Neue', sans-serif;
     --body-font: 'Arial', sans-serif;
     --max-width: 1200px;
@@ -50,15 +50,14 @@ body {
     background: var(--background-color);
 }
 
-h1, h2, h3, h4, h5, h6, span {
+h1, h2, h3, h4, h5, h6, span,a {
     margin-bottom: 1rem;
     font-family: var(--header-font);
+    color: var(--text-color);
+}
+input[id], input#email,input#username, input#favorite, input#comment.custom-input {
     color: white;
 }
-.custom-input {
-    color: #ffffff; /* Change to your desired color */
-}
-
 p {
     margin-bottom: 1rem;
     color: var(--text-color);
@@ -93,7 +92,9 @@ button {
 button:hover {
     background-color: var(--secondary-color);
 }
-
+nav {
+    background-color: var(--secondary-color);
+}
 
 
 main {
