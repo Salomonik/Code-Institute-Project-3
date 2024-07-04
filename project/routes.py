@@ -245,21 +245,22 @@ def logout():
 @login_required
 def profile():
     form = UpdateProfileForm()
+
+    avatars = os.listdir(os.path.join(current_app.static_folder, 'profile_pics'))
+
     if form.validate_on_submit():
-        if 'avatar' in request.files:
-            file = request.files['avatar']
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                file.save(filepath)
-                if current_user.profile:
-                    current_user.profile.avatar_url = filepath
-                else:
-                    profile = UserProfile(user_id=current_user.id, avatar_url=filepath)
-                    db.session.add(profile)
-                db.session.commit()
-                flash('Your profile has been updated!', 'success')
-                return redirect(url_for('routes.profile'))
+        avatar = request.form.get('selected_avatar')
+        if avatar:
+            avatar_url = os.path.join('profile_pics', avatar)
+            if current_user.profile:
+                current_user.profile.avatar_url = avatar_url
+            else:
+                profile = UserProfile(user_id=current_user.id, avatar_url=avatar_url)
+                db.session.add(profile)
+            db.session.commit()
+            flash('Your profile has been updated!', 'success')
+            return redirect(url_for('routes.profile'))     
+
     # Initialize num_favorites
     num_favorites = 0
     
@@ -271,7 +272,7 @@ def profile():
     
     if current_user.comments:
         num_comments = len(current_user.comments)
-    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments)
+    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments,avatars=avatars)
 
 
 
