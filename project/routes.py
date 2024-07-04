@@ -242,16 +242,22 @@ def logout():
 def profile():
     form = UpdateProfileForm()
     if form.validate_on_submit():
-        if form.avatar.data:
-            avatar_file = form.avatar.data
-            filename = secure_filename(avatar_file.filename)
-            avatar_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-            avatar_file.save(avatar_path)
-            current_user.profile.avatar_url = url_for('static', filename='avatars/' + filename)
-            db.session.commit()
-            flash('Your profile has been updated!', 'success')
-        return redirect(url_for('routes.profile'))
-    return render_template('profile.html', form=form)
+        if 'avatar' in request.files:
+            file = request.files['avatar']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                if current_user.profile:
+                    current_user.profile.avatar_url = filepath
+                else:
+                    profile = UserProfile(user_id=current_user.id, avatar_url=filepath)
+                    db.session.add(profile)
+                db.session.commit()
+                flash('Your profile has been updated!', 'success')
+                return redirect(url_for('routes.profile'))
+    return render_template('profile.html', form=form, user=current_user)
+
 
 
 
