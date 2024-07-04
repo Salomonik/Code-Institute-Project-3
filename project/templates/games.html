@@ -12,7 +12,7 @@
             <div class="card-action">
                 <form action="{{ url_for('routes.add_to_favorites') }}" method="post">
                     <input type="hidden" name="game_id" value="{{ game.id }}">
-                    <button type="submit" class="btn-floating btn-large waves-effect waves-light red game-card-btn"><i class="material-icons">favorite</i></button>
+                    <button type="submit" class="btn-floating btn-large waves-effect waves-light red game-card-btn btn-add-favorite"><i class="material-icons">favorite</i></button>
                 </form>
             </div>
             <div class="card-image waves-effect waves-block waves-light">

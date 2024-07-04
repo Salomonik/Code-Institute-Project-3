@@ -7,8 +7,15 @@
 <div class="row">
     {% for game in popular_games %}
     <div class="col s12 m4 l3">
-        <div class="card fixed-size">
+        <div class="card fixed-size game-card">
+            <div class="card-action">
+                <form action="{{ url_for('routes.add_to_favorites') }}" method="post">
+                    <input type="hidden" name="game_id" value="{{ game.id }}">
+                    <button type="submit" class="btn-floating btn-large waves-effect waves-light red game-card-btn btn-add-favorite game-card-btn"><i class="material-icons">favorite</i></button>
+                </form>
+            </div>
             <div class="card-image waves-effect waves-block waves-light">
+                
                 {% if game.cover %}
                 <a href="{{ url_for('routes.game_details', game_id=game.id) }}" target="_blank"><img class="activator" src="{{ game.cover.url }}"></a>
 				{% else %}

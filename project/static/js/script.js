@@ -61,24 +61,28 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-});
-
-
-
-    // add to favorites script
     document.querySelectorAll('.btn-add-favorite').forEach(button => {
         button.addEventListener('click', function() {
             const gameId = this.getAttribute('data-game-id');
+            document.getElementById('game_id').value = gameId;
+
+            const formData = new FormData(document.getElementById('add-to-favorites-form'));
+
             fetch('{{ url_for('routes.add_to_favorites') }}', {
                 method: 'POST',
+                body: formData,
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token() }}'  // Include CSRF token if necessary
-                },
-                body: JSON.stringify({ game_id: gameId })
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log("Server response:", data);  // Debugging
                 if (data.status === 'success') {
                     M.toast({html: data.message, classes: 'green'});
                 } else {
@@ -91,3 +95,5 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
+
+});

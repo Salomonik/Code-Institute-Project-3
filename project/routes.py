@@ -1,10 +1,10 @@
 import os
-from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash, current_app
+from flask import Blueprint, render_template, request, jsonify, url_for, redirect, flash, current_app, Flask, app
+from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from project import db
 from project.forms import RegistrationForm, LoginForm, UpdateProfileForm
 from project.models import User, Game, Favorite, Comment, Like, Friend, GameGenre, GameGenreAssociation, UserProfile
-from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from datetime import datetime
@@ -19,7 +19,6 @@ routes = Blueprint('routes', __name__)
 CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
 
-
 def get_igdb_access_token(client_id, client_secret):
     url = 'https://id.twitch.tv/oauth2/token'
     payload = {
@@ -30,6 +29,8 @@ def get_igdb_access_token(client_id, client_secret):
     response = requests.post(url, data=payload)
     response.raise_for_status()
     return response.json()['access_token']
+
+
 
 @routes.route('/')
 def index():
@@ -293,21 +294,35 @@ def profile():
 @routes.route('/add_to_favorites', methods=['POST'])
 @login_required
 def add_to_favorites():
-    game_id = request.form.get('game_id')
+    data = request.get_json()
+    game_id = data.get('game_id')
+    print(f"Received game_id: {game_id}")  # Debugging
+
     if game_id:
+        # Check if the favorite already exists
+        existing_favorite = Favorite.query.filter_by(user_id=current_user.id, game_id=game_id).first()
+        if existing_favorite:
+            print("This game is already in your favorites.")  # Debugging
+            return jsonify({'status': 'error', 'message': 'This game is already in your favorites.'})
+        
         favorite = Favorite(user_id=current_user.id, game_id=game_id)
         db.session.add(favorite)
         try:
             db.session.commit()
+            print("Game added to favorites!")  # Debugging
             return jsonify({'status': 'success', 'message': 'Game added to favorites!'})
-        except IntegrityError:
+        except IntegrityError as e:
             db.session.rollback()
-            return jsonify({'status': 'error', 'message': 'This game is already in your favorites.'})
-    return jsonify({'status': 'error', 'message': 'Invalid game ID.'})
-
+            print(f"Database error: {e}")  # Debugging
+            return jsonify({'status': 'error', 'message': 'An error occurred. Please try again.'})
+    else:
+        print("Invalid game ID.")  # Debugging
+        return jsonify({'status': 'error', 'message': 'Invalid game ID.'})
 
 
 # Definiowanie filtra dateformat
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
     return datetime.fromtimestamp(value).strftime(format)
+
+

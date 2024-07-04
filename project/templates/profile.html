@@ -22,7 +22,7 @@
             </div>
             <div class="input-field">
                 <label for="comment">Number of Comments</label>
-                <input type="text" id="comment" value="{{ num_comments }}" disabled>
+                <input type="text" id="comment" value="{{ num_comments }}"  class="custom-input" disabled>
             </div>
 			<form method="POST" action="{{ url_for('routes.profile') }}">
 				{{ form.hidden_tag() }}
