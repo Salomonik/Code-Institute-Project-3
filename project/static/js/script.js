@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var csrfToken = csrfTokenMeta.getAttribute('content');
                 console.log('CSRF Token:', csrfToken); // Debugging: CSRF token value
 
-                fetch(addToFavoritesUrl, {
+                fetch(toggleFavoriteUrl, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -88,30 +88,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .then(response => {
                     console.log('Response status:', response.status); // Debugging: Response status
-                    return response.text().then(text => {
-                        console.log('Response text:', text); // Debugging: Response text
-                        return text;
-                    });
+                    return response.json();
                 })
-                .then(text => {
-                    try {
-                        const data = JSON.parse(text);
-                        console.log('Response data:', data); // Debugging: Response data
-                        if (data.error) {
-                            console.error('Error:', data.error); // Debugging: Error message
-                            alert('Error adding game to favorites: ' + data.error);
-                        } else {
-                            console.log('Success:', data.message); // Debugging: Success message
-                            alert('Game added to favorites!');
+                .then(data => {
+                    console.log('Response data:', data); // Debugging: Response data
+                    if (data.error) {
+                        console.error('Error:', data.error); // Debugging: Error message
+                        alert('Error toggling favorite: ' + data.error);
+                    } else {
+                        console.log('Success:', data.message); // Debugging: Success message
+                        var icon = form.querySelector('.material-icons');
+                        if (data.action === 'added') {
+                            icon.textContent = 'favorite';
+                            icon.style.color = 'red';
+                        } else if (data.action === 'removed') {
+                            icon.textContent = 'favorite_border';
+                            icon.style.color = '';
                         }
-                    } catch (error) {
-                        console.error('Error parsing JSON:', error); // Debugging: JSON parsing error
-                        alert('Error adding game to favorites: ' + error.message);
                     }
                 })
                 .catch(error => {
                     console.error('Fetch error:', error); // Debugging: Fetch error
-                    alert('Error adding game to favorites: ' + error);
+                    alert('Error toggling favorite: ' + error);
                 });
             } else {
                 console.error('CSRF token not found'); // Debugging: CSRF token not found
