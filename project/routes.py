@@ -9,12 +9,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
+from werkzeug.utils import secure_filename
+
+
 
 
 routes = Blueprint('routes', __name__)
 
 CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
+
 
 def get_igdb_access_token(client_id, client_secret):
     url = 'https://id.twitch.tv/oauth2/token'
