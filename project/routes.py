@@ -245,13 +245,18 @@ def logout():
 @login_required
 def profile():
     form = UpdateProfileForm()
-
     avatars = os.listdir(os.path.join(current_app.static_folder, 'profile_pics'))
 
+    if request.method == 'POST':
+        print("Form submitted")  # Debugging
+
     if form.validate_on_submit():
-        avatar = request.form.get('selected_avatar')
+        print("Form validated")  # Debugging
+        avatar = form.selected_avatar.data
+        print("Selected avatar:", avatar)  # Debugging
         if avatar:
-            avatar_url = os.path.join('profile_pics', avatar)
+            avatar_url = 'profile_pics/' + avatar  # Use forward slash
+            print("Setting avatar URL:", avatar_url)  # Debugging
             if current_user.profile:
                 current_user.profile.avatar_url = avatar_url
             else:
@@ -259,20 +264,26 @@ def profile():
                 db.session.add(profile)
             db.session.commit()
             flash('Your profile has been updated!', 'success')
-            return redirect(url_for('routes.profile'))     
+            return redirect(url_for('routes.profile'))
+        else:
+            print("No avatar selected")  # Debugging
+    else:
+        if request.method == 'POST':
+            print("Form not validated. Errors:", form.errors)  # Debugging
 
-    # Initialize num_favorites
-    num_favorites = 0
-    
-    # Calculate number of favorites
-    if current_user.favorites:
-        num_favorites = len(current_user.favorites)
-        
-    num_comments = 0
-    
-    if current_user.comments:
-        num_comments = len(current_user.comments)
-    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments,avatars=avatars)
+    num_favorites = len(current_user.favorites) if current_user.favorites else 0
+    num_comments = len(current_user.comments) if current_user.comments else 0
+
+    # Debugging: Print the avatar URL and check if the file exists
+    if current_user.profile and current_user.profile.avatar_url:
+        avatar_path = os.path.join(current_app.static_folder, current_user.profile.avatar_url.replace('/', os.sep))
+        print("Avatar URL:", url_for('static', filename=current_user.profile.avatar_url))
+        print("Avatar Path Exists:", os.path.exists(avatar_path))
+
+    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars)
+
+
+
 
 
 

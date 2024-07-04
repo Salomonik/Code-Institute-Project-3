@@ -39,15 +39,24 @@ document.addEventListener('DOMContentLoaded', function () {
     
     var elems = document.querySelectorAll('.modal');
     M.Modal.init(elems);
-
     document.querySelectorAll('.avatar-option').forEach(function(img) {
         img.addEventListener('click', function() {
+            // Remove the border from all other images
             document.querySelectorAll('.avatar-option').forEach(function(otherImg) {
                 otherImg.style.border = '2px solid transparent';
             });
+
+            // Add a border to the selected image
             img.style.border = '2px solid #000';
+
+            // Get the selected avatar data attribute
             var selectedAvatar = img.getAttribute('data-avatar');
-            document.getElementById('selectedAvatar').value = selectedAvatar;
+
+            // Set the value of the hidden field to the selected avatar
+            document.getElementById('selected_avatar').value = selectedAvatar;
+
+            // Debugging output
+            console.log("Selected avatar:", selectedAvatar);
         });
     });
 

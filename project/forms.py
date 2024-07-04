@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from project.models import User
 
@@ -28,5 +28,5 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
     
 class UpdateProfileForm(FlaskForm):
-    avatar = FileField('Update Profile Picture', validators=[DataRequired()])
+    selected_avatar = HiddenField('Selected Avatar', validators=[DataRequired()])
     submit = SubmitField('Update')
