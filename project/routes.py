@@ -266,7 +266,13 @@ def profile():
     # Calculate number of favorites
     if current_user.favorites:
         num_favorites = len(current_user.favorites)
-    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites)
+        
+    num_comments = 0
+    
+    if current_user.comments:
+        num_comments = len(current_user.comments)
+    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments)
+
 
 
 

@@ -19,16 +19,23 @@
             <input type="email" id="email" value="{{ user.email }}" disabled>
         </div>
 		<div class="input-field">
-            <label for="favorite">Favorites</label>
+            <label for="favorite">Number of Favorites</label>
             <input type="text" id="favorite" value="{{ num_favorites }}" disabled>
+        </div>
+		<div class="input-field">
+            <label for="comment">Number of Comments</label>
+            <input type="text" id="comment" value="{{ num_favorites }}" disabled>
         </div>
 </div>
 <div class="col s12 m6">
-	<div class="profile-picture">
+    <div class="profile-picture">
+        <a class="btn-floating btn-large waves-effect waves-light red profile-picture-btn">
+            <i class="material-icons">add</i>
+        </a>
         {% if user.profile and user.profile.avatar_url %}
-		<img src="{{ current_user.profile.avatar_url }}" alt="Profile Picture" class="responsive-img">
-		{% else %}
-		<img src="{{ url_for('static', filename='profile_pics/default-avatar.jpeg') }}" alt="Default Profile Picture" class="responsive-img">
+        <img src="{{ current_user.profile.avatar_url }}" alt="Profile Picture" class="responsive-img">
+        {% else %}
+        <img src="{{ url_for('static', filename='profile_pics/default-avatar.jpeg') }}" alt="Default Profile Picture" class="responsive-img">
         {% endif %}
     </div>
 </div>

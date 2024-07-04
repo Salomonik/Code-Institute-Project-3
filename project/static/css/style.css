@@ -169,3 +169,16 @@ h1,h2,h3 {
     border-radius: 50%; /* Zaokrąglenie rogów obrazka */
 }
 
+/* Profile */
+
+.profile-picture {
+    position: relative;
+    display: inline-block; /* Make sure the container fits the image */
+}
+
+.profile-picture-btn {
+    position: absolute;
+    top: 10px; /* Adjust as necessary */
+    right: 10px; /* Adjust as necessary */
+    z-index: 10; /* Ensure it appears above the image */
+}
