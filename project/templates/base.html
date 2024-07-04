@@ -22,7 +22,7 @@
 					<li><a class="avatar-img" href="{{ url_for('routes.profile') }}">
 						<div class="nav-profile-picture">
 							{% if current_user.profile and current_user.profile.avatar_url %}
-							<img src="{{ current_user.profile.avatar_url }}" alt="Profile Picture" class="responsive-img">
+							<img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}" alt="Profile Picture" class="responsive-img">
 							{% else %}
 							<img src="{{ url_for('static', filename='profile_pics/default-avatar.jpeg') }}" alt="Default Profile Picture" class="responsive-img">
 							{% endif %}
