@@ -260,7 +260,12 @@ def profile():
                 db.session.commit()
                 flash('Your profile has been updated!', 'success')
                 return redirect(url_for('routes.profile'))
-            num_favorites = len(current_user.favorites) if current_user.favorites else 0
+    # Initialize num_favorites
+    num_favorites = 0
+    
+    # Calculate number of favorites
+    if current_user.favorites:
+        num_favorites = len(current_user.favorites)
     return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites)
 
 
