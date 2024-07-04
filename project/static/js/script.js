@@ -36,5 +36,21 @@ document.addEventListener('DOMContentLoaded', function () {
         edge: 'right' // Ustawienie bocznego menu po prawej stronie
     });
 
+    
+    var elems = document.querySelectorAll('.modal');
+    M.Modal.init(elems);
+
+    document.querySelectorAll('.avatar-option').forEach(function(img) {
+        img.addEventListener('click', function() {
+            document.querySelectorAll('.avatar-option').forEach(function(otherImg) {
+                otherImg.style.border = '2px solid transparent';
+            });
+            img.style.border = '2px solid #000';
+            var selectedAvatar = img.getAttribute('data-avatar');
+            document.getElementById('selectedAvatar').value = selectedAvatar;
+        });
+    });
+
+
 
 });

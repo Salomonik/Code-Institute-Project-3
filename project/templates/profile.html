@@ -44,22 +44,15 @@
 
 
 
-    <form method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <div class="input-field">
-            <label for="username">Username</label>
-            <input type="text" id="username" value="{{ user.username }}" disabled>
-        </div>
-        <div class="input-field">
-            <label for="email">Email</label>
-            <input type="email" id="email" value="{{ user.email }}" disabled>
-        </div>
-        <div class="input-field">
-            <label for="avatar">Upload Avatar</label>
-            {{ form.avatar.label }} {{ form.avatar }}
-        </div>
-        <button type="submit" class="btn">Update Profile</button>
-    </form>
+<form method="POST" action="{{ url_for('routes.profile') }}">
+    {{ form.hidden_tag() }}
+    <input type="hidden" id="selectedAvatar" name="selected_avatar">
+    <div class="input-field">
+        <label for="avatar">Upload Avatar</label>
+        {{ form.avatar.label }} {{ form.avatar }}
+    </div>
+    <button type="submit" class="btn">Update Profile</button>
+</form>
     
 </div>
 {% endblock %}
