@@ -299,11 +299,11 @@ def add_to_favorites():
         db.session.add(favorite)
         try:
             db.session.commit()
-            flash('Game added to favorites!', 'success')
+            return jsonify({'status': 'success', 'message': 'Game added to favorites!'})
         except IntegrityError:
             db.session.rollback()
-            flash('This game is already in your favorites.', 'danger')
-    return redirect(url_for('routes.get_games'))
+            return jsonify({'status': 'error', 'message': 'This game is already in your favorites.'})
+    return jsonify({'status': 'error', 'message': 'Invalid game ID.'})
 
 
 

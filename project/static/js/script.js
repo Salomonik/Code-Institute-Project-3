@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var elems = document.querySelectorAll('.materialboxed');
     M.Materialbox.init(elems);
 
+    //carousel
     var elems = document.querySelectorAll('.carousel');
     M.Carousel.init(elems);
 
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
             gameInput.value = selected;
         }
     });
-
+    // query to display suggested games
     gameInput.addEventListener('input', function () {
         var query = gameInput.value;
         if (query.length >= 2) {
@@ -36,13 +37,13 @@ document.addEventListener('DOMContentLoaded', function () {
         edge: 'right' // Ustawienie bocznego menu po prawej stronie
     });
 
-    
+    // Modal for avatars
     var elems = document.querySelectorAll('.modal');
     M.Modal.init(elems);
-    document.querySelectorAll('.avatar-option').forEach(function(img) {
-        img.addEventListener('click', function() {
+    document.querySelectorAll('.avatar-option').forEach(function (img) {
+        img.addEventListener('click', function () {
             // Remove the border from all other images
-            document.querySelectorAll('.avatar-option').forEach(function(otherImg) {
+            document.querySelectorAll('.avatar-option').forEach(function (otherImg) {
                 otherImg.style.border = '2px solid transparent';
             });
 
@@ -60,6 +61,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-
-
 });
+
+
+
+    // add to favorites script
+    document.querySelectorAll('.btn-add-favorite').forEach(button => {
+        button.addEventListener('click', function() {
+            const gameId = this.getAttribute('data-game-id');
+            fetch('{{ url_for('routes.add_to_favorites') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}'  // Include CSRF token if necessary
+                },
+                body: JSON.stringify({ game_id: gameId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    M.toast({html: data.message, classes: 'green'});
+                } else {
+                    M.toast({html: data.message, classes: 'red'});
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                M.toast({html: 'An error occurred. Please try again.', classes: 'red'});
+            });
+        });
+    });
