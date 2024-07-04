@@ -160,12 +160,18 @@ h1,h2,h3 {
 	margin-left: -50%;
 }
 
-
+/* navbar */
+.nav-wrapper{
+    height: 65px;
+}
+.brand-logo img {
+    height: 65px;
+}
 /* Avatar */
 
 
 .nav-profile-picture {
-    max-width: 50px; /* Maksymalna szerokość kontenera na obrazek w nawigacji */
+    max-width: 65px;/* Maksymalna szerokość kontenera na obrazek w nawigacji */
     display: flex !important;
     align-items: center !important; /* Wyrównanie w pionie */
     justify-items: center !important; /* Wyrównanie w poziomie */
