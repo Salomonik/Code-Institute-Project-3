@@ -24,6 +24,11 @@
                 <label for="comment">Number of Comments</label>
                 <input type="text" id="comment" value="{{ num_comments }}" disabled>
             </div>
+			<form method="POST" action="{{ url_for('routes.profile') }}">
+				{{ form.hidden_tag() }}
+				<input type="hidden" id="selected_avatar" name="selected_avatar">
+				<button type="submit" class="btn">Update Profile</button>
+			</form>
         </div>
         <div class="col s12 m6">
             <div class="profile-picture">
@@ -39,11 +44,7 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ url_for('routes.profile') }}">
-        {{ form.hidden_tag() }}
-        <input type="hidden" id="selected_avatar" name="selected_avatar">
-        <button type="submit" class="btn">Update Profile</button>
-    </form>
+
 
     <!-- Modal Structure -->
     <div id="avatarModal" class="modal">
