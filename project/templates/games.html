@@ -4,18 +4,13 @@
 
 {% block content %}
 
-<script>
-    // Define the URL for toggling favorites
-    const toggleFavoriteUrl = "{{ url_for('routes.toggle_favorite') }}";
-</script>
-
 {% if game_info %}
 <div class="row">
     {% for game in game_info %}
     <div class="col s12 m4 l3">
         <div class="card fixed-size game-card">
             <div class="card-action">
-                <form id="toggle-favorite-form-{{ game.id }}" class="add-to-favorites-form" action="{{ url_for('routes.toggle_favorite') }}" method="post">
+                <form id="toggle-favorite-form-{{ game.id }}" class="add-to-favorites-form" method="post">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="game_id" value="{{ game.id }}">
                     <button type="submit" class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite">
@@ -45,3 +40,40 @@
 </div>
 {% endif %}
 {% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('.add-to-favorites-form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const gameId = formData.get('game_id');
+            fetch('{{ url_for("routes.toggle_favorite") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': formData.get('csrf_token')
+                },
+                body: JSON.stringify({
+                    game_id: gameId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.action === 'added') {
+                    this.querySelector('i').classList.remove('favorite-border-icon');
+                    this.querySelector('i').classList.add('favorite-icon');
+                    this.querySelector('i').textContent = 'favorite';
+                } else if (data.action === 'removed') {
+                    this.querySelector('i').classList.remove('favorite-icon');
+                    this.querySelector('i').classList.add('favorite-border-icon');
+                    this.querySelector('i').textContent = 'favorite_border';
+                }
+                M.toast({html: data.message});
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+</script>

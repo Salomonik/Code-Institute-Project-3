@@ -4,7 +4,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from project import db
 from project.forms import RegistrationForm, LoginForm, UpdateProfileForm
-from project.models import User, Game, Favorite, Comment, Like, Friend, GameGenre, GameGenreAssociation, UserProfile
+from project.models import User, Game, Comment, Like, Friend, GameGenre, GameGenreAssociation, UserProfile, favorites
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from datetime import datetime
@@ -32,15 +32,8 @@ def index():
         client_id = current_app.config['TWITCH_CLIENT_ID']
         client_secret = current_app.config['TWITCH_CLIENT_SECRET']
         
-        # Debugging prints
-        print("Client ID:", client_id)
-        print("Client Secret:", client_secret)
-
         access_token = get_igdb_access_token(client_id, client_secret)
         current_app.config['ACCESS_TOKEN'] = access_token
-        
-        # Debugging prints
-        print("Access Token:", access_token)
         
         url = 'https://api.igdb.com/v4/games'
         headers = {
@@ -84,9 +77,6 @@ def modify_images(game_details):
 @routes.route('/get_games', methods=['GET'])
 def get_games():
     try:
-        # Debugging print
-        print("Access Token:", current_app.config.get('ACCESS_TOKEN'))
-        
         game_name = request.args.get('game_name')
         platform = request.args.get('platform')
         url = 'https://api.igdb.com/v4/games'
@@ -267,7 +257,33 @@ def add_game_to_db(game_details):
     db.session.commit()
     return game
 
-from flask import jsonify, flash
+@routes.route('/add_to_favorites', methods=['POST'])
+@login_required
+def add_to_favorites():
+    try:
+        data = request.get_json()
+        if not data or 'game_id' not in data:
+            return jsonify({'error': 'Game ID is required!', 'category': 'error'}), 400
+
+        game_id = int(data['game_id'])
+        game = Game.query.get(game_id)
+        if not game:
+            game_details = fetch_game_from_igdb(game_id)
+            if not game_details:
+                return jsonify({'error': 'Game not found', 'category': 'error'}), 404
+            game = add_game_to_db(game_details)
+
+        existing_favorite = db.session.query(favorites).filter_by(user_id=current_user.id, game_id=game_id).first()
+        if existing_favorite:
+            return jsonify({'message': 'Game is already in your favorites!', 'category': 'info'}), 200
+
+        db.session.execute(favorites.insert().values(user_id=current_user.id, game_id=game_id))
+        db.session.commit()
+        return jsonify({'message': 'Game added to favorites!', 'category': 'success'}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Error adding game to favorites: ' + str(e), 'category': 'error'}), 500
 
 @routes.route('/toggle_favorite', methods=['POST'])
 @login_required
@@ -285,22 +301,19 @@ def toggle_favorite():
                 return jsonify({'error': 'Game not found', 'category': 'error'}), 404
             game = add_game_to_db(game_details)
 
-        favorite = Favorite.query.filter_by(user_id=current_user.id, game_id=game_id).first()
+        favorite = db.session.query(favorites).filter_by(user_id=current_user.id, game_id=game_id).first()
         if favorite:
-            db.session.delete(favorite)
+            db.session.execute(favorites.delete().where(favorites.c.user_id == current_user.id).where(favorites.c.game_id == game_id))
             db.session.commit()
             return jsonify({'message': 'Game removed from favorites!', 'action': 'removed', 'category': 'success'}), 200
         else:
-            new_favorite = Favorite(user_id=current_user.id, game_id=game_id)
-            db.session.add(new_favorite)
+            db.session.execute(favorites.insert().values(user_id=current_user.id, game_id=game_id))
             db.session.commit()
             return jsonify({'message': 'Game added to favorites!', 'action': 'added', 'category': 'success'}), 200
 
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Error toggling favorite: ' + str(e), 'category': 'error'}), 500
-
-
 
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
