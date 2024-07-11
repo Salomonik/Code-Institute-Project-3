@@ -243,6 +243,16 @@ h3 {
     /* Ensure it appears above the image */
 }
 
+
+/* comment section */
+.collection .collection-item {
+    background-color: var(--secondary-color);
+    line-height: 1.5rem;
+    padding: 10px 20px;
+    margin: 0;
+    border-bottom: 1px solid var(--primary-color);
+}
+
 /* Game Cards in games.html" */
 
 
