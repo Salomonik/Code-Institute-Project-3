@@ -200,6 +200,7 @@ def login():
         if user and check_password_hash(user.password_hash, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
+            flash('Login Successful.', 'success')
             return redirect(next_page) if next_page else redirect(url_for('routes.index'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
