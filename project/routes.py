@@ -269,36 +269,6 @@ def add_game_to_db(game_details):
 
 from flask import jsonify, flash
 
-@routes.route('/add_to_favorites', methods=['POST'])
-@login_required
-def add_to_favorites():
-    try:
-        data = request.get_json()
-        if not data or 'game_id' not in data:
-            return jsonify({'error': 'Game ID is required!', 'category': 'error'}), 400
-
-        game_id = int(data['game_id'])
-        game = Game.query.get(game_id)
-        if not game:
-            game_details = fetch_game_from_igdb(game_id)
-            if not game_details:
-                return jsonify({'error': 'Game not found', 'category': 'error'}), 404
-            game = add_game_to_db(game_details)
-
-        existing_favorite = Favorite.query.filter_by(user_id=current_user.id, game_id=game_id).first()
-        if existing_favorite:
-            return jsonify({'message': 'Game is already in your favorites!', 'category': 'info'}), 200
-
-        favorite = Favorite(user_id=current_user.id, game_id=game_id)
-        db.session.add(favorite)
-        db.session.commit()
-        return jsonify({'message': 'Game added to favorites!', 'category': 'success'}), 200
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': 'Error adding game to favorites: ' + str(e), 'category': 'error'}), 500
-
-
 @routes.route('/toggle_favorite', methods=['POST'])
 @login_required
 def toggle_favorite():
