@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 icon.textContent = 'favorite_border';
                                 icon.style.color = '';
                             }
+                            displayFlashMessage(data.message, data.category);
                         }
                     })
                     .catch(error => {
@@ -117,9 +118,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-
-       // Function to hide flash messages after a certain time
-       function hideFlashMessage(message) {
+    // Function to hide flash messages after a certain time
+    function hideFlashMessage(message) {
         setTimeout(() => {
             message.style.opacity = '0';
             setTimeout(() => message.remove(), 500);
@@ -194,5 +194,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Run the function to hide existing flash messages after the page loads
     window.onload = hideFlashMessages;
-
 });

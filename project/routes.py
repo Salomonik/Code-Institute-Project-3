@@ -286,6 +286,8 @@ def add_to_favorites():
         db.session.rollback()
         return jsonify({'error': 'Error adding game to favorites: ' + str(e), 'category': 'error'}), 500
 
+from flask import flash, jsonify
+
 @routes.route('/toggle_favorite', methods=['POST'])
 @login_required
 def toggle_favorite():
@@ -306,15 +308,19 @@ def toggle_favorite():
         if favorite:
             db.session.execute(favorites.delete().where(favorites.c.user_id == current_user.id).where(favorites.c.game_id == game_id))
             db.session.commit()
+            flash('Game removed from favorites!', 'success')
             return jsonify({'message': 'Game removed from favorites!', 'action': 'removed', 'category': 'success'}), 200
         else:
             db.session.execute(favorites.insert().values(user_id=current_user.id, game_id=game_id))
             db.session.commit()
+            flash('Game added to favorites!', 'success')
             return jsonify({'message': 'Game added to favorites!', 'action': 'added', 'category': 'success'}), 200
 
     except Exception as e:
         db.session.rollback()
+        flash('Error toggling favorite: ' + str(e), 'error')
         return jsonify({'error': 'Error toggling favorite: ' + str(e), 'category': 'error'}), 500
+
 
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
