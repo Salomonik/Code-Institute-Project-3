@@ -351,3 +351,24 @@ def clear_flash_messages():
     session.pop('_flashes', None)
     return jsonify({'status': 'success'})
 
+
+
+@routes.route('/edit_comment/<int:comment_id>', methods=['GET', 'POST'])
+@login_required
+def edit_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    if comment.user_id != current_user.id:
+        flash('You are not authorized to edit this comment.', 'danger')
+        return redirect(url_for('routes.game_details', game_id=comment.game_id))
+    
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment.content = form.content.data
+        comment.updated_at = datetime.now()
+        db.session.commit()
+        flash('Your comment has been updated.', 'success')
+        return redirect(url_for('routes.game_details', game_id=comment.game_id))
+    elif request.method == 'GET':
+        form.content.data = comment.content
+    
+    return render_template('edit_comment.html', form=form)
