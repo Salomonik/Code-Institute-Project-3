@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, jsonify, url_for, redirec
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from project import db
-from project.forms import RegistrationForm, LoginForm, UpdateProfileForm
+from project.forms import RegistrationForm, LoginForm, UpdateProfileForm, CommentForm
 from project.models import User, Game, Comment, Like, Friend, GameGenre, GameGenreAssociation, UserProfile, favorites
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
@@ -107,8 +107,26 @@ def get_games():
         print("Error fetching game data:", e)
         return render_template('error.html', error=str(e))
 
-@routes.route('/game_details/<int:game_id>', methods=['GET'])
+@routes.route('/game_details/<int:game_id>', methods=['GET', 'POST'])
 def game_details(game_id):
+    form = CommentForm()
+    game_details = fetch_game_details(game_id)  # Zakładam, że istnieje funkcja `fetch_game_details` obsługująca logikę API
+
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            comment = Comment(content=form.content.data, user_id=current_user.id, game_id=game_id)
+            db.session.add(comment)
+            db.session.commit()
+            flash('Your comment has been added!', 'success')
+        else:
+            flash('You need to be logged in to comment.', 'danger')
+        return redirect(url_for('routes.game_details', game_id=game_id))
+
+    comments = Comment.query.filter_by(game_id=game_id).order_by(Comment.created_at.desc()).all()
+    favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
+    return render_template('game_details.html', game_details=game_details, form=form, comments=comments, favorite_game_ids=favorite_game_ids)
+
+def fetch_game_details(game_id):
     try:
         url = 'https://api.igdb.com/v4/games'
         headers = {
@@ -122,17 +140,15 @@ def game_details(game_id):
             'game_modes.name, themes.name, first_release_date; '
             f'where id = {game_id};'
         )
-        
+
         response = requests.post(url, headers=headers, data=data)
         response.raise_for_status()
-        game_details = response.json()
-        
-        modify_images(game_details)
-        favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
-        return render_template('game_details.html', game_details=game_details[0], favorite_game_ids=favorite_game_ids)
+        game_details = response.json()[0]  # Zakładam, że odpowiedź jest listą zawierającą jeden element
+        modify_images([game_details])  # Modyfikowanie obrazów
+        return game_details
     except Exception as e:
         print("Error fetching game details:", e)
-        return render_template('error.html', error=str(e))
+        return None
 
 @routes.route('/suggest_games', methods=['GET'])
 def suggest_games():
