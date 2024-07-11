@@ -16,7 +16,7 @@
 	<header>
 		<nav>
 			<div class="nav-wrapper">
-				<a href="{{ url_for('routes.index') }}" class="brand-logo"><img src="../static/logo/logo.webp"
+				<a href="{{ url_for('routes.index') }}" class="brand-logo left"><img src="../static/logo/logo.webp"
 						alt=""></a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
 					<li><a href="{{ url_for('routes.index') }}">Home</a></li>
@@ -76,14 +76,14 @@
 			{% endwith %}
 		</div>
 
-		<form action="/get_games" method="get" class="col s12">
-			<div class="row">
-				<div class="input-field col s6">
+		<form action="/get_games" method="get" class="col s12 ">
+			<div class="row ">
+				<div class="input-field col s6 offset-m2">
 					<input type="text" id="game_name" name="game_name" class="validate autocomplete">
 					<label for="game_name">Game Name</label>
 				</div>
-				<div class="input-field col s6">
-					<button type="submit" class="btn waves-effect waves-light">SEARCH</button>
+				<div class="input-field col s3">
+					<button type="submit" class="btn waves-effect waves-light"><i class="material-icons right">search</i>SEARCH</button>
 				</div>
 			</div>
 		</form>

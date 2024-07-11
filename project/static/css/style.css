@@ -74,6 +74,9 @@ input#favorite,
 input#comment.custom-input {
     color: white;
 }
+.input-field>label {
+    color: white;
+}
 
 p {
     margin-bottom: 1rem;
