@@ -4,11 +4,23 @@
 
 {% block content %}
 <div class="row">
-	<div class="col s12 m6 center-align">
+	<div class="col s12 m6 center-align cover-container">
 		{% if game_details.cover %}
-		<img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
-		{% endif %}
-	</div>
+        <div class="cover-wrapper">
+            <img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
+            <!-- Favorite Button on the Cover -->
+            <form id="toggle-favorite-form-{{ game_details.id }}" class="add-to-favorites-form" method="post" action="{{ url_for('routes.toggle_favorite') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="game_id" value="{{ game_details.id }}">
+                <button type="submit" class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite favorite-button-on-cover">
+                    <i class="material-icons {% if game_details.id in favorite_game_ids %}favorite-icon{% else %}favorite-border-icon{% endif %}">
+                        {% if game_details.id in favorite_game_ids %}favorite{% else %}favorite_border{% endif %}
+                    </i>
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
 	<div class="col s12 m6">
 		<h3>{{ game_details.name }}</h3>
 		{% if game_details.first_release_date %}

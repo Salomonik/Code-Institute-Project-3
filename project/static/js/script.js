@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => {
             message.style.opacity = '0';
             setTimeout(() => message.remove(), 500);
-        }, 5000); // Time in milliseconds (5000ms = 5s)
+        }, 3000); 
     }
 
     // Function to hide existing flash messages
@@ -194,4 +194,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Run the function to hide existing flash messages after the page loads
     window.onload = hideFlashMessages;
+
+
+
+    
 });
