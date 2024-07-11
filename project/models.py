@@ -2,6 +2,12 @@ from . import db
 from datetime import datetime
 from flask_login import UserMixin
 
+# Definiujemy tabelę pomocniczą dla relacji wiele do wielu między użytkownikami a grami
+favorites = db.Table('favorites',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True)
+)
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
@@ -9,7 +15,8 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     comments = db.relationship('Comment', backref='author', lazy=True)
-    favorites = db.relationship('Favorite', backref='user_favorite', lazy=True)
+    # Zmiana relacji 'favorites' na wiele do wielu
+    favorites = db.relationship('Game', secondary=favorites, backref=db.backref('favorited_by', lazy='dynamic'))
     friends = db.relationship('Friend', 
                               foreign_keys='[Friend.user_id]', 
                               backref='user', 
@@ -33,12 +40,6 @@ class Game(db.Model):
     
     def __repr__(self):
         return f'<Game {self.name}>'
-
-class Favorite(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now)
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
