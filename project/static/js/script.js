@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Add to favorites form submission
-    document.querySelectorAll('.add-to-favorites-form').forEach(function(form) {
-        form.addEventListener('submit', function(event) {
+    document.querySelectorAll('.add-to-favorites-form').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
             event.preventDefault();
             console.log('Form submitted'); // Debugging: Form submission event
 
@@ -86,34 +86,50 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: JSON.stringify({ game_id: game_id })
                 })
-                .then(response => {
-                    console.log('Response status:', response.status); // Debugging: Response status
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Response data:', data); // Debugging: Response data
-                    if (data.error) {
-                        console.error('Error:', data.error); // Debugging: Error message
-                        alert('Error toggling favorite: ' + data.error);
-                    } else {
-                        console.log('Success:', data.message); // Debugging: Success message
-                        var icon = form.querySelector('.material-icons');
-                        if (data.action === 'added') {
-                            icon.textContent = 'favorite';
-                            icon.style.color = 'red';
-                        } else if (data.action === 'removed') {
-                            icon.textContent = 'favorite_border';
-                            icon.style.color = '';
+                    .then(response => {
+                        console.log('Response status:', response.status); // Debugging: Response status
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Response data:', data); // Debugging: Response data
+                        if (data.error) {
+                            console.error('Error:', data.error); // Debugging: Error message
+                            alert('Error toggling favorite: ' + data.error);
+                        } else {
+                            console.log('Success:', data.message); // Debugging: Success message
+                            var icon = form.querySelector('.material-icons');
+                            if (data.action === 'added') {
+                                icon.textContent = 'favorite';
+                                icon.style.color = 'red';
+                            } else if (data.action === 'removed') {
+                                icon.textContent = 'favorite_border';
+                                icon.style.color = '';
+                            }
                         }
-                    }
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error); // Debugging: Fetch error
-                    alert('Error toggling favorite: ' + error);
-                });
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error); // Debugging: Fetch error
+                        alert('Error toggling favorite: ' + error);
+                    });
             } else {
                 console.error('CSRF token not found'); // Debugging: CSRF token not found
             }
         });
     });
+
+    // Function to hide flash messages after a certain time
+    function hideFlashMessages() {
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach((message) => {
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2500); // Time in milliseconds (5000ms = 5s)
+        });
+    }
+
+    // Run the function after the page loads
+    window.onload = hideFlashMessages;
+
+
+
 });

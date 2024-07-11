@@ -62,22 +62,18 @@
 	</header>
 	<main>
 
-		<!-- Flash messages section -->
-		<div class="container">
-			{% with messages = get_flashed_messages(with_categories=true) %}
-			{% if messages %}
-			<div class="row">
-				{% for category, message in messages %}
-				<div class="col s12">
-					<div class="card-panel {{ category }}">
-						<span class="white-text">{{ message }}</span>
-					</div>
-				</div>
-				{% endfor %}
+		<!-- Flash Messages -->
+		{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+		<div class="flash-messages">
+			{% for category, message in messages %}
+			<div class="flash-message {{ category }}">
+				{{ message }}
 			</div>
-			{% endif %}
-			{% endwith %}
+			{% endfor %}
 		</div>
+		{% endif %}
+		{% endwith %}
 
 		<form action="/get_games" method="get" class="col s12">
 			<div class="row">
