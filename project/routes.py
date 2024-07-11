@@ -53,8 +53,9 @@ def index():
         popular_games = response.json()
         
         modify_images(popular_games)
-        
-        return render_template('index.html', popular_games=popular_games)
+        favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
+
+        return render_template('index.html', popular_games=popular_games,  favorite_game_ids=favorite_game_ids)
     except Exception as e:
         print("Error fetching popular games:", e)
         return render_template('error.html', error=str(e))
@@ -100,8 +101,8 @@ def get_games():
         game_info = response.json()
         
         modify_images(game_info)
-        
-        return render_template('games.html', game_info=game_info)
+        favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
+        return render_template('games.html', game_info=game_info,favorite_game_ids=favorite_game_ids)
     except Exception as e:
         print("Error fetching game data:", e)
         return render_template('error.html', error=str(e))
