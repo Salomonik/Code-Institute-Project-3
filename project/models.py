@@ -46,6 +46,8 @@ class Comment(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
+    user = db.relationship('User', backref='user_comments')
+    game = db.relationship('Game', backref='game_comments')
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
