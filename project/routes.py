@@ -325,3 +325,9 @@ def toggle_favorite():
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
     return datetime.fromtimestamp(value).strftime(format)
+
+@routes.route('/clear_flash_messages', methods=['POST'])
+def clear_flash_messages():
+    session.pop('_flashes', None)
+    return jsonify({'status': 'success'})
+
