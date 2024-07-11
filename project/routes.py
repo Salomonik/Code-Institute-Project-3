@@ -73,7 +73,7 @@ def modify_images(game_details):
             game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
         if 'screenshots' in game:
             for screenshot in game['screenshots']:
-                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_huge')
+                screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
 
 @routes.route('/get_games', methods=['GET'])
 def get_games():
@@ -220,13 +220,16 @@ def profile():
             db.session.commit()
             flash('Your profile has been updated!', 'success')
             return redirect(url_for('routes.profile'))
-    
+
     num_favorites = len(current_user.favorites) if current_user.favorites else 0
     num_comments = len(current_user.comments) if current_user.comments else 0
 
     if current_user.profile and current_user.profile.avatar_url:
         avatar_path = os.path.join(current_app.static_folder, current_user.profile.avatar_url.replace('/', os.sep))
     favorite_games = current_user.favorites if current_user.favorites else []
+    for game in favorite_games:
+        if game.cover_url:
+            game.cover_url = modify_image_url(game.cover_url, 't_cover_big')
 
     return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars, favorite_games = favorite_games)
 

@@ -50,28 +50,17 @@
 	</div>
 
 	
-    <!-- Sekcja ulubionych gier -->
     <div class="row">
-        <div class="col s12">
-            <h4>Favorite Games</h4>
-            {% if favorite_games %}
+        <div class="col s6">
+            <h5>Your Favorite Games</h5>
             <div class="carousel">
                 {% for game in favorite_games %}
-                <a class="carousel-item" href="#{{ game.id }}">
-                    {% if game.cover_url %}
-                    <img src="{{ game.cover_url }}" alt="{{ game.name }}" class="responsive-img">
-                    {% else %}
-                    <img src="{{ url_for('static', filename='images/cover-placeholder.webp') }}" alt="{{ game.name }}" class="responsive-img">
-                    {% endif %}
-                    <span class="carousel-caption">{{ game.name }}</span>
-                </a>
+                <a class="carousel-item" href="#{{ game.id }}"><img src="{{ game.cover_url }}"></a>
                 {% endfor %}
             </div>
-            {% else %}
-            <p>You have no favorite games yet.</p>
-            {% endif %}
         </div>
     </div>
+
 
 
 	<!-- Modal Structure -->
