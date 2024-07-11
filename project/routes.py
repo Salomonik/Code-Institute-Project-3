@@ -260,56 +260,48 @@ def add_game_to_db(game_details):
         id=game_details['id'],
         name=game_details['name'],
         description=game_details.get('summary', ''),
-        release_date=datetime.utcfromtimestamp(game_details['first_release_date']).date() if 'first_release_date' in game_details else None,
+        release_date=datetime.now(game_details['first_release_date']).date() if 'first_release_date' in game_details else None,
         cover_url=game_details['cover']['url'] if 'cover' in game_details and 'url' in game_details['cover'] else None
     )
     db.session.add(game)
     db.session.commit()
     return game
 
+from flask import flash
+
 @routes.route('/add_to_favorites', methods=['POST'])
 @login_required
 def add_to_favorites():
     try:
-        print("Received request to add to favorites")  # Debugging
         data = request.get_json()
-        print("Request data:", data)  # Debugging
         if not data or 'game_id' not in data:
-            print("Missing game_id in request data")  # Debugging
             return jsonify({'error': 'Game ID is required!'}), 400
 
         game_id = int(data['game_id'])
-        print("Game ID:", game_id)  # Debugging
-
-        # Verify the existence of the game
         game = Game.query.get(game_id)
         if not game:
-            print("Game not found in local DB, fetching from IGDB")  # Debugging
             game_details = fetch_game_from_igdb(game_id)
             if not game_details:
-                print("Game not found in IGDB")  # Debugging
                 return jsonify({'error': 'Game not found'}), 404
-            print("Game fetched from IGDB, adding to local DB")  # Debugging
             game = add_game_to_db(game_details)
-            print(f"Game {game.name} added to local DB")  # Debugging
 
         existing_favorite = Favorite.query.filter_by(user_id=current_user.id, game_id=game_id).first()
         if existing_favorite:
-            print("Game is already in favorites")  # Debugging
-            return jsonify({'message': 'Game is already in your favorites!'}), 200
+            flash('Game is already in your favorites!', 'info')
+            return jsonify({'message': 'Game is already in your favorites!', 'category': 'info'}), 200
 
         favorite = Favorite(user_id=current_user.id, game_id=game_id)
         db.session.add(favorite)
         db.session.commit()
-        print("Game added to favorites")  # Debugging
-        return jsonify({'message': 'Game added to favorites!'}), 200
+        flash('Game added to favorites!', 'success')
+        return jsonify({'message': 'Game added to favorites!', 'category': 'success'}), 200
 
     except Exception as e:
         db.session.rollback()
-        print("Error adding game to favorites:", str(e))  # Debugging
-        return jsonify({'error': 'Error adding game to favorites: ' + str(e)}), 500
-    
-    
+        flash('Error adding game to favorites: ' + str(e), 'error')
+        return jsonify({'error': 'Error adding game to favorites: ' + str(e), 'category': 'error'}), 500
+
+
 @routes.route('/toggle_favorite', methods=['POST'])
 @login_required
 def toggle_favorite():
@@ -330,16 +322,20 @@ def toggle_favorite():
         if favorite:
             db.session.delete(favorite)
             db.session.commit()
-            return jsonify({'message': 'Game removed from favorites!', 'action': 'removed'}), 200
+            flash('Game removed from favorites!', 'success')
+            return jsonify({'message': 'Game removed from favorites!', 'action': 'removed', 'category': 'success'}), 200
         else:
             new_favorite = Favorite(user_id=current_user.id, game_id=game_id)
             db.session.add(new_favorite)
             db.session.commit()
-            return jsonify({'message': 'Game added to favorites!', 'action': 'added'}), 200
+            flash('Game added to favorites!', 'success')
+            return jsonify({'message': 'Game added to favorites!', 'action': 'added', 'category': 'success'}), 200
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': 'Error toggling favorite: ' + str(e)}), 500
+        flash('Error toggling favorite: ' + str(e), 'error')
+        return jsonify({'error': 'Error toggling favorite: ' + str(e), 'category': 'error'}), 500
+
 
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
