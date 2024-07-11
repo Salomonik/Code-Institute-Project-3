@@ -226,8 +226,9 @@ def profile():
 
     if current_user.profile and current_user.profile.avatar_url:
         avatar_path = os.path.join(current_app.static_folder, current_user.profile.avatar_url.replace('/', os.sep))
+    favorite_games = current_user.favorites if current_user.favorites else []
 
-    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars)
+    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars, favorite_games = favorite_games)
 
 
 def fetch_game_from_igdb(game_id):
