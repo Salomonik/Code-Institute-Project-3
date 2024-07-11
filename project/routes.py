@@ -372,3 +372,16 @@ def edit_comment(comment_id):
         form.content.data = comment.content
     
     return render_template('edit_comment.html', form=form)
+
+@routes.route('/delete_comment/<int:comment_id>', methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    if comment.user_id != current_user.id:
+        flash('You are not authorized to delete this comment.', 'danger')
+        return redirect(url_for('routes.game_details', game_id=comment.game_id))
+    
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Your comment has been deleted.', 'success')
+    return redirect(url_for('routes.game_details', game_id=comment.game_id))
