@@ -128,8 +128,8 @@ def game_details(game_id):
         game_details = response.json()
         
         modify_images(game_details)
-        
-        return render_template('game_details.html', game_details=game_details[0])
+        favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
+        return render_template('game_details.html', game_details=game_details[0], favorite_game_ids=favorite_game_ids)
     except Exception as e:
         print("Error fetching game details:", e)
         return render_template('error.html', error=str(e))

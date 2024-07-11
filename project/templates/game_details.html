@@ -3,6 +3,11 @@
 {% block title %}{{ game_details.name }}{% endblock %}
 
 {% block content %}
+
+<script>
+    // Define the URL for toggling favorites
+    const toggleFavoriteUrl = "{{ url_for('routes.toggle_favorite') }}";
+</script>
 <div class="row">
 	<div class="col s12 m6 center-align cover-container">
 		{% if game_details.cover %}
