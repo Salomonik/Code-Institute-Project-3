@@ -195,7 +195,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Run the function to hide existing flash messages after the page loads
     window.onload = hideFlashMessages;
 
-
+    // Handle edit comment button click
+    document.querySelectorAll('.edit-comment-btn').forEach(button => {
+        button.addEventListener('click', event => {
+            const commentId = event.target.dataset.commentId;
+            document.getElementById(`comment-content-${commentId}`).style.display = 'none';
+            document.getElementById(`edit-comment-form-${commentId}`).style.display = 'block';
+        });
+    });
 
     
 });

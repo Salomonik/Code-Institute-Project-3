@@ -365,3 +365,19 @@ def delete_comment(comment_id):
     db.session.commit()
     flash('Your comment has been deleted.', 'success')
     return redirect(url_for('routes.game_details', game_id=comment.game_id))
+
+@routes.route('/update_comment/<int:comment_id>', methods=['POST'])
+@login_required
+def update_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    if comment.user_id != current_user.id:
+        return jsonify({'error': 'You are not authorized to edit this comment.'}), 403
+    
+    data = request.get_json()
+    if not data or 'content' not in data:
+        return jsonify({'error': 'Content is required.'}), 400
+
+    comment.content = data['content']
+    comment.updated_at = datetime.now()
+    db.session.commit()
+    return jsonify({'message': 'Comment updated successfully.', 'content': comment.content}), 200
