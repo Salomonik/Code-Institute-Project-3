@@ -51,6 +51,7 @@
 		<ul class="sidenav right-aligned" id="mobile-demo">
 			<li><a href="{{ url_for('routes.index') }}">Home</a></li>
 			{% if current_user.is_authenticated %}
+			<li><a href="{{ url_for('routes.profile') }}">Profile</a></li>
 			<li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
 			{% else %}
 			<li><a href="{{ url_for('routes.login') }}">Login</a></li>

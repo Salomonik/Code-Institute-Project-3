@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
 /* Global css rules */
 * {
     margin: 0;
@@ -5,20 +7,21 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     width: 100%;
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    
+
 }
 
 body {
-	max-width: 1280px;
-	margin-inline: auto;
-	height: 100dvh;
-	display: flex;
-	flex-direction: column;
+    max-width: 1280px;
+    margin-inline: auto;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
 
 }
 
@@ -29,6 +32,7 @@ body {
     --text-color: white;
     --header-font: 'Helvetica Neue', sans-serif;
     --body-font: 'Arial', sans-serif;
+    --title-font: "Open Sans", sans-serif;
     --max-width: 1200px;
     --padding: 20px;
     --margin: 20px;
@@ -40,7 +44,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color) !important;
     font-family: var(--body-font);
-    
+
 }
 
 .container {
@@ -50,14 +54,27 @@ body {
     background: var(--background-color);
 }
 
-h1, h2, h3, h4, h5, h6, span,a {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+a {
     margin-bottom: 1rem;
     font-family: var(--header-font);
     color: var(--text-color);
 }
-input[id], input#email,input#username, input#favorite, input#comment.custom-input {
+
+input[id],
+input#email,
+input#username,
+input#favorite,
+input#comment.custom-input {
     color: white;
 }
+
 p {
     margin-bottom: 1rem;
     color: var(--text-color);
@@ -66,7 +83,7 @@ p {
 a {
     color: white;
     text-decoration: none;
-    
+
 }
 
 a:hover {
@@ -92,54 +109,70 @@ button {
 button:hover {
     background-color: var(--secondary-color);
 }
+
 nav {
     background-color: var(--secondary-color);
 }
 
 
 main {
-	flex: 1 0 0;
+    flex: 1 0 0;
 }
 
-h1,h2,h3 {
-	margin: 0;
+h1,
+h2,
+h3 {
+    margin: 0;
 }
 
 
 .fixed-size {
-	height: 500px;
-	/* Ustalona wysokość karty */
-	display: flex;
-	flex-direction: column;
-	position: relative; /* Dodane dla lepszego zarządzania pozycjonowaniem */
-    overflow: hidden; /* Ukryj elementy wychodzące poza kartę */
+    height: 400px;
+    /* Ustalona wysokość karty */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* Dodane dla lepszego zarządzania pozycjonowaniem */
+    overflow: hidden;
+    /* Ukryj elementy wychodzące poza kartę */
 }
+
 .card {
-	border-radius: var(--border-radius);
+    border-radius: var(--border-radius);
     background-color: var(--secondary-color);
 }
 
 .card-content {
-	flex-grow: 1;
-	overflow: hidden;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.card-title * {
+    font-family: var(--title-font);
+    font-size: larger;
+    font-weight: 500;
+  
+
 }
 
 
 
 /* Dodane style dla obrazów */
 .card-image img {
-	object-fit: contain;
-	height: 100%;
+    object-fit: contain;
+    height: 100%;
 }
 
 .screenshot-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* Odstęp między elementami */
+    gap: 10px;
+    /* Odstęp między elementami */
 }
 
 .screenshot-item {
-    flex: 1 1 calc(33.333% - 10px); /* 33.333% szerokości minus odstęp */
+    flex: 1 1 calc(33.333% - 10px);
+    /* 33.333% szerokości minus odstęp */
     box-sizing: border-box;
 }
 
@@ -152,50 +185,64 @@ h1,h2,h3 {
 /* Game Details */
 
 .carousel {
-	max-height: 300px;
+    max-height: 300px;
 }
 
 .carousel .carousel-item>img {
     min-width: 220%;
-	margin-left: -50%;
+    margin-left: -50%;
 }
 
 /* navbar */
-.nav-wrapper{
+.nav-wrapper {
     height: 65px;
 }
+
+.logo-wrapper {
+    max-height: 30px !important;
+}
+
 .brand-logo img {
-    height: 65px;
+    max-width: 65px;
 }
+
 /* Avatar */
 
 
 .nav-profile-picture {
-    max-width: 65px;/* Maksymalna szerokość kontenera na obrazek w nawigacji */
+    max-width: 64px;
+    /* Maksymalna szerokość kontenera na obrazek w nawigacji */
     display: flex !important;
-    align-items: center !important; /* Wyrównanie w pionie */
-    justify-items: center !important; /* Wyrównanie w poziomie */
-   
+    align-items: center !important;
+    /* Wyrównanie w pionie */
+    justify-items: center !important;
+    /* Wyrównanie w poziomie */
+
 }
 
 .nav-profile-picture img {
     width: 100%;
     height: auto;
-    border-radius: 50%; /* Zaokrąglenie rogów obrazka */
+    border-radius: 50%;
+    /* Zaokrąglenie rogów obrazka */
 }
 
 /* Profile */
 
 .profile-picture {
     position: relative;
-    display: inline-block; /* Make sure the container fits the image */
+    display: inline-block;
+    /* Make sure the container fits the image */
 }
 
 .profile-picture-btn {
     position: absolute;
-    top: 10px; /* Adjust as necessary */
-    right: 10px; /* Adjust as necessary */
-    z-index: 10; /* Ensure it appears above the image */
+    top: 10px;
+    /* Adjust as necessary */
+    right: 10px;
+    /* Adjust as necessary */
+    z-index: 10;
+    /* Ensure it appears above the image */
 }
 
 /* Game Cards in games.html" */
@@ -203,21 +250,35 @@ h1,h2,h3 {
 
 .game-card {
     position: relative;
-    display:block;
+    display: block;
+    border: 2px solid var(--primary-color);
+
 }
 
 .game-card-btn {
     position: absolute;
-    top: 20px; /* Adjust as necessary */
-    right: 10px; /* Adjust as necessary */
-    z-index: 10; /* Ensure it appears above the image */   
+    top: 20px;
+    /* Adjust as necessary */
+    right: 10px;
+    /* Adjust as necessary */
+    z-index: 10;
+    /* Ensure it appears above the image */
 }
 
 .card-content {
     display: flex !important;
-    justify-content:center !important;
-    align-items:flex-start !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    position: absolute;
+    bottom: 5%;
+    
+    z-index: 40;
+    background-color: black;
+    opacity: 80%;
+    width: 100%;
 }
+
+
 
 
 /* Flash messages */
@@ -267,19 +328,23 @@ h1,h2,h3 {
 
 /* Styl dla ikony favorite */
 .favorite-icon {
-    color: red !important; /* Zmień kolor na czerwony */
-    font-size: 24px !important; /* Zmień rozmiar czcionki */
+    color: red !important;
+    /* Zmień kolor na czerwony */
+    font-size: 24px !important;
+    /* Zmień rozmiar czcionki */
     /* Dodaj inne style według potrzeb */
 }
 
 /* Styl dla ikony favorite_border */
 .favorite-border-icon {
-    color: gray !important; /* Zmień kolor na szary */
-    font-size: 24px !important; /* Zmień rozmiar czcionki */
+    color: gray !important;
+    /* Zmień kolor na szary */
+    font-size: 24px !important;
+    /* Zmień rozmiar czcionki */
     /* Dodaj inne style według potrzeb */
 }
 
-
+/* favoirite btn in game_details */
 .cover-container {
     position: relative;
 }
