@@ -260,14 +260,14 @@ def add_game_to_db(game_details):
         id=game_details['id'],
         name=game_details['name'],
         description=game_details.get('summary', ''),
-        release_date=datetime.now(game_details['first_release_date']).date() if 'first_release_date' in game_details else None,
+        release_date=datetime.fromtimestamp(game_details['first_release_date']).date() if 'first_release_date' in game_details else None,
         cover_url=game_details['cover']['url'] if 'cover' in game_details and 'url' in game_details['cover'] else None
     )
     db.session.add(game)
     db.session.commit()
     return game
 
-from flask import flash
+from flask import jsonify, flash
 
 @routes.route('/add_to_favorites', methods=['POST'])
 @login_required
@@ -275,30 +275,27 @@ def add_to_favorites():
     try:
         data = request.get_json()
         if not data or 'game_id' not in data:
-            return jsonify({'error': 'Game ID is required!'}), 400
+            return jsonify({'error': 'Game ID is required!', 'category': 'error'}), 400
 
         game_id = int(data['game_id'])
         game = Game.query.get(game_id)
         if not game:
             game_details = fetch_game_from_igdb(game_id)
             if not game_details:
-                return jsonify({'error': 'Game not found'}), 404
+                return jsonify({'error': 'Game not found', 'category': 'error'}), 404
             game = add_game_to_db(game_details)
 
         existing_favorite = Favorite.query.filter_by(user_id=current_user.id, game_id=game_id).first()
         if existing_favorite:
-            flash('Game is already in your favorites!', 'info')
             return jsonify({'message': 'Game is already in your favorites!', 'category': 'info'}), 200
 
         favorite = Favorite(user_id=current_user.id, game_id=game_id)
         db.session.add(favorite)
         db.session.commit()
-        flash('Game added to favorites!', 'success')
         return jsonify({'message': 'Game added to favorites!', 'category': 'success'}), 200
 
     except Exception as e:
         db.session.rollback()
-        flash('Error adding game to favorites: ' + str(e), 'error')
         return jsonify({'error': 'Error adding game to favorites: ' + str(e), 'category': 'error'}), 500
 
 
@@ -308,33 +305,31 @@ def toggle_favorite():
     try:
         data = request.get_json()
         if not data or 'game_id' not in data:
-            return jsonify({'error': 'Game ID is required!'}), 400
+            return jsonify({'error': 'Game ID is required!', 'category': 'error'}), 400
 
         game_id = int(data['game_id'])
         game = Game.query.get(game_id)
         if not game:
             game_details = fetch_game_from_igdb(game_id)
             if not game_details:
-                return jsonify({'error': 'Game not found'}), 404
+                return jsonify({'error': 'Game not found', 'category': 'error'}), 404
             game = add_game_to_db(game_details)
 
         favorite = Favorite.query.filter_by(user_id=current_user.id, game_id=game_id).first()
         if favorite:
             db.session.delete(favorite)
             db.session.commit()
-            flash('Game removed from favorites!', 'success')
             return jsonify({'message': 'Game removed from favorites!', 'action': 'removed', 'category': 'success'}), 200
         else:
             new_favorite = Favorite(user_id=current_user.id, game_id=game_id)
             db.session.add(new_favorite)
             db.session.commit()
-            flash('Game added to favorites!', 'success')
             return jsonify({'message': 'Game added to favorites!', 'action': 'added', 'category': 'success'}), 200
 
     except Exception as e:
         db.session.rollback()
-        flash('Error toggling favorite: ' + str(e), 'error')
         return jsonify({'error': 'Error toggling favorite: ' + str(e), 'category': 'error'}), 500
+
 
 
 @routes.app_template_filter('dateformat')

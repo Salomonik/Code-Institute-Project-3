@@ -117,19 +117,82 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Function to hide flash messages after a certain time
-    function hideFlashMessages() {
-        const flashMessages = document.querySelectorAll('.flash-message');
-        flashMessages.forEach((message) => {
-            setTimeout(() => {
-                message.style.display = 'none';
-            }, 2500); // Time in milliseconds (5000ms = 5s)
-        });
+
+       // Function to hide flash messages after a certain time
+       function hideFlashMessage(message) {
+        setTimeout(() => {
+            message.style.opacity = '0';
+            setTimeout(() => message.remove(), 500);
+        }, 5000); // Time in milliseconds (5000ms = 5s)
     }
 
-    // Run the function after the page loads
+    // Function to hide existing flash messages
+    function hideFlashMessages() {
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach(hideFlashMessage);
+    }
+
+    // Function to display a flash message
+    function displayFlashMessage(message, category) {
+        console.log('Displaying flash message:', message, category); // Debugging
+        const flashMessagesDiv = document.getElementById('flash-messages');
+        if (!flashMessagesDiv) {
+            console.error('Flash messages container not found'); // Debugging
+            return;
+        }
+        console.log('Flash messages container found:', flashMessagesDiv); // Debugging
+        const flashMessageDiv = document.createElement('div');
+        flashMessageDiv.className = `flash-message ${category}`;
+        flashMessageDiv.textContent = message;
+        flashMessagesDiv.appendChild(flashMessageDiv);
+        console.log('Flash message added to container:', flashMessageDiv); // Debugging
+
+        hideFlashMessage(flashMessageDiv);
+    }
+
+    // Function to handle AJAX response
+    function handleResponse(response) {
+        console.log('Handling response:', response); // Debugging
+        response.json().then(data => {
+            console.log('Server response JSON:', data); // Debugging
+            if (data.message) {
+                displayFlashMessage(data.message, data.category || 'info');
+            } else if (data.error) {
+                displayFlashMessage(data.error, data.category || 'error');
+            }
+        }).catch(error => console.error('Error parsing JSON:', error));
+    }
+
+    // Function to handle form submission for adding/removing favorites
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        const gameId = form.querySelector('input[name="game_id"]').value;
+        const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ game_id: gameId })
+        })
+        .then(response => {
+            console.log('Response status:', response.status); // Debugging
+            handleResponse(response);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Attach event listeners to forms
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.add-to-favorites-form').forEach(form => {
+            form.addEventListener('submit', handleFormSubmit);
+        });
+    });
+
+    // Run the function to hide existing flash messages after the page loads
     window.onload = hideFlashMessages;
-
-
 
 });

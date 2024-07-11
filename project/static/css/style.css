@@ -261,3 +261,20 @@ h1,h2,h3 {
     background-color: #f2dede;
     border-color: #ebccd1;
 }
+
+
+/* Favorite btn */
+
+/* Styl dla ikony favorite */
+.favorite-icon {
+    color: red !important; /* Zmień kolor na czerwony */
+    font-size: 24px !important; /* Zmień rozmiar czcionki */
+    /* Dodaj inne style według potrzeb */
+}
+
+/* Styl dla ikony favorite_border */
+.favorite-border-icon {
+    color: gray !important; /* Zmień kolor na szary */
+    font-size: 24px !important; /* Zmień rozmiar czcionki */
+    /* Dodaj inne style według potrzeb */
+}
