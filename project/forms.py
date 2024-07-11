@@ -31,3 +31,6 @@ class UpdateProfileForm(FlaskForm):
     selected_avatar = HiddenField('Selected Avatar', validators=[DataRequired()])
     submit = SubmitField('Update')
 
+class CommentForm(FlaskForm):
+    content = TextAreaField('Comment', validators=[DataRequired()])
+    submit = SubmitField('Post Comment')
