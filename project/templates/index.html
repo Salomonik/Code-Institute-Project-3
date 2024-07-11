@@ -17,8 +17,8 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="game_id" value="{{ game.id }}">
                     <button type="submit" class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite">
-                        <i class="material-icons {% if game in current_user.favorites %}favorite-icon{% else %}favorite-border-icon{% endif %}">
-                            {% if game in current_user.favorites %}favorite{% else %}favorite_border{% endif %}
+                        <i class="material-icons {% if game.id in favorite_game_ids %}favorite-icon{% else %}favorite-border-icon{% endif %}">
+                            {% if game.id in favorite_game_ids %}favorite{% else %}favorite_border{% endif %}
                         </i>
                     </button>
                 </form>
