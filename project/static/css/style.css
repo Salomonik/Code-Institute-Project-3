@@ -127,7 +127,7 @@ h3 {
 
 
 .fixed-size {
-    height: 400px;
+    max-height: 500px;
     /* Ustalona wysokość karty */
     display: flex;
     flex-direction: column;
@@ -151,8 +151,10 @@ h3 {
     font-family: var(--title-font);
     font-size: larger;
     font-weight: 500;
-  
+}
 
+.card .card-action{
+    padding: 0;
 }
 
 
@@ -270,11 +272,11 @@ h3 {
     justify-content: center !important;
     align-items: flex-start !important;
     position: absolute;
-    bottom: 5%;
+    bottom: 0%;
     
     z-index: 40;
     background-color: black;
-    opacity: 80%;
+    opacity: 85%;
     width: 100%;
 }
 

@@ -10,7 +10,7 @@
 {% if popular_games %}
 <div class="row">
     {% for game in popular_games %}
-    <div class="col s12 m4 l3">
+    <div class="col s6 m4 l3">
         <div class="card fixed-size game-card">
             <div class="card-action">
                 <form id="toggle-favorite-form-{{ game.id }}" class="add-to-favorites-form" method="post" action="{{ url_for('routes.toggle_favorite') }}">
