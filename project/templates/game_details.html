@@ -5,27 +5,30 @@
 {% block content %}
 
 <script>
-    // Define the URL for toggling favorites
-    const toggleFavoriteUrl = "{{ url_for('routes.toggle_favorite') }}";
+	// Define the URL for toggling favorites
+	const toggleFavoriteUrl = "{{ url_for('routes.toggle_favorite') }}";
 </script>
 <div class="row">
 	<div class="col s12 m6 center-align cover-container">
 		{% if game_details.cover %}
-        <div class="cover-wrapper">
-            <img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
-            <!-- Favorite Button on the Cover -->
-            <form id="toggle-favorite-form-{{ game_details.id }}" class="add-to-favorites-form" method="post" action="{{ url_for('routes.toggle_favorite') }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="game_id" value="{{ game_details.id }}">
-                <button type="submit" class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite favorite-button-on-cover">
-                    <i class="material-icons {% if game_details.id in favorite_game_ids %}favorite-icon{% else %}favorite-border-icon{% endif %}">
-                        {% if game_details.id in favorite_game_ids %}favorite{% else %}favorite_border{% endif %}
-                    </i>
-                </button>
-            </form>
-        </div>
-        {% endif %}
-    </div>
+		<div class="cover-wrapper">
+			<img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
+			<!-- Favorite Button on the Cover -->
+			<form id="toggle-favorite-form-{{ game_details.id }}" class="add-to-favorites-form" method="post"
+				action="{{ url_for('routes.toggle_favorite') }}">
+				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+				<input type="hidden" name="game_id" value="{{ game_details.id }}">
+				<button type="submit"
+					class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite favorite-button-on-cover">
+					<i
+						class="material-icons {% if game_details.id in favorite_game_ids %}favorite-icon{% else %}favorite-border-icon{% endif %}">
+						{% if game_details.id in favorite_game_ids %}favorite{% else %}favorite_border{% endif %}
+					</i>
+				</button>
+			</form>
+		</div>
+		{% endif %}
+	</div>
 	<div class="col s12 m6">
 		<h3>{{ game_details.name }}</h3>
 		{% if game_details.first_release_date %}
@@ -79,42 +82,54 @@
 
 <!-- Comment section -->
 <div class="row">
-    <div class="col s12 m6">
-        <h5>Comments</h5>
-        <form method="POST" action="{{ url_for('routes.game_details', game_id=game_details.id) }}">
-            {{ form.hidden_tag() }}
-            <div class="input-field">
-                {{ form.content.label }}
-                {{ form.content(rows=4, class="materialize-textarea") }}
-            </div>
-            <div class="input-field">
-                {{ form.submit(class="btn") }}
-            </div>
-        </form>
-        <ul class="collection">
-            {% for comment in comments %}
-            <li class="collection-item avatar">
-                <img src="{{ comment.user.profile.avatar_url if comment.user.profile else url_for('static', filename='profile_pics/default-avatar.png') }}" alt="" class="circle">
-                <span class="title">{{ comment.user.username }}</span>
-                <p id="comment-content-{{ comment.id }}">{{ comment.content }}<br>
-                   <small>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
-                </p>
-                {% if comment.user_id == current_user.id %}
-                <form method="POST" action="{{ url_for('routes.delete_comment', comment_id=comment.id) }}" class="delete-comment-form">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-small red">Delete</button>
-                </form>
-                <button class="btn btn-small blue edit-comment-btn" data-comment-id="{{ comment.id }}">Edit</button>
-                <div class="edit-comment-form" id="edit-comment-form-{{ comment.id }}" style="display:none;">
-                    <textarea class="materialize-textarea" id="edit-comment-content-{{ comment.id }}">{{ comment.content }}</textarea>
-                    <button class="btn btn-small green save-comment-btn" data-comment-id="{{ comment.id }}">Save</button>
-                    <button class="btn btn-small grey cancel-edit-btn" data-comment-id="{{ comment.id }}">Cancel</button>
-                </div>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+	<div class="col s12 m6">
+		<h5>Comments</h5>
+		<form method="POST" action="{{ url_for('routes.game_details', game_id=game_details.id) }}">
+			{{ form.hidden_tag() }}
+			<div class="input-field">
+				{{ form.content.label }}
+				{{ form.content(rows=4, class="materialize-textarea") }}
+			</div>
+			<div class="input-field">
+				{{ form.submit(class="btn") }}
+			</div>
+		</form>
+		<ul class="collection">
+			{% for comment in comments %}
+			<li class="collection-item avatar">
+				{% if current_user.profile and current_user.profile.avatar_url %}
+				<img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}" alt="Profile Picture"
+					class="circle">
+				{% else %}
+				<img src="{{ url_for('static', filename='profile_pics/default-avatar.png') }}"
+					alt="Default Profile Picture" class="circle">
+				{% endif %}
+				<span class="title">{{ comment.user.username }}</span>
+				<p id="comment-content-{{ comment.id }}">{{ comment.content }}<br>
+					<small>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+				</p>
+				<div id="edit-box">
+					{% if comment.user_id == current_user.id %}
+					<form method="POST" action="{{ url_for('routes.delete_comment', comment_id=comment.id) }}"
+						class="delete-comment-form">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+						<button type="submit" class="btn btn-small red">Delete</button>
+					</form>
+					<button class="btn btn-small blue edit-comment-btn" data-comment-id="{{ comment.id }}">Edit</button>
+				</div>
+				<div class="edit-comment-form" id="edit-comment-form-{{ comment.id }}" style="display:none;">
+					<textarea class="materialize-textarea"
+						id="edit-comment-content-{{ comment.id }}">{{ comment.content }}</textarea>
+					<button class="btn btn-small green save-comment-btn"
+						data-comment-id="{{ comment.id }}">Save</button>
+					<button class="btn btn-small grey cancel-edit-btn"
+						data-comment-id="{{ comment.id }}">Cancel</button>
+				</div>
+				{% endif %}
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
 </div>
 
 {% endblock %}
