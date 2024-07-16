@@ -105,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 icon.textContent = 'favorite_border';
                                 icon.style.color = '';
                             }
-                            displayFlashMessage(data.message, data.category);
                         }
                     })
                     .catch(error => {
@@ -123,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => {
             message.style.opacity = '0';
             setTimeout(() => message.remove(), 500);
-        }, 3000); 
+        }, 5000); // Time in milliseconds (5000ms = 5s)
     }
 
     // Function to hide existing flash messages
@@ -204,5 +203,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    
+    // Handle cancel edit comment button click
+    document.querySelectorAll('.cancel-edit-btn').forEach(button => {
+        button.addEventListener('click', event => {
+            const commentId = event.target.dataset.commentId;
+            document.getElementById(`comment-content-${commentId}`).style.display = 'block';
+            document.getElementById(`edit-comment-form-${commentId}`).style.display = 'none';
+        });
+    });
+
+    // Handle save comment button click
+    document.querySelectorAll('.save-comment-btn').forEach(button => {
+        button.addEventListener('click', event => {
+            const commentId = event.target.dataset.commentId;
+            const content = document.getElementById(`edit-comment-content-${commentId}`).value;
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`/update_comment/${commentId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ content: content })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById(`comment-content-${commentId}`).textContent = data.content;
+                    document.getElementById(`comment-content-${commentId}`).style.display = 'block';
+                    document.getElementById(`edit-comment-form-${commentId}`).style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error updating comment:', error));
+        });
+    });
 });
