@@ -381,3 +381,4 @@ def update_comment(comment_id):
     comment.updated_at = datetime.now()
     db.session.commit()
     return jsonify({'message': 'Comment updated successfully.', 'content': comment.content}), 200
+
