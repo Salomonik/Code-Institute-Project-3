@@ -2,9 +2,26 @@ document.addEventListener('DOMContentLoaded', function () {
     var elems = document.querySelectorAll('.materialboxed');
     M.Materialbox.init(elems);
 
-    // Carousel
-    var carouselElems = document.querySelectorAll('.carousel');
-    M.Carousel.init(carouselElems);
+     // Initialize carousel
+     var carouselElems = document.querySelectorAll('.carousel');
+     M.Carousel.init(carouselElems);
+ 
+     // Initialize materialboxed
+     var elems = document.querySelectorAll('.materialboxed');
+     M.Materialbox.init(elems, {
+         onOpenStart: function() {
+             // Podczas otwierania modala, ustaw z-index dla innych elementów
+             document.querySelectorAll('.carousel').forEach(function(carousel) {
+                 carousel.style.zIndex = '1030';
+             });
+         },
+         onCloseEnd: function() {
+             // Przy zamykaniu modala, przywróć z-index
+             document.querySelectorAll('.carousel').forEach(function(carousel) {
+                 carousel.style.zIndex = '';
+             });
+         }
+     });
 
     // Autocomplete for game input
     var gameInput = document.getElementById('game_name');

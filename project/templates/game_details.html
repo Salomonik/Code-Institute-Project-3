@@ -63,9 +63,14 @@
 		<h5>Screenshots</h5>
 		<div class="carousel">
 			{% for screenshot in game_details.screenshots %}
-			<a class="carousel-item" href="#{{ screenshot.url }}"><img src="{{ screenshot.url }}"></a>
+			<a class="carousel-item">
+				<img src="{{ screenshot.url }}" alt="Screenshot {{ loop.index }}" class="materialboxed responsive-img">
+			</a>
 			{% endfor %}
 		</div>
+		
+		
+		
 		{% endif %}
 	</div>
 	<div class="col s12 m6">

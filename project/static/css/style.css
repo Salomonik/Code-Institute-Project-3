@@ -192,11 +192,22 @@ h3 {
 }
 
 .carousel .carousel-item>img {
-    min-width: 120%;
-    
+    min-width: 120%;  
     margin-left: -20%;
     object-fit: contain;
 }
+
+.carousel-item img.materialboxed {
+    z-index: 1050; /* Z-index dla obrazów */
+}
+
+.materialbox-overlay {
+    z-index: 1040; /* Z-index dla nakładki */
+}
+
+/* modal for screenshots */
+
+
 
 /* navbar */
 .nav-wrapper {
