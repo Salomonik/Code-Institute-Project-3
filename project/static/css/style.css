@@ -379,7 +379,12 @@ h3 {
     right: 10px;
 }
 
+.materialize-textarea {
+    color: white;
+}
+
 #edit-box{
+    margin-block: 1rem;
     display: flex;
     gap: 2px;
 }
