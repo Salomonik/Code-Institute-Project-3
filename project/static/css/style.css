@@ -121,6 +121,7 @@ button:hover {
 
 nav {
     background-color: var(--secondary-color);
+    height: 65px;
 }
 
 
@@ -199,7 +200,7 @@ h3 {
 
 /* navbar */
 .nav-wrapper {
-    height: 65px;
+    min-height: 65px !important;
 }
 
 .logo-wrapper {
@@ -208,6 +209,7 @@ h3 {
 
 .brand-logo img {
     max-width: 65px;
+    margin: 0;
 }
 
 /* Avatar */
@@ -229,6 +231,7 @@ h3 {
     height: auto;
     border-radius: 50%;
     /* Zaokrąglenie rogów obrazka */
+    margin: 0;
 }
 
 /* Profile */
@@ -395,4 +398,5 @@ h3 {
 
 footer {
     margin-top: 4rem;
+    text-align: center;
 }

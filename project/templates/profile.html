@@ -26,10 +26,10 @@
 				<label for="comment">Number of Comments</label>
 				<input type="text" id="comment" value="{{ num_comments }}" class="custom-input" disabled>
 			</div>
-			<form method="POST" action="{{ url_for('routes.profile') }}">
+			<form method="POST" class="center-align" action="{{ url_for('routes.profile') }}">
 				{{ form.hidden_tag() }}
 				<input type="hidden" id="selected_avatar" name="selected_avatar">
-				<button type="submit" class="btn">Update Profile</button>
+				<button type="submit" class="btn" style="margin-bottom: 20px;" >Update Profile</button>
 			</form>
 		</div>
 		<div class="col s12 m6">
