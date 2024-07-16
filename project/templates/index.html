@@ -12,8 +12,9 @@
     {% for game in popular_games %}
     <div class="col s6 m4 l3">
         <div class="card fixed-size game-card">
+            {% if current_user.is_authenticated %}
             <div class="card-action">
-                <form id="toggle-favorite-form-{{ game.id }}" class="add-to-favorites-form" method="post" action="{{ url_for('routes.toggle_favorite') }}">
+                <form id="toggle-favorite-form-{{ game.id }}" class="add-to-favorites-form" method="post">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="game_id" value="{{ game.id }}">
                     <button type="submit" class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite">
@@ -23,6 +24,7 @@
                     </button>
                 </form>
             </div>
+            {% endif %}
             <div class="card-image waves-effect waves-block waves-light">
                 {% if game.cover %}
                 <a href="{{ url_for('routes.game_details', game_id=game.id) }}" target="_blank">
