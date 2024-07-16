@@ -55,7 +55,7 @@
             <h5>Your Favorite Games</h5>
             <div class="carousel">
                 {% for game in favorite_games %}
-                <a class="carousel-item" href="#{{ game.id }}"><img src="{{ game.cover_url }}"></a>
+                <a class="carousel-item" href="{{ url_for('routes.game_details', game_id=game.id) }}"><img src="{{ game.cover_url }}"></a>
                 {% endfor %}
             </div>
         </div>
