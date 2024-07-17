@@ -18,6 +18,7 @@
 				action="{{ url_for('routes.toggle_favorite') }}">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 				<input type="hidden" name="game_id" value="{{ game_details.id }}">
+				{% if current_user.is_authenticated %}
 				<button type="submit"
 					class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite favorite-button-on-cover">
 					<i
@@ -25,6 +26,7 @@
 						{% if game_details.id in favorite_game_ids %}favorite{% else %}favorite_border{% endif %}
 					</i>
 				</button>
+				{% endif %}
 			</form>
 		</div>
 		{% endif %}
