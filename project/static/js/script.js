@@ -1,50 +1,48 @@
 document.addEventListener('DOMContentLoaded', function () {
-
-
-        // Modal for avatars
-        var modalElems = document.querySelectorAll('.modal');
-        M.Modal.init(modalElems);
-        document.querySelectorAll('.avatar-option').forEach(function (img) {
-            img.addEventListener('click', function () {
-                // Remove the border from all other images
-                document.querySelectorAll('.avatar-option').forEach(function (otherImg) {
-                    otherImg.style.border = '2px solid transparent';
-                });
-    
-                // Add a border to the selected image
-                img.style.border = '2px solid #000';
-    
-                // Get the selected avatar data attribute
-                var selectedAvatar = img.getAttribute('data-avatar');
-    
-                // Set the value of the hidden field to the selected avatar
-                document.getElementById('selected_avatar').value = selectedAvatar;
-    
-                // Debugging output
-                console.log("Selected avatar:", selectedAvatar);
+    // Modal for avatars
+    var modalElems = document.querySelectorAll('.modal');
+    M.Modal.init(modalElems);
+    document.querySelectorAll('.avatar-option').forEach(function (img) {
+        img.addEventListener('click', function () {
+            // Remove the border from all other images
+            document.querySelectorAll('.avatar-option').forEach(function (otherImg) {
+                otherImg.style.border = '2px solid transparent';
             });
-        });
 
-     // Initialize carousel
-     var carouselElems = document.querySelectorAll('.carousel');
-     M.Carousel.init(carouselElems);
- 
-     // Initialize materialboxed
-     var elems = document.querySelectorAll('.materialboxed');
-     M.Materialbox.init(elems, {
-         onOpenStart: function() {
-             // Podczas otwierania modala, ustaw z-index dla innych elementów
-             document.querySelectorAll('.carousel').forEach(function(carousel) {
-                 carousel.style.zIndex = '1030';
-             });
-         },
-         onCloseEnd: function() {
-             // Przy zamykaniu modala, przywróć z-index
-             document.querySelectorAll('.carousel').forEach(function(carousel) {
-                 carousel.style.zIndex = '';
-             });
-         }
-     });
+            // Add a border to the selected image
+            img.style.border = '2px solid #000';
+
+            // Get the selected avatar data attribute
+            var selectedAvatar = img.getAttribute('data-avatar');
+
+            // Set the value of the hidden field to the selected avatar
+            document.getElementById('selected_avatar').value = selectedAvatar;
+
+            // Debugging output
+            console.log("Selected avatar:", selectedAvatar);
+        });
+    });
+
+    // Initialize carousel
+    var carouselElems = document.querySelectorAll('.carousel');
+    M.Carousel.init(carouselElems);
+
+    // Initialize materialboxed
+    var elems = document.querySelectorAll('.materialboxed');
+    M.Materialbox.init(elems, {
+        onOpenStart: function() {
+            // Podczas otwierania modala, ustaw z-index dla innych elementów
+            document.querySelectorAll('.carousel').forEach(function(carousel) {
+                carousel.style.zIndex = '1030';
+            });
+        },
+        onCloseEnd: function() {
+            // Przy zamykaniu modala, przywróć z-index
+            document.querySelectorAll('.carousel').forEach(function(carousel) {
+                carousel.style.zIndex = '';
+            });
+        }
+    });
 
     // Autocomplete for game input
     var gameInput = document.getElementById('game_name');
@@ -78,8 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
     M.Sidenav.init(sidenavElems, {
         edge: 'right' // Ustawienie bocznego menu po prawej stronie
     });
-
-
 
     // Add to favorites form submission
     document.querySelectorAll('.add-to-favorites-form').forEach(function (form) {
@@ -215,19 +211,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle edit comment button click
     document.querySelectorAll('.edit-comment-btn').forEach(button => {
+        console.log("Adding event listener to edit button", button); // Debugging
         button.addEventListener('click', event => {
             const commentId = event.target.dataset.commentId;
-            document.getElementById(`comment-content-${commentId}`).style.display = 'none';
-            document.getElementById(`edit-comment-form-${commentId}`).style.display = 'block';
+            console.log("Edit button clicked for comment ID:", commentId); // Debugging
+            const commentContent = document.getElementById(`comment-content-${commentId}`);
+            const editCommentForm = document.getElementById(`edit-comment-form-${commentId}`);
+            if (commentContent && editCommentForm) {
+                commentContent.style.display = 'none';
+                editCommentForm.style.display = 'block';
+            } else {
+                console.error(`Element with ID comment-content-${commentId} or edit-comment-form-${commentId} not found.`);
+            }
         });
     });
 
     // Handle cancel edit comment button click
     document.querySelectorAll('.cancel-edit-btn').forEach(button => {
+        console.log("Adding event listener to cancel button", button); // Debugging
         button.addEventListener('click', event => {
             const commentId = event.target.dataset.commentId;
-            document.getElementById(`comment-content-${commentId}`).style.display = 'block';
-            document.getElementById(`edit-comment-form-${commentId}`).style.display = 'none';
+            console.log("Cancel button clicked for comment ID:", commentId); // Debugging
+            const commentContent = document.getElementById(`comment-content-${commentId}`);
+            const editCommentForm = document.getElementById(`edit-comment-form-${commentId}`);
+            if (commentContent && editCommentForm) {
+                commentContent.style.display = 'block';
+                editCommentForm.style.display = 'none';
+            } else {
+                console.error(`Element with ID comment-content-${commentId} or edit-comment-form-${commentId} not found.`);
+            }
         });
     });
 
@@ -251,9 +263,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.error) {
                     alert(data.error);
                 } else {
-                    document.getElementById(`comment-content-${commentId}`).textContent = data.content;
-                    document.getElementById(`comment-content-${commentId}`).style.display = 'block';
-                    document.getElementById(`edit-comment-form-${commentId}`).style.display = 'none';
+                    const commentContent = document.getElementById(`comment-content-${commentId}`);
+                    const editCommentForm = document.getElementById(`edit-comment-form-${commentId}`);
+                    if (commentContent && editCommentForm) {
+                        commentContent.textContent = data.content;
+                        commentContent.style.display = 'block';
+                        editCommentForm.style.display = 'none';
+                    } else {
+                        console.error(`Element with ID comment-content-${commentId} or edit-comment-form-${commentId} not found.`);
+                    }
                 }
             })
             .catch(error => console.error('Error updating comment:', error));

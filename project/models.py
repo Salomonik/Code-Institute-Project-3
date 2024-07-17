@@ -14,16 +14,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
-    comments = db.relationship('Comment', backref='author', lazy=True)
+    comments = db.relationship('Comment', backref='author', lazy=True, overlaps="user_comments,author")
     favorites = db.relationship('Game', secondary=favorites, backref=db.backref('favorited_by', lazy='dynamic'))
-    friends = db.relationship('Friend', 
-                              foreign_keys='[Friend.user_id]', 
-                              backref='user', 
-                              lazy=True)
-    friend_of = db.relationship('Friend', 
-                                foreign_keys='[Friend.friend_id]', 
-                                backref='friend', 
-                                lazy=True)
     profile = db.relationship('UserProfile', uselist=False, backref='user_profile')
     
     def __repr__(self):
@@ -46,29 +38,8 @@ class Comment(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
-    user = db.relationship('User', backref='user_comments')
+    user = db.relationship('User', backref='user_comments', overlaps="author,comments")
     game = db.relationship('Game', backref='game_comments')
-
-class Like(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now)
-
-class Friend(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    friend_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now)
-
-class GameGenre(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
-
-class GameGenreAssociation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
-    genre_id = db.Column(db.Integer, db.ForeignKey('game_genre.id'), nullable=False)
 
 class UserProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -4,7 +4,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from project import db
 from project.forms import RegistrationForm, LoginForm, UpdateProfileForm, CommentForm
-from project.models import User, Game, Comment, Like, Friend, GameGenre, GameGenreAssociation, UserProfile, favorites
+from project.models import User, Game, Comment, UserProfile, favorites
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from datetime import datetime
