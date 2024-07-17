@@ -7,13 +7,13 @@
     box-sizing: border-box;
 }
 
+/* HTML and Body styling */
 html,
 body {
     height: 100%;
     width: 100%;
     font-family: Arial, sans-serif;
     line-height: 1.6;
-
 }
 
 body {
@@ -22,9 +22,9 @@ body {
     height: 100dvh;
     display: flex;
     flex-direction: column;
-
 }
 
+/* Root variables for colors, fonts, and other design elements */
 :root {
     --primary-color: #F1DCBC;
     --secondary-color: #2C6169;
@@ -40,13 +40,14 @@ body {
     --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* Body styling */
 body {
     background-color: var(--background-color);
     color: var(--text-color) !important;
     font-family: var(--body-font);
-
 }
 
+/* Container styling */
 .container {
     max-width: var(--max-width);
     margin: 0 auto;
@@ -54,45 +55,37 @@ body {
     background: var(--background-color);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-span,
-a {
+/* Heading, span, and link styling */
+h1, h2, h3, h4, h5, h6, span, a {
     margin-bottom: 1rem;
     font-family: var(--header-font);
     color: var(--text-color);
 }
 
-input[id],
-input#email,
-input#username,
-input#favorite,
-input#comment.custom-input {
+/* Input field styling */
+input[id], input#email, input#username, input#favorite, input#comment.custom-input {
     color: white;
 }
-.input-field>label {
+.input-field > label {
     color: white;
 }
 
+/* Paragraph styling */
 p {
     margin-bottom: 1rem;
     color: var(--text-color);
 }
 
+/* Link styling */
 a {
     color: white;
     text-decoration: none;
-
 }
-
 a:hover {
     text-decoration: underline;
 }
 
+/* Image styling */
 img {
     max-width: 100%;
     height: auto;
@@ -100,222 +93,166 @@ img {
     margin-bottom: 1rem;
 }
 
-button {
+/* Button styling */
+button, .btn {
     background-color: var(--primary-color);
     color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-}
-.btn {
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
    
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    margin: auto;
 }
-
 button:hover {
     background-color: var(--secondary-color);
 }
 
+/* Navbar styling */
 nav {
     background-color: var(--secondary-color);
     height: 65px;
 }
 
-
+/* Main content styling */
 main {
     flex: 1 0 0;
 }
 
-h1,
-h2,
-h3 {
+/* Heading margins */
+h1, h2, h3 {
     margin: 0;
 }
 
-
+/* Fixed size styling */
 .fixed-size {
     max-height: 500px;
-    /* Ustalona wysokość karty */
     display: flex;
     flex-direction: column;
     position: relative;
-    /* Dodane dla lepszego zarządzania pozycjonowaniem */
     overflow: hidden;
-    /* Ukryj elementy wychodzące poza kartę */
 }
 
+/* Card styling */
 .card {
     border-radius: var(--border-radius);
     background-color: var(--secondary-color);
 }
-
 .card-content {
     flex-grow: 1;
     overflow: hidden;
 }
-
 .card-title * {
     font-family: var(--title-font);
     font-size: larger;
     font-weight: 500;
 }
-
-.card .card-action{
+.card .card-action {
     padding: 0;
 }
 
-
-
-/* Dodane style dla obrazów */
+/* Card image styling */
 .card-image img {
     object-fit: contain;
     height: 100%;
 }
 
-
-
-
-/* Game Details */
-
+/* Carousel styling */
 .carousel {
     height: 350px;
 }
-
 .carousel .carousel-item {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
-.carousel .carousel-item>img {
+.carousel .carousel-item > img {
     min-width: 120%;  
     margin-left: -20%;
     object-fit: contain;
 }
-
 .carousel-item img.materialboxed {
-    z-index: 1050; /* Z-index dla obrazów */
+    z-index: 1050;
 }
-
 .materialbox-overlay {
-    z-index: 1040; /* Z-index dla nakładki */
+    z-index: 1040;
 }
 
-/* modal for screenshots */
-
-
-
-/* navbar */
+/* Navbar specific styling */
 .nav-wrapper {
     min-height: 65px !important;
 }
-
 .logo-wrapper {
     max-height: 30px !important;
 }
-
 .brand-logo img {
     max-width: 65px;
     margin: 0;
 }
 
-/* Avatar */
-
-
+/* Avatar styling */
 .nav-profile-picture {
     max-width: 64px;
-    /* Maksymalna szerokość kontenera na obrazek w nawigacji */
     display: flex !important;
     align-items: center !important;
-    /* Wyrównanie w pionie */
     justify-items: center !important;
-    /* Wyrównanie w poziomie */
-
 }
-
 .nav-profile-picture img {
     width: 100%;
     height: auto;
     border-radius: 50%;
-    /* Zaokrąglenie rogów obrazka */
     margin: 0;
 }
 
-/* Profile */
-
+/* Profile picture styling */
 .profile-picture {
     position: relative;
     display: inline-block;
-    /* Make sure the container fits the image */
 }
-
 .profile-picture-btn {
     position: absolute;
     top: 10px;
-    /* Adjust as necessary */
     right: 10px;
-    /* Adjust as necessary */
     z-index: 10;
-    /* Ensure it appears above the image */
 }
 
-
-/* comment section */
+/* Comment section styling */
 .collection {
     border-radius: 15px;
 }
-
 .collection .collection-item {
     background-color: var(--secondary-color);
     line-height: 1.5rem;
     padding: 10px 20px;
     margin: 0;
     border-bottom: 1px solid var(--primary-color);
-
 }
 
-/* Game Cards in games.html" */
-
-
+/* Game cards styling */
 .game-card {
     position: relative;
     display: block;
     border: 2px solid var(--primary-color);
-
 }
-
 .game-card-btn {
     position: absolute;
     top: 20px;
-    /* Adjust as necessary */
     right: 10px;
-    /* Adjust as necessary */
     z-index: 10;
-    /* Ensure it appears above the image */
 }
-
 .card-content {
     display: flex !important;
     justify-content: center !important;
     align-items: flex-start !important;
     position: absolute;
     bottom: 0%;
-    
     z-index: 40;
     background-color: black;
     opacity: 85%;
     width: 100%;
 }
 
-
-
-
-/* Flash messages */
-
+/* Flash messages styling */
 .flash-messages {
     position: fixed;
     top: 50px;
@@ -323,7 +260,6 @@ h3 {
     width: auto;
     z-index: 1000;
 }
-
 .flash-message {
     padding: 10px;
     margin-bottom: 10px;
@@ -331,82 +267,65 @@ h3 {
     border-radius: 4px;
     background-color: #19242F;
 }
-
 .flash-message.info {
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1;
 }
-
 .flash-message.success {
     color: #3c763d;
     background-color: #dff0d8;
     border-color: #d6e9c6;
 }
-
 .flash-message.warning {
     color: #8a6d3b;
     background-color: #fcf8e3;
     border-color: #faebcc;
 }
-
 .flash-message.error {
     color: #a94442;
     background-color: #f2dede;
     border-color: #ebccd1;
 }
 
-
-/* Favorite btn */
-
-/* Styl dla ikony favorite */
+/* Favorite button styling */
 .favorite-icon {
     color: red !important;
-    /* Zmień kolor na czerwony */
     font-size: 24px !important;
-    /* Zmień rozmiar czcionki */
-    /* Dodaj inne style według potrzeb */
 }
-
-/* Styl dla ikony favorite_border */
 .favorite-border-icon {
     color: gray !important;
-    /* Zmień kolor na szary */
     font-size: 24px !important;
-    /* Zmień rozmiar czcionki */
-    /* Dodaj inne style według potrzeb */
 }
 
-/* favoirite btn in game_details */
+/* Favorite button on game details */
 .cover-container {
     position: relative;
 }
-
 .cover-wrapper {
     position: relative;
     display: inline-block;
 }
-
 .favorite-button-on-cover {
     position: absolute;
     top: 10px;
     right: 10px;
 }
 
+/* Textarea styling */
 .materialize-textarea {
     color: white;
 }
-
-#edit-box{
+#edit-box {
     margin-block: 1rem;
     display: flex;
     gap: 2px;
 }
 #edit-comment-content-3 {
     color: white;
-
 }
 
+/* Footer styling */
 footer {
     margin-top: 4rem;
     text-align: center;
