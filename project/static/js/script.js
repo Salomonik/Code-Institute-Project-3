@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Modal for avatars
+    // Initialize modals for avatars
     var modalElems = document.querySelectorAll('.modal');
     M.Modal.init(modalElems);
+
+    // Handle avatar selection
     document.querySelectorAll('.avatar-option').forEach(function (img) {
         img.addEventListener('click', function () {
             // Remove the border from all other images
@@ -27,17 +29,17 @@ document.addEventListener('DOMContentLoaded', function () {
     var carouselElems = document.querySelectorAll('.carousel');
     M.Carousel.init(carouselElems);
 
-    // Initialize materialboxed
+    // Initialize materialboxed images
     var elems = document.querySelectorAll('.materialboxed');
     M.Materialbox.init(elems, {
         onOpenStart: function() {
-            // Podczas otwierania modala, ustaw z-index dla innych elementów
+            // When the modal opens, set z-index for other elements
             document.querySelectorAll('.carousel').forEach(function(carousel) {
                 carousel.style.zIndex = '1030';
             });
         },
         onCloseEnd: function() {
-            // Przy zamykaniu modala, przywróć z-index
+            // When the modal closes, reset z-index
             document.querySelectorAll('.carousel').forEach(function(carousel) {
                 carousel.style.zIndex = '';
             });
@@ -71,13 +73,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Sidenav
+    // Initialize sidenav
     var sidenavElems = document.querySelectorAll('.sidenav');
     M.Sidenav.init(sidenavElems, {
-        edge: 'right' // Ustawienie bocznego menu po prawej stronie
+        edge: 'right' // Set sidenav on the right side
     });
 
-    // Add to favorites form submission
+    // Handle add to favorites form submission
     document.querySelectorAll('.add-to-favorites-form').forEach(function (form) {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
