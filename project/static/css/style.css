@@ -328,3 +328,10 @@ footer {
     margin-top: 4rem;
     text-align: center;
 }
+
+
+/* login screen */
+
+.form-group {
+    margin-bottom: 1rem;
+}
