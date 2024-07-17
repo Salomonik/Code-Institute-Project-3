@@ -70,9 +70,9 @@
 			</a>
 			{% endfor %}
 		</div>
-		
-		
-		
+
+
+
 		{% endif %}
 	</div>
 	<div class="col s12 m6">
@@ -104,13 +104,7 @@
 		<ul class="collection">
 			{% for comment in comments %}
 			<li class="collection-item avatar">
-				{% if current_user.profile and current_user.profile.avatar_url %}
-				<img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}" alt="Profile Picture"
-					class="circle">
-				{% else %}
-				<img src="{{ url_for('static', filename='profile_pics/default-avatar.png') }}"
-					alt="Default Profile Picture" class="circle">
-				{% endif %}
+				<img src="{{ url_for('static', filename=comment.user.profile.avatar_url) if comment.user.profile else url_for('static', filename='profile_pics/default-avatar.png') }}" alt="" class="circle">
 				<span class="title">{{ comment.user.username }}</span>
 				<p id="comment-content-{{ comment.id }}">{{ comment.content }}<br>
 					<small>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
