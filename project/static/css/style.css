@@ -245,11 +245,17 @@ h1, h2, h3 {
     align-items: flex-start !important;
     position: absolute;
     bottom: 0%;
-    z-index: 40;
+   z-index: 40;
     background-color: black;
     opacity: 85%;
     width: 100%;
 }
+@media screen and (max-width: 360px ) {
+    .card-content{
+        z-index: 0;
+    }
+}
+
 
 /* Flash messages styling */
 .flash-messages {
@@ -335,3 +341,5 @@ footer {
 .form-group {
     margin-bottom: 1rem;
 }
+
+
