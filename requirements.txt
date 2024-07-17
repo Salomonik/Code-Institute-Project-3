@@ -7,3 +7,4 @@ Werkzeug
 requests
 email-validator
 SQLAlchemy
+gunicorn
