@@ -97,11 +97,10 @@ img {
 button, .btn {
     background-color: var(--primary-color);
     color: #fff;
-   
+
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
-    margin: auto;
 }
 button:hover {
     background-color: var(--secondary-color);
@@ -316,8 +315,7 @@ h1, h2, h3 {
 .materialize-textarea {
     color: white;
 }
-#edit-box {
-    margin-block: 1rem;
+#edit-box { 
     display: flex;
     gap: 2px;
 }

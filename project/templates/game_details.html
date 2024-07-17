@@ -5,132 +5,133 @@
 {% block content %}
 
 <script>
-	// Define the URL for toggling favorites
-	const toggleFavoriteUrl = "{{ url_for('routes.toggle_favorite') }}";
+    // Define the URL for toggling favorites
+    const toggleFavoriteUrl = "{{ url_for('routes.toggle_favorite') }}";
 </script>
-<div class="row">
-	<div class="col s12 m6 center-align cover-container">
-		{% if game_details.cover %}
-		<div class="cover-wrapper">
-			<img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
-			<!-- Favorite Button on the Cover -->
-			<form id="toggle-favorite-form-{{ game_details.id }}" class="add-to-favorites-form" method="post"
-				action="{{ url_for('routes.toggle_favorite') }}">
-				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-				<input type="hidden" name="game_id" value="{{ game_details.id }}">
-				{% if current_user.is_authenticated %}
-				<button type="submit"
-					class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite favorite-button-on-cover">
-					<i
-						class="material-icons {% if game_details.id in favorite_game_ids %}favorite-icon{% else %}favorite-border-icon{% endif %}">
-						{% if game_details.id in favorite_game_ids %}favorite{% else %}favorite_border{% endif %}
-					</i>
-				</button>
-				{% endif %}
-			</form>
-		</div>
-		{% endif %}
-	</div>
-	<div class="col s12 m6">
-		<h3>{{ game_details.name }}</h3>
-		{% if game_details.first_release_date %}
-		<p><strong>Release Date:</strong> {{ game_details.first_release_date | dateformat }}</p>
-		{% endif %}
-		{% if game_details.platforms %}
-		<p><strong>Platforms:</strong> {{ game_details.platforms | map(attribute='name') | join(', ') }}</p>
-		{% endif %}
-		{% if game_details.genres %}
-		<p><strong>Genre:</strong> {{ game_details.genres | map(attribute='name') | join(', ') }}</p>
-		{% endif %}
-		{% if game_details.game_modes %}
-		<p><strong>Game Modes:</strong> {{ game_details.game_modes | map(attribute='name') | join(', ') }}</p>
-		{% endif %}
-		{% if game_details.storyline %}
-		<p><strong>Storyline:</strong> {{ game_details.storyline }}</p>
-		{% endif %}
-		{% if game_details.involved_companies %}
-		<p><strong>Developer:</strong> {{ game_details.involved_companies | map(attribute='company.name') | join(', ')
-			}}</p>
-		{% endif %}
-		{% if game_details.rating %}
-		<p><strong>Rating:</strong> {{ game_details.rating }}</p>
-		{% endif %}
-	</div>
 
+<div class="row">
+    <!-- Game Cover Image and Favorite Button -->
+    <div class="col s12 m6 center-align cover-container">
+        {% if game_details.cover %}
+        <div class="cover-wrapper">
+            <img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
+            <!-- Favorite Button on the Cover -->
+            <form id="toggle-favorite-form-{{ game_details.id }}" class="add-to-favorites-form" method="post"
+                action="{{ url_for('routes.toggle_favorite') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="game_id" value="{{ game_details.id }}">
+                {% if current_user.is_authenticated %}
+                <button type="submit"
+                    class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite favorite-button-on-cover">
+                    <i
+                        class="material-icons {% if game_details.id in favorite_game_ids %}favorite-icon{% else %}favorite-border-icon{% endif %}">
+                        {% if game_details.id in favorite_game_ids %}favorite{% else %}favorite_border{% endif %}
+                    </i>
+                </button>
+                {% endif %}
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Game Details -->
+    <div class="col s12 m6">
+        <h3>{{ game_details.name }}</h3>
+        {% if game_details.first_release_date %}
+        <p><strong>Release Date:</strong> {{ game_details.first_release_date | dateformat }}</p>
+        {% endif %}
+        {% if game_details.platforms %}
+        <p><strong>Platforms:</strong> {{ game_details.platforms | map(attribute='name') | join(', ') }}</p>
+        {% endif %}
+        {% if game_details.genres %}
+        <p><strong>Genre:</strong> {{ game_details.genres | map(attribute='name') | join(', ') }}</p>
+        {% endif %}
+        {% if game_details.game_modes %}
+        <p><strong>Game Modes:</strong> {{ game_details.game_modes | map(attribute='name') | join(', ') }}</p>
+        {% endif %}
+        {% if game_details.storyline %}
+        <p><strong>Storyline:</strong> {{ game_details.storyline }}</p>
+        {% endif %}
+        {% if game_details.involved_companies %}
+        <p><strong>Developer:</strong> {{ game_details.involved_companies | map(attribute='company.name') | join(', ') }}</p>
+        {% endif %}
+        {% if game_details.rating %}
+        <p><strong>Rating:</strong> {{ game_details.rating }}</p>
+        {% endif %}
+    </div>
 </div>
 
 <div class="row">
-	<div class="col s12 m6">
-		{% if game_details.screenshots %}
-		<h5>Screenshots</h5>
-		<div class="carousel">
-			{% for screenshot in game_details.screenshots %}
-			<a class="carousel-item">
-				<img src="{{ screenshot.url }}" alt="Screenshot {{ loop.index }}" class="materialboxed responsive-img">
-			</a>
-			{% endfor %}
-		</div>
+    <!-- Screenshots Carousel -->
+    <div class="col s12 m6">
+        {% if game_details.screenshots %}
+        <h5>Screenshots</h5>
+        <div class="carousel">
+            {% for screenshot in game_details.screenshots %}
+            <a class="carousel-item">
+                <img src="{{ screenshot.url }}" alt="Screenshot {{ loop.index }}" class="materialboxed responsive-img">
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
 
-
-
-		{% endif %}
-	</div>
-	<div class="col s12 m6">
-		{% if game_details.videos %}
-		<h5>Videos</h5>
-		<div class="video-container">
-			{% for video in game_details.videos %}
-			<iframe src="https://www.youtube.com/embed/{{ video.video_id }}" frameborder="0" allowfullscreen></iframe>
-			{% endfor %}
-		</div>
-		{% endif %}
-	</div>
+    <!-- Videos Section -->
+    <div class="col s12 m6">
+        {% if game_details.videos %}
+        <h5>Videos</h5>
+        <div class="video-container">
+            {% for video in game_details.videos %}
+            <iframe src="https://www.youtube.com/embed/{{ video.video_id }}" frameborder="0" allowfullscreen></iframe>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
 </div>
 
-<!-- Comment section -->
+<!-- Comment Section -->
 <div class="row">
-	<div class="col s12">
-		<h5>Comments</h5>
-		<form method="POST" action="{{ url_for('routes.game_details', game_id=game_details.id) }}">
-			{{ form.hidden_tag() }}
-			<div class="input-field">
-				{{ form.content.label }}
-				{{ form.content(rows=4, class="materialize-textarea") }}
-			</div>
-			<div class="input-field">
-				{{ form.submit(class="btn") }}
-			</div>
-		</form>
-		<ul class="collection">
-			{% for comment in comments %}
-			<li class="collection-item avatar">
-				<img src="{{ url_for('static', filename=comment.user.profile.avatar_url) if comment.user.profile else url_for('static', filename='profile_pics/default-avatar.png') }}" alt="" class="circle">
-				<span class="title">{{ comment.user.username }}</span>
-				<p id="comment-content-{{ comment.id }}">{{ comment.content }}<br>
-					<small>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
-				</p>
-				<div id="edit-box">
-					{% if comment.user_id == current_user.id %}
-					<form method="POST" action="{{ url_for('routes.delete_comment', comment_id=comment.id) }}"
-						class="delete-comment-form">
-						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-						<button type="submit" class="btn btn-small red">Delete</button>
-					</form>
-					<button class="btn btn-small blue edit-comment-btn" data-comment-id="{{ comment.id }}">Edit</button>
-				</div>
-				<div class="edit-comment-form" id="edit-comment-form-{{ comment.id }}" style="display:none;">
-					<textarea class="materialize-textarea"
-						id="edit-comment-content-{{ comment.id }}">{{ comment.content }}</textarea>
-					<button class="btn btn-small green save-comment-btn"
-						data-comment-id="{{ comment.id }}">Save</button>
-					<button class="btn btn-small grey cancel-edit-btn"
-						data-comment-id="{{ comment.id }}">Cancel</button>
-				</div>
-				{% endif %}
-			</li>
-			{% endfor %}
-		</ul>
-	</div>
+    <div class="col s12">
+        <h5>Comments</h5>
+        <form method="POST" action="{{ url_for('routes.game_details', game_id=game_details.id) }}">
+            {{ form.hidden_tag() }}
+            <div class="input-field">
+                {{ form.content.label }}
+                {{ form.content(rows=4, class="materialize-textarea") }}
+            </div>
+            <div class="input-field">
+                {{ form.submit(class="btn") }}
+            </div>
+        </form>
+
+        <!-- Display Comments -->
+        <ul class="collection">
+            {% for comment in comments %}
+            <li class="collection-item avatar">
+                <img src="{{ url_for('static', filename=comment.user.profile.avatar_url) if comment.user.profile else url_for('static', filename='profile_pics/default-avatar.png') }}" alt="" class="circle">
+                <span class="title">{{ comment.user.username }}</span>
+                <p id="comment-content-{{ comment.id }}">{{ comment.content }}<br>
+                    <small>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                </p>
+                <div id="edit-box">
+                    <!-- Comment Edit/Delete Buttons -->
+                    {% if comment.user_id == current_user.id %}
+                    <form method="POST" action="{{ url_for('routes.delete_comment', comment_id=comment.id) }}" class="delete-comment-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-small red">Delete</button>
+                    </form>
+                    <button class="btn btn-small blue edit-comment-btn" data-comment-id="{{ comment.id }}">Edit</button>
+                </div>
+                <div class="edit-comment-form" id="edit-comment-form-{{ comment.id }}" style="display:none;">
+                    <textarea class="materialize-textarea" id="edit-comment-content-{{ comment.id }}">{{ comment.content }}</textarea>
+                    <button class="btn btn-small green save-comment-btn" data-comment-id="{{ comment.id }}">Save</button>
+                    <button class="btn btn-small grey cancel-edit-btn" data-comment-id="{{ comment.id }}">Cancel</button>
+                </div>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 
 {% endblock %}
