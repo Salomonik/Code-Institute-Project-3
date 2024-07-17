@@ -10,11 +10,14 @@ import requests
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 
+# Define Blueprint for routing
 routes = Blueprint('routes', __name__)
 
+# Retrieve environment variables
 CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
 
+# Function to get access token from IGDB
 def get_igdb_access_token(client_id, client_secret):
     url = 'https://id.twitch.tv/oauth2/token'
     payload = {
@@ -26,12 +29,14 @@ def get_igdb_access_token(client_id, client_secret):
     response.raise_for_status()
     return response.json()['access_token']
 
+# Route for the home page
 @routes.route('/')
 def index():
     try:
         client_id = current_app.config['TWITCH_CLIENT_ID']
         client_secret = current_app.config['TWITCH_CLIENT_SECRET']
         
+        # Get access token
         access_token = get_igdb_access_token(client_id, client_secret)
         current_app.config['ACCESS_TOKEN'] = access_token
         
@@ -48,10 +53,12 @@ def index():
             'limit 12;'
         )
         
+        # Fetch popular games from IGDB
         response = requests.post(url, headers=headers, data=data)
         response.raise_for_status()
         popular_games = response.json()
         
+        # Modify image URLs for better display
         modify_images(popular_games)
         favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
 
@@ -60,6 +67,7 @@ def index():
         print("Error fetching popular games:", e)
         return render_template('error.html', error=str(e))
 
+# Function to modify image URL size
 def modify_image_url(url, size):
     sizes = ["t_thumb", "t_cover_small", "t_logo_med", "t_screenshot_med", "t_cover_big", "t_screenshot_big", "t_screenshot_huge", "t_720p", "t_1080p"]
     for s in sizes:
@@ -67,6 +75,7 @@ def modify_image_url(url, size):
             return url.replace(s, size)
     return url
 
+# Function to modify images in game details
 def modify_images(game_details):
     for game in game_details:
         if 'cover' in game:
@@ -75,6 +84,7 @@ def modify_images(game_details):
             for screenshot in game['screenshots']:
                 screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
 
+# Route to get games based on search criteria
 @routes.route('/get_games', methods=['GET'])
 def get_games():
     try:
@@ -96,21 +106,24 @@ def get_games():
         if platform:
             data += f' where platforms = [{platform}];'
         
+        # Fetch games based on search criteria
         response = requests.post(url, headers=headers, data=data)
         response.raise_for_status()
         game_info = response.json()
         
+        # Modify image URLs for better display
         modify_images(game_info)
         favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
-        return render_template('games.html', game_info=game_info,favorite_game_ids=favorite_game_ids)
+        return render_template('games.html', game_info=game_info, favorite_game_ids=favorite_game_ids)
     except Exception as e:
         print("Error fetching game data:", e)
         return render_template('error.html', error=str(e))
 
+# Route for game details
 @routes.route('/game_details/<int:game_id>', methods=['GET', 'POST'])
 def game_details(game_id):
     form = CommentForm()
-    game_details = fetch_game_details(game_id)  # Zakładam, że istnieje funkcja `fetch_game_details` obsługująca logikę API
+    game_details = fetch_game_details(game_id)  # Assume a function `fetch_game_details` handles API logic
 
     if form.validate_on_submit():
         if current_user.is_authenticated:
@@ -126,6 +139,7 @@ def game_details(game_id):
     favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
     return render_template('game_details.html', game_details=game_details, form=form, comments=comments, favorite_game_ids=favorite_game_ids)
 
+# Function to fetch game details from IGDB
 def fetch_game_details(game_id):
     try:
         url = 'https://api.igdb.com/v4/games'
@@ -143,13 +157,14 @@ def fetch_game_details(game_id):
 
         response = requests.post(url, headers=headers, data=data)
         response.raise_for_status()
-        game_details = response.json()[0]  # Zakładam, że odpowiedź jest listą zawierającą jeden element
-        modify_images([game_details])  # Modyfikowanie obrazów
+        game_details = response.json()[0]  # Assume the response is a list containing one element
+        modify_images([game_details])  # Modify image URLs
         return game_details
     except Exception as e:
         print("Error fetching game details:", e)
         return None
 
+# Route to suggest games based on a query
 @routes.route('/suggest_games', methods=['GET'])
 def suggest_games():
     try:
@@ -175,6 +190,7 @@ def suggest_games():
         print("Error fetching game suggestions:", e)
         return jsonify([])
 
+# Route for user registration
 @routes.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -197,6 +213,7 @@ def register():
             flash('Email address already exists.', 'danger')
     return render_template('register.html', title='Register', form=form)
 
+# Route for user login
 @routes.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -213,11 +230,13 @@ def login():
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
+# Route for user logout
 @routes.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('routes.index'))
 
+# Route for user profile
 @routes.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -247,9 +266,9 @@ def profile():
         if game.cover_url:
             game.cover_url = modify_image_url(game.cover_url, 't_cover_big')
 
-    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars, favorite_games = favorite_games)
+    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars, favorite_games=favorite_games)
 
-
+# Function to fetch game details from IGDB
 def fetch_game_from_igdb(game_id):
     url = 'https://api.igdb.com/v4/games'
     headers = {
@@ -266,6 +285,7 @@ def fetch_game_from_igdb(game_id):
     else:
         return None
 
+# Function to add game to the database
 def add_game_to_db(game_details):
     game = Game(
         id=game_details['id'],
@@ -278,6 +298,7 @@ def add_game_to_db(game_details):
     db.session.commit()
     return game
 
+# Route to add a game to favorites
 @routes.route('/add_to_favorites', methods=['POST'])
 @login_required
 def add_to_favorites():
@@ -306,8 +327,7 @@ def add_to_favorites():
         db.session.rollback()
         return jsonify({'error': 'Error adding game to favorites: ' + str(e), 'category': 'error'}), 500
 
-from flask import flash, jsonify
-
+# Route to toggle a game as favorite
 @routes.route('/toggle_favorite', methods=['POST'])
 @login_required
 def toggle_favorite():
@@ -341,18 +361,18 @@ def toggle_favorite():
         flash('Error toggling favorite: ' + str(e), 'error')
         return jsonify({'error': 'Error toggling favorite: ' + str(e), 'category': 'error'}), 500
 
-
+# Custom template filter for date formatting
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
     return datetime.fromtimestamp(value).strftime(format)
 
+# Route to clear flash messages
 @routes.route('/clear_flash_messages', methods=['POST'])
 def clear_flash_messages():
     session.pop('_flashes', None)
     return jsonify({'status': 'success'})
 
-
-
+# Route to delete a comment
 @routes.route('/delete_comment/<int:comment_id>', methods=['POST'])
 @login_required
 def delete_comment(comment_id):
@@ -366,6 +386,7 @@ def delete_comment(comment_id):
     flash('Your comment has been deleted.', 'success')
     return redirect(url_for('routes.game_details', game_id=comment.game_id))
 
+# Route to update a comment
 @routes.route('/update_comment/<int:comment_id>', methods=['POST'])
 @login_required
 def update_comment(comment_id):
@@ -381,4 +402,3 @@ def update_comment(comment_id):
     comment.updated_at = datetime.now()
     db.session.commit()
     return jsonify({'message': 'Comment updated successfully.', 'content': comment.content}), 200
-
