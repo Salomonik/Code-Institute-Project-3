@@ -2,100 +2,98 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{% block title %}Flask IGDB API{% endblock %}</title>
-	<meta name="csrf-token" content="{{ csrf_token() }}">
-	
-	<link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Flask IGDB API{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
-	<header>
-		<nav>
-			<div class="nav-wrapper">
-				<a href="{{ url_for('routes.index') }}" class="brand-logo left"><img src="../static/logo/logo.webp"
-						alt=""></a>
-				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="{{ url_for('routes.index') }}">Home</a></li>
-					{% if current_user.is_authenticated %}
-					<li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
-					<li><a class="avatar-img" href="{{ url_for('routes.profile') }}">
-							<div class="nav-profile-picture">
-								{% if current_user.profile and current_user.profile.avatar_url and
-								current_user.profile.avatar_url.strip() %}
-								<img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}"
-									alt="Profile Picture" class="responsive-img">
-								{% else %}
-								<img src="{{ url_for('static', filename='profile_pics/default-avatar.png') }}"
-									alt="Default Profile Picture" class="responsive-img">
-								{% endif %}
+    <header>
+        <nav aria-label="Main navigation">
+            <div class="nav-wrapper">
+                <a href="{{ url_for('routes.index') }}" class="brand-logo left"><img src="../static/logo/logo.webp"
+                        alt="logo"></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="{{ url_for('routes.index') }}">Home</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
+                    <li><a class="avatar-img" href="{{ url_for('routes.profile') }}">
+                            <div class="nav-profile-picture">
+                                {% if current_user.profile and current_user.profile.avatar_url and current_user.profile.avatar_url.strip() %}
+                                <img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}"
+                                    alt="Profile Picture" class="responsive-img">
+                                {% else %}
+                                <img src="{{ url_for('static', filename='profile_pics/default-avatar.png') }}"
+                                    alt="Default Profile Picture" class="responsive-img">
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li><a href="{{ url_for('routes.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('routes.register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i
+                        class="material-icons">menu</i></a>
+            </div>
+        </nav>
 
-							</div>
-						</a>
-					</li>
-					{% else %}
-					<li><a href="{{ url_for('routes.login') }}">Login</a></li>
-					<li><a href="{{ url_for('routes.register') }}">Register</a></li>
-					{% endif %}
-				</ul>
-				<a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i
-						class="material-icons">menu</i></a>
-			</div>
-		</nav>
+        <ul class="sidenav right-aligned" id="mobile-demo" aria-label="Mobile navigation">
+            <li><a href="{{ url_for('routes.index') }}">Home</a></li>
+            {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('routes.profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('routes.login') }}">Login</a></li>
+            <li><a href="{{ url_for('routes.register') }}">Register</a></li>
+            {% endif %}
+        </ul>
+    </header>
 
+    <main>
+        <!-- Flash Messages -->
+        <div id="flash-messages" class="flash-messages" role="alert" aria-live="polite">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
 
+        <form action="/get_games" method="get" class="col s12 ">
+            <div class="row ">
+                <div class="input-field col s6 offset-m2 offset-s2">
+                    <label for="game_name">Game Name</label>
+                    <input type="text" id="game_name" name="game_name" class="validate autocomplete" aria-required="true">
+                </div>
+                <div class="input-field col s3">
+                    <button type="submit" style="background-color: #2C6169;" class="btn waves-effect waves-light">
+                        <i class="material-icons center-align" aria-hidden="true">search</i>
+                        <span class="sr-only">Search</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        {% block content %}{% endblock %}
+    </main>
 
-		<ul class="sidenav right-aligned" id="mobile-demo">
-			<li><a href="{{ url_for('routes.index') }}">Home</a></li>
-			{% if current_user.is_authenticated %}
-			<li><a href="{{ url_for('routes.profile') }}">Profile</a></li>
-			<li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
-			{% else %}
-			<li><a href="{{ url_for('routes.login') }}">Login</a></li>
-			<li><a href="{{ url_for('routes.register') }}">Register</a></li>
-			{% endif %}
-		</ul>
+    <footer>
+        <p>&copy;2024 Jakub Parafian</p>
+    </footer>
 
-
-	</header>
-	<main>
-
-		<!-- Flash Messages -->
-		<div id="flash-messages" class="flash-messages">
-			{% with messages = get_flashed_messages(with_categories=true) %}
-			{% if messages %}
-			{% for category, message in messages %}
-			<div class="flash-message {{ category }}">
-				{{ message }}
-			</div>
-			{% endfor %}
-			{% endif %}
-			{% endwith %}
-		</div>
-
-		<form action="/get_games" method="get" class="col s12 ">
-			<div class="row ">
-				<div class="input-field col s6 offset-m2 offset-s2">
-					<input type="text" id="game_name" name="game_name" class="validate autocomplete">
-					<label for="game_name">Game Name</label>
-				</div>
-				<div class="input-field col s3">
-					<button type="submit" style="background-color: #2C6169;" class="btn waves-effect waves-light"><i class="material-icons center-align">search</i></button>
-				</div>
-			</div>
-		</form>
-		{% block content %}{% endblock %}
-	</main>
-	<footer>
-		<p>&copy;2024 Jakub Parafian</p>
-	</footer>
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 
 </html>
