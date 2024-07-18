@@ -112,8 +112,6 @@ During the project planning phase, the following steps were undertaken to ensure
 
 ### Functional Requirements
 
-### Functional Requirements
-
 1. **User Authentication**:
    - Users should be able to register, log in, and log out.
    - Registered users should have a unique username and email.
@@ -159,3 +157,21 @@ During the project planning phase, the following steps were undertaken to ensure
     - CSRF protection should be implemented to prevent cross-site request forgery.
     - User input should be validated to prevent SQL injection and other security issues.
 
+### Non-Functional Requirements
+
+1. **Performance**:
+   - Database queries should be optimized for fast retrieval of data.
+
+2. **Reliability**:
+   - The application should have minimal downtime.
+
+3. **Usability**:
+   - The user interface should be intuitive and easy to navigate.
+   - Forms and other interactive elements should provide clear feedback to the user.
+
+4. **Security**:
+   - Sensitive data, such as user passwords, should be encrypted.
+   - The application should be protected against common security threats, such as SQL injection, XSS, and CSRF.
+
+8. **Accessibility**:
+   - It should follow accessibility guidelines, such as providing alt text for images and ensuring good contrast between text and background colors.
