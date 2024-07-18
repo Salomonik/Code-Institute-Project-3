@@ -63,5 +63,33 @@ During the project planning phase, the following steps were undertaken to ensure
    - Configured version control using Git and set up a repository on GitHub.
    - Established a development environment with necessary tools and libraries, including virtual environments, required Python packages, and database configurations.
 
+### Content Requirements
 
+#### Pages and Features
+
+1. **Home Page**:
+   - Introduction to the site and its main features.
+   - Search bar for users to search for games by name.
+   - Display of popular games.
+
+2. **Game Details Page**:
+   - Detailed information about a specific game, including:
+     - Name
+     - Description
+     - Release date
+     - Cover image
+     - User comments
+   - Option to add the game to the user's favorites list (if logged in).
+
+3. **User Profile Page**:
+   - Display user information, including username and email.
+   - List of the user's favorite games.
+   - Option to update profile picture.
+
+4. **Login Page**:
+   - Form for users to log in with their email and password.
+
+5. **Registration Page**:
+   - Form for new users to sign up with their username, email, and password.
+   - Validation for unique usernames and emails.
 
