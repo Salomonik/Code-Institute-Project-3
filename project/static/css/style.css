@@ -167,7 +167,7 @@ h1, h2, h3 {
 }
 .carousel .carousel-item > img {
     min-width: 120%;  
-    margin-left: -20%;
+    margin-left: -0%;
     object-fit: contain;
 }
 .carousel-item img.materialboxed {
