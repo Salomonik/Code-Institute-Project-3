@@ -14,7 +14,7 @@
     <div class="col s12 m6 center-align cover-container">
         {% if game_details.cover %}
         <div class="cover-wrapper">
-            <img src="{{ game_details.cover.url }}" alt="{{ game_details.name }}" class="responsive-img">
+            <img src="{{ game_details.cover.url }}" alt="{{ game_details.name }} cover" class="responsive-img">
             <!-- Favorite Button on the Cover -->
             <form id="toggle-favorite-form-{{ game_details.id }}" class="add-to-favorites-form" method="post"
                 action="{{ url_for('routes.toggle_favorite') }}">
@@ -108,7 +108,7 @@
         <ul class="collection">
             {% for comment in comments %}
             <li class="collection-item avatar">
-                <img src="{{ url_for('static', filename=comment.user.profile.avatar_url) if comment.user.profile else url_for('static', filename='profile_pics/default-avatar.png') }}" alt="" class="circle">
+                <img src="{{ url_for('static', filename=comment.user.profile.avatar_url) if comment.user.profile else url_for('static', filename='profile_pics/default-avatar.png') }}" alt="avatar" class="circle">
                 <span class="title">{{ comment.user.username }}</span>
                 <p id="comment-content-{{ comment.id }}">{{ comment.content }}<br>
                     <small>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>

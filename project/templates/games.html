@@ -33,10 +33,10 @@
             <div class="card-image waves-effect waves-block waves-light">
                 {% if game.cover %}
                 <a href="{{ url_for('routes.game_details', game_id=game.id) }}" target="_blank">
-                    <img class="activator" src="{{ game.cover.url }}">
+                    <img class="activator" src="{{ game.cover.url }}" alt="{{ game.name }} cover">
                 </a>
                 {% else %}
-                <img class="activator" src="{{ url_for('static', filename='images/cover-placeholder.webp') }}">
+                <img class="activator" src="{{ url_for('static', filename='images/cover-placeholder.webp') }}" alt="Placeholder">
                 {% endif %}
             </div>
             <!-- Game title -->
