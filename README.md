@@ -175,3 +175,17 @@ During the project planning phase, the following steps were undertaken to ensure
 
 8. **Accessibility**:
    - It should follow accessibility guidelines, such as providing alt text for images and ensuring good contrast between text and background colors.
+
+### Out of Scope
+
+The following features are not included in the current scope of the Game Central Collection project:
+
+1. **Viewing Other Users' Profiles**:
+   - The ability to view the profiles of other users is not implemented.
+
+2. **Displaying All Comments on User Profiles**:
+   - User profiles do not display a list of all comments made by the user.
+
+3. **Liking Comments**:
+   - The functionality to like or upvote comments is not available.
+
