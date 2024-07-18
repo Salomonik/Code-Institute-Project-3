@@ -32,5 +32,36 @@ As the owner of Game Central Collection, the primary goals of the site are:
 7. **Security**: Implement robust security measures to protect user data, including secure authentication, data encryption, and CSRF protection.
 
 
+## Development Life Cycle
+
+### Project Planning
+
+During the project planning phase, the following steps were undertaken to ensure a structured and well-organized development process for Game Central Collection:
+
+1. **Requirements Gathering**:
+   - Identified the primary goals and objectives of the project.
+   - Defined the core features and functionalities required for the application, including game browsing, user authentication, favorites management, and commenting.
+
+2. **Research and Analysis**:
+   - Conducted research on available APIs for video game data, selecting the IGDB API for its comprehensive dataset and reliable performance.
+   - Analyzed similar existing platforms to identify best practices and potential areas for improvement.
+
+3. **Technical Planning**:
+   - Chose the Flask framework for backend development due to its simplicity and flexibility.
+   - Selected PostgreSQL as the database system for its robustness and compatibility with Heroku.
+   - Decided on using Materialize CSS for frontend design to ensure a responsive and modern user interface.
+
+4. **Wireframing and Prototyping**:
+   - Created wireframes and prototypes to visualize the layout and user flow of the application.
+   - Gathered feedback on the prototypes to make necessary adjustments before starting development.
+
+5. **Task Breakdown and Timeline**:
+   - Broke down the project into manageable tasks and milestones.
+   - Established a timeline for development, setting deadlines for each phase of the project.
+
+6. **Setting Up the Development Environment**:
+   - Configured version control using Git and set up a repository on GitHub.
+   - Established a development environment with necessary tools and libraries, including virtual environments, required Python packages, and database configurations.
+
 
 
