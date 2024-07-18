@@ -93,3 +93,17 @@ During the project planning phase, the following steps were undertaken to ensure
    - Form for new users to sign up with their username, email, and password.
    - Validation for unique usernames and emails.
 
+### Development Life Cycle
+
+## Development
+
+1. **Setting Up Flask Application**:
+   - Initialized a Flask application.
+   - Configured the app with necessary settings including the database and CSRF protection.
+2. **Defining Database Models**:
+   - Created SQLAlchemy models for `User`, `Game`, `Comment`, and a many-to-many relationship `favorites`.
+3. **API Integration**:
+   - Integrated with the IGDB API to fetch and display game data.
+4. **Frontend Development**:
+   - Created HTML templates using Jinja2 templating engine.
+   - Utilized Materialize CSS framework for styling and responsiveness.
