@@ -65,7 +65,7 @@ During the project planning phase, the following steps were undertaken to ensure
 
 ### Content Requirements
 
-#### Pages and Features
+*Pages and Features*
 
 1. **Home Page**:
    - Introduction to the site and its main features.
@@ -107,3 +107,55 @@ During the project planning phase, the following steps were undertaken to ensure
 4. **Frontend Development**:
    - Created HTML templates using Jinja2 templating engine.
    - Utilized Materialize CSS framework for styling and responsiveness.
+
+## Requirements
+
+### Functional Requirements
+
+### Functional Requirements
+
+1. **User Authentication**:
+   - Users should be able to register, log in, and log out.
+   - Registered users should have a unique username and email.
+   - Passwords should be hashed and stored securely.
+
+2. **User Profile**:
+   - Users should be able to view and update their profile, including changing their avatar.
+   - Profiles should display the number of favorite games and comments made by the user.
+
+3. **Game Search and Display**:
+   - Users should be able to search for games by name.
+   - The application should display game details including name, genres, platforms, release dates, and summary.
+   - Game data should be fetched from the IGDB API.
+
+4. **Favorites Management**:
+   - Users should be able to add games to their favorites.
+   - Users should be able to view their list of favorite games.
+   - Users should be able to remove games from their favorites.
+
+5. **Comments**:
+   - Users should be able to add comments to game pages.
+   - Users should be able to edit and delete their own comments.
+   - Comments should be displayed in chronological order on the game detail page.
+
+6. **Home Page**:
+   - The home page should display a list of popular games.
+   - Each game on the home page should link to its detail page.
+
+7. **Game Details Page**:
+   - The game details page should display detailed information about the game.
+   - The page should also show user comments and a form to add new comments.
+   - Users should be able to toggle a game as a favorite from the game details page.
+
+8. **Responsive Design**:
+   - The application should be responsive and work well on both desktop and mobile devices.
+   - The layout should adjust to different screen sizes, providing a good user experience on all devices.
+
+9. **Error Handling**:
+   - The application should handle errors gracefully.
+   - Users should see user-friendly error messages if something goes wrong, such as failing to fetch data from the API or trying to access a page that doesn't exist.
+
+10. **Security**:
+    - CSRF protection should be implemented to prevent cross-site request forgery.
+    - User input should be validated to prevent SQL injection and other security issues.
+
