@@ -248,6 +248,13 @@ The application uses the following fonts:
 
 These fonts are chosen to ensure readability and a modern look.
 
+### Layout
 
+The layout of the application is responsive and adapts to different screen sizes. The design principles followed include:
+
+- **Max Width**: The maximum width of the container is set to `1200px`.
+- **Padding and Margin**: Consistent padding and margin are applied throughout the application for a balanced layout.
+- **Border Radius**: Rounded corners are applied to elements using a border radius of `8px`.
+- **Box Shadow**: A subtle box shadow is used to add depth to the elements.
 
 
