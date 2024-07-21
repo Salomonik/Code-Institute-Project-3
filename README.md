@@ -12,7 +12,6 @@ The application is built using Flask for the backend, SQLAlchemy for ORM, and is
 
 The main objective of Game Central Collection is to provide gamers with an extensive and easy-to-navigate platform to discover and keep track of their favorite games.
 
-
 ## Site Owner Goals
 
 As the owner of Game Central Collection, the primary goals of the site are:
@@ -31,7 +30,6 @@ As the owner of Game Central Collection, the primary goals of the site are:
 
 7. **Security**: Implement robust security measures to protect user data, including secure authentication, data encryption, and CSRF protection.
 
-
 ## Development Life Cycle
 
 ### Project Planning
@@ -39,23 +37,28 @@ As the owner of Game Central Collection, the primary goals of the site are:
 During the project planning phase, the following steps were undertaken to ensure a structured and well-organized development process for Game Central Collection:
 
 1. **Requirements Gathering**:
+
    - Identified the primary goals and objectives of the project.
    - Defined the core features and functionalities required for the application, including game browsing, user authentication, favorites management, and commenting.
 
 2. **Research and Analysis**:
+
    - Conducted research on available APIs for video game data, selecting the IGDB API for its comprehensive dataset and reliable performance.
    - Analyzed similar existing platforms to identify best practices and potential areas for improvement.
 
 3. **Technical Planning**:
+
    - Chose the Flask framework for backend development due to its simplicity and flexibility.
    - Selected PostgreSQL as the database system for its robustness and compatibility with Heroku.
    - Decided on using Materialize CSS for frontend design to ensure a responsive and modern user interface.
 
 4. **Wireframing and Prototyping**:
+
    - Created wireframes and prototypes to visualize the layout and user flow of the application.
    - Gathered feedback on the prototypes to make necessary adjustments before starting development.
 
 5. **Task Breakdown and Timeline**:
+
    - Broke down the project into manageable tasks and milestones.
    - Established a timeline for development, setting deadlines for each phase of the project.
 
@@ -65,14 +68,16 @@ During the project planning phase, the following steps were undertaken to ensure
 
 ### Content Requirements
 
-*Pages and Features*
+_Pages and Features_
 
 1. **Home Page**:
+
    - Introduction to the site and its main features.
    - Search bar for users to search for games by name.
    - Display of popular games.
 
 2. **Game Details Page**:
+
    - Detailed information about a specific game, including:
      - Name
      - Description
@@ -82,11 +87,13 @@ During the project planning phase, the following steps were undertaken to ensure
    - Option to add the game to the user's favorites list (if logged in).
 
 3. **User Profile Page**:
+
    - Display user information, including username and email.
    - List of the user's favorite games.
    - Option to update profile picture.
 
 4. **Login Page**:
+
    - Form for users to log in with their email and password.
 
 5. **Registration Page**:
@@ -113,44 +120,53 @@ During the project planning phase, the following steps were undertaken to ensure
 ### Functional Requirements
 
 1. **User Authentication**:
+
    - Users should be able to register, log in, and log out.
    - Registered users should have a unique username and email.
    - Passwords should be hashed and stored securely.
 
 2. **User Profile**:
+
    - Users should be able to view and update their profile, including changing their avatar.
    - Profiles should display the number of favorite games and comments made by the user.
    - Users should be able to view the profiles of other users.
 
 3. **Game Search and Display**:
+
    - Users should be able to search for games by name.
    - The application should display game details including name, genres, platforms, release dates, and summary.
    - Game data should be fetched from the IGDB API.
 
 4. **Favorites Management**:
+
    - Users should be able to add games to their favorites.
    - Users should be able to view their list of favorite games.
    - Users should be able to remove games from their favorites.
 
 5. **Comments**:
+
    - Users should be able to add comments to game pages.
    - Users should be able to edit and delete their own comments.
    - Comments should be displayed in chronological order on the game detail page.
 
 6. **Home Page**:
+
    - The home page should display a list of popular games.
    - Each game on the home page should link to its detail page.
 
 7. **Game Details Page**:
+
    - The game details page should display detailed information about the game.
    - The page should also show user comments and a form to add new comments.
    - Users should be able to toggle a game as a favorite from the game details page.
 
 8. **Responsive Design**:
+
    - The application should be responsive and work well on both desktop and mobile devices.
    - The layout should adjust to different screen sizes, providing a good user experience on all devices.
 
 9. **Error Handling**:
+
    - The application should handle errors gracefully.
    - Users should see user-friendly error messages if something goes wrong, such as failing to fetch data from the API or trying to access a page that doesn't exist.
 
@@ -161,20 +177,24 @@ During the project planning phase, the following steps were undertaken to ensure
 ### Non-Functional Requirements
 
 1. **Performance**:
+
    - Database queries should be optimized for fast retrieval of data.
 
 2. **Reliability**:
+
    - The application should have minimal downtime.
 
 3. **Usability**:
+
    - The user interface should be intuitive and easy to navigate.
    - Forms and other interactive elements should provide clear feedback to the user.
 
 4. **Security**:
+
    - Sensitive data, such as user passwords, should be encrypted.
    - The application should be protected against common security threats, such as SQL injection, XSS, and CSRF.
 
-8. **Accessibility**:
+5. **Accessibility**:
    - It should follow accessibility guidelines, such as providing alt text for images and ensuring good contrast between text and background colors.
 
 ### Out of Scope
@@ -182,6 +202,7 @@ During the project planning phase, the following steps were undertaken to ensure
 The following features are not included in the current scope of the Game Central Collection project:
 
 1. **Displaying All Comments on User Profiles**:
+
    - User profiles do not display a list of all comments made by the user.
 
 2. **Liking Comments**:
@@ -205,22 +226,26 @@ The following features are not included in the current scope of the Game Central
 **Returning User Experience**
 
 1. **Seamless Login**:
+
    - Returning users can easily log in to their accounts using their registered email and password.
 
-
 2. **Profile Management**:
+
    - Returning users can view and update their avatar.
    - Users can see a summary of their activity, such as the number of favorite games and comments made.
 
 3. **Favorites Management**:
+
    - Returning users can view their list of favorite games from their profile page.
    - They can add new games to their favorites or remove games they are no longer interested in.
 
 4. **Comment Interaction**:
+
    - Returning users can view their past comments on game detail pages.
    - They have the ability to edit or delete their own comments, ensuring their feedback stays relevant and accurate.
 
 5. **Game Search and Discovery**:
+
    - Users can continue to search for new games using the search functionality.
    - Popular games and new additions are displayed on the home page, providing users with new content to explore.
 
@@ -268,7 +293,6 @@ The layout of the application is responsive and adapts to different screen sizes
 
 ![Main Page Wireframe](./assets/documentation/wireframe-main.png)
 
-
 </details>
 
 <details>
@@ -287,7 +311,6 @@ The layout of the application is responsive and adapts to different screen sizes
 
 </details>
 
-
 ## Screenshots
 
 <details>
@@ -299,7 +322,6 @@ The layout of the application is responsive and adapts to different screen sizes
 
 ![Main Page Wireframe](./assets/documentation/index.png)
 ![Main Page Wireframe](./assets/documentation/index-mobile.png)
-
 
 </details>
 
@@ -324,41 +346,51 @@ The layout of the application is responsive and adapts to different screen sizes
 ## Features
 
 ### Homepage
+
 - **Game Search**: Users can search for games by name using the search bar on the homepage.
 - **Popular Games Display**: The homepage displays a list of popular games fetched from the IGDB API, along with their cover images and brief descriptions.
 - **User Authentication**: Users can log in or register directly from the homepage navigation bar.
 
 ### User Authentication
+
 - **User Registration**: Users can create a new account by providing a username, email, and password.
 - **User Login**: Registered users can log in to their accounts using their email and password.
 - **User Logout**: Logged-in users can log out of their accounts.
 
 ### User Profile
+
 - **Profile Page**: Users have a personal profile page where they can view their information and update their profile picture.
 - **Favorite Games**: Users can view a list of their favorite games on their profile page.
 
 ### Game Details
+
 - **Detailed Game Information**: Clicking on a game displays detailed information about the game, including its description, release date, genres, platforms, and more.
 - **Add to Favorites**: Users can add or remove games from their favorites list.
 - **Comments**: Users can view comments left by other users and add their own comments on the game details page.
 
 ### Flash Messages
+
 - **Feedback Messages**: Users receive flash messages for important actions, such as adding a game to favorites, login/logout actions, and form submission feedback.
 
 ### Responsive Design
+
 - **Mobile Friendly**: The application is fully responsive and works well on different devices, including desktops, tablets, and mobile phones.
 
 ### Search Autocomplete
+
 - **Game Search Autocomplete**: As users type in the search bar, the application provides game suggestions based on the input.
 
 ### Favorites
+
 - **Toggle Favorites**: Users can toggle their favorite games by clicking a heart icon. The icon changes based on whether the game is in the user's favorites.
 
 ### Security
+
 - **CSRF Protection**: The application uses CSRF tokens to protect against Cross-Site Request Forgery attacks.
 - **Password Hashing**: User passwords are securely hashed using Werkzeug's security module.
 
 ### Additional Features
+
 - **Profile Picture Upload**: Users can upload and change their profile picture.
 - **Comments Management**: Users can edit and delete their own comments.
 - **Game Recommendations**: Based on user favorites and popular games, users can receive game recommendations.
@@ -366,6 +398,7 @@ The layout of the application is responsive and adapts to different screen sizes
 ## Implementation Details
 
 ### Technology Stack
+
 - **Frontend**: HTML, CSS (Materialize CSS), JavaScript
 - **Backend**: Python, Flask
 - **Database**: PostgreSQL
@@ -373,7 +406,9 @@ The layout of the application is responsive and adapts to different screen sizes
 - **Hosting**: Heroku
 
 ### Environment Configuration
+
 The application uses environment variables to manage configuration settings. These variables are defined in the `env.py` file and include:
+
 - `FLASK_APP`: The entry point of the application (`run.py`).
 - `SECRET_KEY`: A secret key for session management and CSRF protection.
 - `DATABASE_URL`: The URL for connecting to the PostgreSQL database.
@@ -383,7 +418,9 @@ The application uses environment variables to manage configuration settings. The
 - `TWITCH_CLIENT_SECRET`: The client secret for accessing the IGDB API.
 
 ### Database Models
+
 The application uses SQLAlchemy to define the following database models:
+
 - **User**: Stores user information such as username, email, password hash, profile picture, and relationships to comments and favorite games.
 - **Game**: Stores game information fetched from the IGDB API.
 - **Comment**: Stores user comments related to games.
@@ -395,39 +432,45 @@ The application uses SQLAlchemy to define the following database models:
 ### Table Relationships
 
 1. **User - Comments**:
-    - **Relationship**: One-to-Many
-    - **Description**: A user can have many comments. The `user_id` foreign key in the `comment` table references the `id` in the `user` table.
-    - **Diagram**: `USER ||--o{ COMMENT : writes`
+
+   - **Relationship**: One-to-Many
+   - **Description**: A user can have many comments. The `user_id` foreign key in the `comment` table references the `id` in the `user` table.
+   - **Diagram**: `USER ||--o{ COMMENT : writes`
 
 2. **Game - Comments**:
-    - **Relationship**: One-to-Many
-    - **Description**: A game can have many comments. The `game_id` foreign key in the `comment` table references the `id` in the `game` table.
-    - **Diagram**: `GAME ||--o{ COMMENT : has`
+
+   - **Relationship**: One-to-Many
+   - **Description**: A game can have many comments. The `game_id` foreign key in the `comment` table references the `id` in the `game` table.
+   - **Diagram**: `GAME ||--o{ COMMENT : has`
 
 3. **User - UserProfile**:
-    - **Relationship**: One-to-One
-    - **Description**: A user can have only one profile. The `user_id` foreign key in the `user_profile` table references the `id` in the `user` table.
-    - **Diagram**: `USER ||--o| USER_PROFILE : has`
+
+   - **Relationship**: One-to-One
+   - **Description**: A user can have only one profile. The `user_id` foreign key in the `user_profile` table references the `id` in the `user` table.
+   - **Diagram**: `USER ||--o| USER_PROFILE : has`
 
 4. **User - Favorites**:
-    - **Relationship**: Many-to-Many
-    - **Description**: A user can have many favorite games, and a game can be favorited by many users. The `favorites` table implements this many-to-many relationship, containing `user_id` and `game_id` as foreign keys referencing the `id` in the `user` and `game` tables, respectively.
-    - **Diagram**: `USER ||--o{ FAVORITES : likes`
+
+   - **Relationship**: Many-to-Many
+   - **Description**: A user can have many favorite games, and a game can be favorited by many users. The `favorites` table implements this many-to-many relationship, containing `user_id` and `game_id` as foreign keys referencing the `id` in the `user` and `game` tables, respectively.
+   - **Diagram**: `USER ||--o{ FAVORITES : likes`
 
 5. **Game - Favorites**:
-    - **Relationship**: Many-to-Many
-    - **Description**: A game can be favorited by many users, and a user can have many favorite games. The `favorites` table implements this many-to-many relationship, containing `user_id` and `game_id` as foreign keys referencing the `id` in the `user` and `game` tables, respectively.
-    - **Diagram**: `GAME ||--o{ FAVORITES : liked by`
-
+   - **Relationship**: Many-to-Many
+   - **Description**: A game can be favorited by many users, and a user can have many favorite games. The `favorites` table implements this many-to-many relationship, containing `user_id` and `game_id` as foreign keys referencing the `id` in the `user` and `game` tables, respectively.
+   - **Diagram**: `GAME ||--o{ FAVORITES : liked by`
 
 ## Testing
 
 - CSS
 
   - No errors were returned when passing through the official W3C Markup Validator by direct input.<br>
-      ![css-validated](./assets/documentation/w3c-validator.png)
+    ![css-validated](./assets/documentation/w3c-validator.png)
 
 - HTML
 
   - Errors related to using Jinja Template.
 
+- JS
+  - No errors returned when passing via https://jshint.com/.
+    ![js-validated](./assets/documentation/jshint-validator.png)
