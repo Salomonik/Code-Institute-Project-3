@@ -569,3 +569,42 @@ During the development and testing phases, the application was rigorously tested
 ### Known Issues
 
 - **Flash Messages**: There is an unresolved issue where flash messages persist after page reloads. This has not been fixed yet.
+
+## Technologies Used
+
+### Frontend Technologies
+
+- **HTML5**: Markup language used for structuring the content on the web.
+- **CSS3**: Style sheet language used for describing the presentation of the web pages.
+- **JavaScript**: Programming language used to create dynamic and interactive effects on web pages.
+- **Materialize CSS**: A modern responsive front-end framework based on Material Design.
+
+### Backend Technologies
+
+- **Python**: Programming language used for backend development.
+- **Flask**: A lightweight WSGI web application framework in Python used to build the web application.
+- **Flask-SQLAlchemy**: An extension for Flask that adds support for SQLAlchemy, a SQL toolkit and Object-Relational Mapping (ORM) system.
+- **Flask-Migrate**: An extension that handles SQLAlchemy database migrations for Flask applications using Alembic.
+- **Flask-Login**: An extension that provides user session management for Flask.
+- **Flask-WTF**: An extension that integrates Flask with WTForms, allowing for form validation and rendering.
+- **Gunicorn**: A Python WSGI HTTP server for Unix used to serve the web application.
+
+### Database
+
+- **PostgreSQL**: An advanced, open-source relational database management system used to store and manage the application's data.
+
+### APIs and Libraries
+
+- **IGDB API**: Used to fetch game data for the application.
+- **Requests**: A simple, yet elegant HTTP library for Python used to make API requests.
+- **Werkzeug**: A comprehensive WSGI web application library used in Flask applications.
+
+### Deployment
+
+- **Heroku**: A cloud platform used to deploy, manage, and scale the application.
+- **Git**: A version control system used for tracking changes in the source code.
+
+### Other Tools
+
+- **Jinja2**: A templating engine for Python used in Flask to render templates.
+- **WTForms**: A flexible forms validation and rendering library for Python web development.
