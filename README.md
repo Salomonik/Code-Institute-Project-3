@@ -608,3 +608,20 @@ During the development and testing phases, the application was rigorously tested
 
 - **Jinja2**: A templating engine for Python used in Flask to render templates.
 - **WTForms**: A flexible forms validation and rendering library for Python web development.
+
+
+## Pre-Deployment Checklist
+
+Before deploying the application, ensure that the following tasks are completed:
+
+### Code Quality and Testing
+
+- [x] **Code Review**: Ensure all code has been reviewed and adheres to the project's coding standards.
+
+### Application Configuration
+
+- [x] **Environment Variables**: Ensure all necessary environment variables are set, including `FLASK_APP`, `DATABASE_URL`, `SECRET_KEY`, `TWITCH_CLIENT_ID`, and `TWITCH_CLIENT_SECRET`.
+- [x] **Configuration Files**: Verify that configuration files such as `config.py` and `.env` are correctly set up for the production environment.
+- [x] **Database Migrations**: Run database migrations to ensure the production database schema is up-to-date.
+  ```bash
+  flask db upgrade
