@@ -363,3 +363,31 @@ The layout of the application is responsive and adapts to different screen sizes
 - **Comments Management**: Users can edit and delete their own comments.
 - **Game Recommendations**: Based on user favorites and popular games, users can receive game recommendations.
 
+## Implementation Details
+
+### Technology Stack
+- **Frontend**: HTML, CSS (Materialize CSS), JavaScript
+- **Backend**: Python, Flask
+- **Database**: PostgreSQL
+- **APIs**: IGDB API for game information
+- **Hosting**: Heroku
+
+### Environment Configuration
+The application uses environment variables to manage configuration settings. These variables are defined in the `env.py` file and include:
+- `FLASK_APP`: The entry point of the application (`run.py`).
+- `SECRET_KEY`: A secret key for session management and CSRF protection.
+- `DATABASE_URL`: The URL for connecting to the PostgreSQL database.
+- `DEBUG`: A flag to enable/disable debug mode.
+- `DEVELOPMENT`: A flag to indicate the development environment.
+- `TWITCH_CLIENT_ID`: The client ID for accessing the IGDB API.
+- `TWITCH_CLIENT_SECRET`: The client secret for accessing the IGDB API.
+
+### Database Models
+The application uses SQLAlchemy to define the following database models:
+- **User**: Stores user information such as username, email, password hash, profile picture, and relationships to comments and favorite games.
+- **Game**: Stores game information fetched from the IGDB API.
+- **Comment**: Stores user comments related to games.
+- **UserProfile**: Stores additional user profile information like the profile picture.
+- **favorites**: A many-to-many relationship table between users and games.
+
+![database Wireframe](./assets/documentation/wireframe-databasepng.png)
