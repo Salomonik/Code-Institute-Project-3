@@ -288,3 +288,37 @@ The layout of the application is responsive and adapts to different screen sizes
 </details>
 
 
+## Screenshots
+
+<details>
+<summary>Screenshots</summary>
+
+<details>
+
+<summary>Main Page</summary>
+
+![Main Page Wireframe](./assets/documentation/index.png)
+![Main Page Wireframe](./assets/documentation/index-mobile.png)
+
+
+</details>
+
+<details>
+<summary>Game Details</summary>
+
+![Game Details Page Wireframe](./assets/documentation/gamedetails.png)
+![Game Details Page Wireframe](./assets/documentation/gamedetails-mobile.png)
+
+</details>
+
+<details>
+<summary>Profile</summary>
+
+![Profile Wireframe](./assets/documentation/profile.png)
+![Profile Wireframe](./assets/documentation/profile-mobile.png)
+
+</details>
+
+</details>
+
+
