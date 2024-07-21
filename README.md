@@ -418,3 +418,16 @@ The application uses SQLAlchemy to define the following database models:
     - **Relationship**: Many-to-Many
     - **Description**: A game can be favorited by many users, and a user can have many favorite games. The `favorites` table implements this many-to-many relationship, containing `user_id` and `game_id` as foreign keys referencing the `id` in the `user` and `game` tables, respectively.
     - **Diagram**: `GAME ||--o{ FAVORITES : liked by`
+
+
+## Testing
+
+- CSS
+
+  - No errors were returned when passing through the official W3C Markup Validator by direct input.<br>
+      ![css-validated](./assets/documentation/w3c-validator.png)
+
+- HTML
+
+  - Errors related to using Jinja Template.
+
