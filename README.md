@@ -478,3 +478,50 @@ The application uses SQLAlchemy to define the following database models:
 ### Lighthouse Test
 
 - ![lighhouse results](./assets/documentation/lighthouse.png)
+
+### Manual Testing
+
+1. **Home Page**:
+    - **Objective**: Verify that the home page loads correctly and displays the popular games.
+    - **Steps**:
+        1. Navigate to the home page.
+        2. Check if the popular games are displayed.
+        3. Verify the images, titles, and descriptions are correct.
+    - **Expected Result**: The home page loads without errors, and popular games are displayed correctly.
+
+2. **User Registration**:
+    - **Objective**: Ensure the user can register successfully.
+    - **Steps**:
+        1. Navigate to the registration page.
+        2. Fill in the registration form with valid data.
+        3. Submit the form.
+        4. Verify that a success message is displayed, and the user is redirected to the login page.
+    - **Expected Result**: The user is registered successfully, and a success message is displayed.
+
+3. **User Login**:
+    - **Objective**: Ensure the user can log in successfully.
+    - **Steps**:
+        1. Navigate to the login page.
+        2. Fill in the login form with valid credentials.
+        3. Submit the form.
+        4. Verify that the user is redirected to the home page and the user-specific options are visible.
+    - **Expected Result**: The user logs in successfully and sees user-specific options.
+
+4. **Add to Favorites**:
+    - **Objective**: Verify that a user can add a game to their favorites.
+    - **Steps**:
+        1. Log in as a user.
+        2. Navigate to a game's detail page.
+        3. Click the "Add to Favorites" button.
+        4. Verify that the game is added to the favorites list.
+    - **Expected Result**: The game is added to the user's favorites list, and a success message is displayed.
+
+5. **Comments**:
+    - **Objective**: Ensure the user can add, edit, and delete comments on a game.
+    - **Steps**:
+        1. Log in as a user.
+        2. Navigate to a game's detail page.
+        3. Add a comment.
+        4. Edit the comment.
+        5. Delete the comment.
+    - **Expected Result**: The user can add, edit, and delete comments successfully.
