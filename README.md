@@ -525,3 +525,19 @@ The application uses SQLAlchemy to define the following database models:
         4. Edit the comment.
         5. Delete the comment.
     - **Expected Result**: The user can add, edit, and delete comments successfully.
+
+### Browser Testing
+
+1. **Cross-browser Testing**:
+    - **Objective**: Ensure the application works correctly across different browsers.
+    - **Steps**:
+        1. Test the application in different browsers (Chrome, Firefox, Safari, Edge).
+        2. Verify that all features work as expected.
+    - **Expected Result**: The application works correctly across all tested browsers.
+
+2. **Responsive Design Testing**:
+    - **Objective**: Verify that the application is responsive and works well on different screen sizes.
+    - **Steps**:
+        1. Test the application on different devices (desktop, tablet, mobile).
+        2. Verify that the layout adjusts correctly to different screen sizes.
+    - **Expected Result**: The application is responsive and works well on different devices.
