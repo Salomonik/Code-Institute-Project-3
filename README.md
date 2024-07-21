@@ -120,6 +120,7 @@ During the project planning phase, the following steps were undertaken to ensure
 2. **User Profile**:
    - Users should be able to view and update their profile, including changing their avatar.
    - Profiles should display the number of favorite games and comments made by the user.
+   - Users should be able to view the profiles of other users.
 
 3. **Game Search and Display**:
    - Users should be able to search for games by name.
@@ -180,12 +181,50 @@ During the project planning phase, the following steps were undertaken to ensure
 
 The following features are not included in the current scope of the Game Central Collection project:
 
-1. **Viewing Other Users' Profiles**:
-   - The ability to view the profiles of other users is not implemented.
-
-2. **Displaying All Comments on User Profiles**:
+1. **Displaying All Comments on User Profiles**:
    - User profiles do not display a list of all comments made by the user.
 
-3. **Liking Comments**:
+2. **Liking Comments**:
    - The functionality to like or upvote comments is not available.
+
+## User Experience
+
+### User Stories
+
+1. **As a visitor**, I want to be able to search for video games by name so that I can find information about my favorite games.
+2. **As a visitor**, I want to view detailed information about a game, including its description, release date, genres, and platforms.
+3. **As a visitor**, I want to be able to register for an account so that I can save my favorite games and leave comments.
+4. **As a registered user**, I want to be able to log in and log out of my account.
+5. **As a registered user**, I want to update my profile information, including changing my avatar.
+6. **As a registered user**, I want to be able to add games to my list of favorites.
+7. **As a registered user**, I want to be able to view and manage my list of favorite games.
+8. **As a registered user**, I want to leave comments on game detail pages.
+9. **As a registered user**, I want to edit and delete my own comments.
+10. **As a registered user**, I want to be able to view the profiles of other users to see their favorite games.
+
+**Returning User Experience**
+
+1. **Seamless Login**:
+   - Returning users can easily log in to their accounts using their registered email and password.
+
+
+2. **Profile Management**:
+   - Returning users can view and update their avatar.
+   - Users can see a summary of their activity, such as the number of favorite games and comments made.
+
+3. **Favorites Management**:
+   - Returning users can view their list of favorite games from their profile page.
+   - They can add new games to their favorites or remove games they are no longer interested in.
+
+4. **Comment Interaction**:
+   - Returning users can view their past comments on game detail pages.
+   - They have the ability to edit or delete their own comments, ensuring their feedback stays relevant and accurate.
+
+5. **Game Search and Discovery**:
+   - Users can continue to search for new games using the search functionality.
+   - Popular games and new additions are displayed on the home page, providing users with new content to explore.
+
+6. **Personalized Experience**:
+   - Notifications or flash messages can inform users of successful actions, such as adding a game to favorites or updating profile information.
+
 
