@@ -625,3 +625,67 @@ Before deploying the application, ensure that the following tasks are completed:
 - [x] **Database Migrations**: Run database migrations to ensure the production database schema is up-to-date.
   ```bash
   flask db upgrade
+
+## Deployment
+
+### Pre-Deployment Checklist
+
+1. **Code Review**: Ensure that all code has been reviewed and is free from syntax errors and major bugs.
+2. **Environment Configuration**: Verify that all environment variables are correctly set up in the `.env` file and in Heroku settings.
+3. **Dependencies**: Ensure all dependencies are listed in `requirements.txt`.
+4. **Database Migration**: Confirm that all database migrations have been applied.
+5. **Static Files**: Ensure all static files are correctly configured and accessible.
+6. **Testing**: Complete all necessary testing to ensure the application works as expected.
+
+### Deployment Steps
+
+1. **Set Up Heroku CLI**: Make sure you have the Heroku CLI installed on your local machine. If not, you can install it from [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
+
+2. **Log In to Heroku**:
+    ```sh
+    heroku login
+    ```
+
+3. **Create a New Heroku Application**:
+    ```sh
+    heroku create your-app-name
+    ```
+
+4. **Set Up PostgreSQL Add-On**:
+    ```sh
+    heroku addons:create heroku-postgresql:hobby-dev
+    ```
+
+5. **Set Environment Variables**: Set the necessary environment variables on Heroku:
+    ```sh
+    heroku config:set SECRET_KEY=your_secret_key
+    heroku config:set DATABASE_URL=your_database_url
+    heroku config:set TWITCH_CLIENT_ID=your_twitch_client_id
+    heroku config:set TWITCH_CLIENT_SECRET=your_twitch_client_secret
+    ```
+
+6. **Push Code to Heroku**:
+    ```sh
+    git push heroku main
+    ```
+
+7. **Run Database Migrations**:
+    ```sh
+    heroku run flask db upgrade
+    ```
+
+8. **Open the Application**:
+    ```sh
+    heroku open
+    ```
+
+### Post-Deployment
+
+1. **Monitor Logs**: Use Heroku logs to monitor the application for any errors or issues.
+    ```sh
+    heroku logs --tail
+    ```
+
+2. **Testing**: Perform final testing in the production environment to ensure everything is working as expected.
+
+3. **Regular Maintenance**: Keep the application updated with the latest security patches and updates. Regularly back up the database and monitor for any issues.
