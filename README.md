@@ -238,6 +238,16 @@ The color scheme is designed to be visually appealing and easy on the eyes. It u
 - **Background Color**: `#19242F`
 - **Text Color**: `white`
 
+### Typography
+
+The application uses the following fonts:
+
+- **Header Font**: 'Helvetica Neue', sans-serif
+- **Body Font**: 'Arial', sans-serif
+- **Title Font**: 'Open Sans', sans-serif
+
+These fonts are chosen to ensure readability and a modern look.
+
 
 
 
