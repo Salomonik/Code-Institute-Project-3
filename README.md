@@ -348,5 +348,18 @@ The layout of the application is responsive and adapts to different screen sizes
 ### Responsive Design
 - **Mobile Friendly**: The application is fully responsive and works well on different devices, including desktops, tablets, and mobile phones.
 
+### Search Autocomplete
+- **Game Search Autocomplete**: As users type in the search bar, the application provides game suggestions based on the input.
 
+### Favorites
+- **Toggle Favorites**: Users can toggle their favorite games by clicking a heart icon. The icon changes based on whether the game is in the user's favorites.
+
+### Security
+- **CSRF Protection**: The application uses CSRF tokens to protect against Cross-Site Request Forgery attacks.
+- **Password Hashing**: User passwords are securely hashed using Werkzeug's security module.
+
+### Additional Features
+- **Profile Picture Upload**: Users can upload and change their profile picture.
+- **Comments Management**: Users can edit and delete their own comments.
+- **Game Recommendations**: Based on user favorites and popular games, users can receive game recommendations.
 
