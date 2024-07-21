@@ -227,4 +227,17 @@ The following features are not included in the current scope of the Game Central
 6. **Personalized Experience**:
    - Notifications or flash messages can inform users of successful actions, such as adding a game to favorites or updating profile information.
 
+## Design
+
+### Color Scheme
+
+The color scheme is designed to be visually appealing and easy on the eyes. It uses a combination of primary, secondary, and background colors to create a consistent and cohesive look throughout the application.
+
+- **Primary Color**: `#F1DCBC`
+- **Secondary Color**: `#2C6169`
+- **Background Color**: `#19242F`
+- **Text Color**: `white`
+
+
+
 
