@@ -391,3 +391,30 @@ The application uses SQLAlchemy to define the following database models:
 - **favorites**: A many-to-many relationship table between users and games.
 
 ![database Wireframe](./assets/documentation/wireframe-databasepng.png)
+
+### Table Relationships
+
+1. **User - Comments**:
+    - **Relationship**: One-to-Many
+    - **Description**: A user can have many comments. The `user_id` foreign key in the `comment` table references the `id` in the `user` table.
+    - **Diagram**: `USER ||--o{ COMMENT : writes`
+
+2. **Game - Comments**:
+    - **Relationship**: One-to-Many
+    - **Description**: A game can have many comments. The `game_id` foreign key in the `comment` table references the `id` in the `game` table.
+    - **Diagram**: `GAME ||--o{ COMMENT : has`
+
+3. **User - UserProfile**:
+    - **Relationship**: One-to-One
+    - **Description**: A user can have only one profile. The `user_id` foreign key in the `user_profile` table references the `id` in the `user` table.
+    - **Diagram**: `USER ||--o| USER_PROFILE : has`
+
+4. **User - Favorites**:
+    - **Relationship**: Many-to-Many
+    - **Description**: A user can have many favorite games, and a game can be favorited by many users. The `favorites` table implements this many-to-many relationship, containing `user_id` and `game_id` as foreign keys referencing the `id` in the `user` and `game` tables, respectively.
+    - **Diagram**: `USER ||--o{ FAVORITES : likes`
+
+5. **Game - Favorites**:
+    - **Relationship**: Many-to-Many
+    - **Description**: A game can be favorited by many users, and a user can have many favorite games. The `favorites` table implements this many-to-many relationship, containing `user_id` and `game_id` as foreign keys referencing the `id` in the `user` and `game` tables, respectively.
+    - **Diagram**: `GAME ||--o{ FAVORITES : liked by`
