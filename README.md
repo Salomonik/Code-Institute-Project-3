@@ -689,3 +689,63 @@ Before deploying the application, ensure that the following tasks are completed:
 2. **Testing**: Perform final testing in the production environment to ensure everything is working as expected.
 
 3. **Regular Maintenance**: Keep the application updated with the latest security patches and updates. Regularly back up the database and monitor for any issues.
+
+## Version Control
+
+### GitHub Repository
+
+The project's source code is hosted on GitHub, providing version control and collaboration features. The repository contains all the code, documentation, and configuration files necessary for running the application.
+
+## Version Control
+
+### GitHub Repository
+
+The project's source code is hosted on GitHub, providing version control and collaboration features. The repository contains all the code, documentation, and configuration files necessary for running the application.
+
+### Repository Structure
+
+- **`main` branch**: The main branch contains the stable version of the application. All new features and bug fixes are merged into this branch after thorough testing.
+- **Feature branches**: Each new feature or bug fix is developed in its own branch, following a naming convention such as `feature/feature-name` or `bugfix/bug-name`.
+- **Pull Requests (PRs)**: Changes from feature branches are merged into the `main` branch through pull requests. Each pull request undergoes code review and testing before being approved and merged.
+
+### Version Control Practices
+
+1. **Commits**: Commits are made frequently with clear, concise messages that describe the changes made. This helps in tracking the history of the project and understanding the purpose of each change.
+2. **Branching**: The use of branches allows multiple developers to work on different features simultaneously without interfering with each other's work. This also makes it easier to isolate and test new features before they are merged into the main codebase.
+3. **Merging**: Merging is done through pull requests, ensuring that all changes are reviewed and tested before being included in the main branch. This helps maintain code quality and prevents the introduction of bugs.
+4. **Tags and Releases**: Tags are used to mark significant milestones or releases. Each release is tagged with a version number, following semantic versioning principles (e.g., `v1.0.0`, `v1.1.0`). This makes it easy to track and reference different versions of the project.
+
+### Workflow
+
+1. **Clone the Repository**:
+    ```sh
+    git clone https://github.com/salomonik/Code-Institute-Project-3.git
+    cd repository-name
+    ```
+
+2. **Create a Feature Branch**:
+    ```sh
+    git checkout -b feature/feature-name
+    ```
+
+3. **Make Changes and Commit**:
+    ```sh
+    git add .
+    git commit -m "Description of changes"
+    ```
+
+4. **Push the Branch to GitHub**:
+    ```sh
+    git push origin feature/feature-name
+    ```
+
+5. **Create a Pull Request**: Go to the GitHub repository and create a pull request from your feature branch to the `main` branch.
+
+6. **Code Review and Merge**: The pull request is reviewed, and once approved, it is merged into the `main` branch.
+
+7. **Pull Latest Changes**: After a successful merge, pull the latest changes to keep your local repository up to date.
+    ```sh
+    git checkout main
+    git pull origin main
+    ```
+
