@@ -474,3 +474,7 @@ The application uses SQLAlchemy to define the following database models:
 - JS
   - No errors returned when passing via https://jshint.com/.
     ![js-validated](./assets/documentation/jshint-validator.png)
+
+### Lighthouse Test
+
+- ![lighhouse results](./assets/documentation/lighthouse.png)
