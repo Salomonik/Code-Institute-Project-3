@@ -749,3 +749,14 @@ The project's source code is hosted on GitHub, providing version control and col
     git pull origin main
     ```
 
+## Reflections
+
+### Achievements
+
+Developing this project has been a rewarding experience with several key achievements:
+
+1. **Feature Implementation**: Successfully implemented core features such as user authentication, game search, and favorite management. These features enhance the user experience and provide valuable functionality.
+2. **Integration with IGDB API**: Seamlessly integrated with the IGDB API to fetch and display game data. This allows the application to provide up-to-date information about various video games.
+3. **Responsive Design**: Ensured the application is fully responsive, providing an optimal viewing experience across a range of devices from desktops to mobile phones.
+4. **User Profiles and Comments**: Added features for user profiles and commenting, fostering community interaction and engagement within the application.
+5. **Database Management**: Efficiently managed database migrations and relationships using SQLAlchemy and Flask-Migrate, ensuring data integrity and ease of development.
