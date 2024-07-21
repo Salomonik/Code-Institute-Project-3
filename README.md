@@ -526,6 +526,7 @@ The application uses SQLAlchemy to define the following database models:
         5. Delete the comment.
     - **Expected Result**: The user can add, edit, and delete comments successfully.
 
+
 ### Browser Testing
 
 1. **Cross-browser Testing**:
@@ -541,3 +542,30 @@ The application uses SQLAlchemy to define the following database models:
         1. Test the application on different devices (desktop, tablet, mobile).
         2. Verify that the layout adjusts correctly to different screen sizes.
     - **Expected Result**: The application is responsive and works well on different devices.
+
+
+## Bug Tracking and Fixes
+
+### Overview
+
+During the development and testing phases, the application was rigorously tested to identify and resolve any potential bugs. The following outlines the process used for tracking and fixing bugs.
+
+### Bug Tracking Process
+
+1. **Identification**: Bugs were identified through manual testing, automated testing, and user feedback.
+2. **Logging**: Identified bugs were logged in a bug tracking system (e.g., GitHub Issues) with details about the issue, steps to reproduce, and severity.
+3. **Prioritization**: Bugs were prioritized based on their impact on the application's functionality and user experience.
+4. **Assignment**: Bugs were assigned to developers for resolution.
+5. **Resolution**: Developers investigated and fixed the bugs.
+6. **Verification**: Fixed bugs were tested to ensure they were resolved and did not introduce new issues.
+
+### Fixed Bugs
+
+- **User Registration Issues**: Fixed an issue where users could register with an existing email address, causing database conflicts.
+- **Login Problems**: Resolved an issue where users were unable to log in due to incorrect password hash comparison.
+- **Favorites Functionality**: Corrected a problem where users were unable to add games to their favorites due to missing game details in the database.
+- **Commenting System**: Fixed various issues with adding, editing, and deleting comments, ensuring the functionality worked as expected.
+
+### Known Issues
+
+- **Flash Messages**: There is an unresolved issue where flash messages persist after page reloads. This has not been fixed yet.
