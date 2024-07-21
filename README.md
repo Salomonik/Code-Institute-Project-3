@@ -776,3 +776,8 @@ This project has been a significant learning experience, providing insights into
 3. **User Experience (UX)**: Emphasized the importance of user experience in application design, leading to a more intuitive and user-friendly interface.
 4. **Version Control**: Improved skills in version control using Git and GitHub.
 5. **Deployment**: Acquired knowledge in deploying web applications to cloud platforms like Heroku, managing environment variables, and ensuring the application runs smoothly in a production environment.
+
+### Future Enhancements
+
+ **Comment Liking**: Add features to allow users to like and interact with comments, fostering more engagement.
+ **Bug Fixes and Improvements**: Continue to identify and fix bugs, including the unresolved flash message issue, and make continuous improvements based on user feedback.
