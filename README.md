@@ -257,4 +257,34 @@ The layout of the application is responsive and adapts to different screen sizes
 - **Border Radius**: Rounded corners are applied to elements using a border radius of `8px`.
 - **Box Shadow**: A subtle box shadow is used to add depth to the elements.
 
+## Wireframe
+
+<details>
+<summary>Wireframe</summary>
+
+<details>
+
+<summary>Main Page</summary>
+
+![Main Page Wireframe](./assets/documentation/wireframe-main.png)
+
+
+</details>
+
+<details>
+<summary>Game Details</summary>
+
+![Game Details Page Wireframe](./assets/documentation/wireframe-gamedetails.png)
+
+</details>
+
+<details>
+<summary>Profile</summary>
+
+![Profile Wireframe](./assets/documentation/wireframe-profile.png)
+
+</details>
+
+</details>
+
 
