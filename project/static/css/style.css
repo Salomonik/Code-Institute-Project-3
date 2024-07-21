@@ -153,6 +153,10 @@ h1, h2, h3 {
 .card-image img {
     object-fit: contain;
     height: 100%;
+    transition: transform 0.5s ease;
+}
+.card-image:hover img {
+    transform: matrix(1.09248, 0, 0, 1.09248, 0, 0);
 }
 
 /* Carousel styling */
@@ -232,7 +236,10 @@ h1, h2, h3 {
     position: relative;
     display: block;
     border: 2px solid var(--primary-color);
+ 
 }
+
+
 .game-card-btn {
     position: absolute;
     top: 20px;
