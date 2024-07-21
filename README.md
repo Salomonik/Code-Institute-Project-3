@@ -321,4 +321,45 @@ The layout of the application is responsive and adapts to different screen sizes
 
 </details>
 
+## Features
+
+### Homepage
+- **Game Search**: Users can search for games by name using the search bar on the homepage.
+- **Popular Games Display**: The homepage displays a list of popular games fetched from the IGDB API, along with their cover images and brief descriptions.
+- **User Authentication**: Users can log in or register directly from the homepage navigation bar.
+
+### User Authentication
+- **User Registration**: Users can create a new account by providing a username, email, and password.
+- **User Login**: Registered users can log in to their accounts using their email and password.
+- **User Logout**: Logged-in users can log out of their accounts.
+
+### User Profile
+- **Profile Page**: Users have a personal profile page where they can view their information and update their profile picture.
+- **Favorite Games**: Users can view a list of their favorite games on their profile page.
+
+### Game Details
+- **Detailed Game Information**: Clicking on a game displays detailed information about the game, including its description, release date, genres, platforms, and more.
+- **Add to Favorites**: Users can add or remove games from their favorites list.
+- **Comments**: Users can view comments left by other users and add their own comments on the game details page.
+
+### Flash Messages
+- **Feedback Messages**: Users receive flash messages for important actions, such as adding a game to favorites, login/logout actions, and form submission feedback.
+
+### Responsive Design
+- **Mobile Friendly**: The application is fully responsive and works well on different devices, including desktops, tablets, and mobile phones.
+
+### Search Autocomplete
+- **Game Search Autocomplete**: As users type in the search bar, the application provides game suggestions based on the input.
+
+### Favorites
+- **Toggle Favorites**: Users can toggle their favorite games by clicking a heart icon. The icon changes based on whether the game is in the user's favorites.
+
+### Security
+- **CSRF Protection**: The application uses CSRF tokens to protect against Cross-Site Request Forgery attacks.
+- **Password Hashing**: User passwords are securely hashed using Werkzeug's security module.
+
+### Additional Features
+- **Profile Picture Upload**: Users can upload and change their profile picture.
+- **Comments Management**: Users can edit and delete their own comments.
+- **Game Recommendations**: Based on user favorites and popular games, users can receive game recommendations.
 
