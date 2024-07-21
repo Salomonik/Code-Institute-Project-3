@@ -38,7 +38,7 @@
 					{% if current_user.is_authenticated %}
 					<li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
 					<li>
-						<a class="avatar-img" href="{{ url_for('routes.profile') }}">
+						<a class="avatar-img" href="{{ url_for('routes.profile', user_id=current_user.id) }}">
 							<div class="nav-profile-picture">
 								{% if current_user.profile and current_user.profile.avatar_url and current_user.profile.avatar_url.strip() %}
 								<img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}" alt="Profile Picture" class="responsive-img">
@@ -65,7 +65,7 @@
 		<ul class="sidenav right-aligned" id="mobile-demo">
 			<li><a href="{{ url_for('routes.index') }}">Home</a></li>
 			{% if current_user.is_authenticated %}
-			<li><a href="{{ url_for('routes.profile') }}">Profile</a></li>
+			<li><a href="{{ url_for('routes.profile', user_id=current_user.id) }}">Profile</a></li>
 			<li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
 			{% else %}
 			<li><a href="{{ url_for('routes.login') }}">Login</a></li>

@@ -237,13 +237,14 @@ def logout():
     return redirect(url_for('routes.index'))
 
 # Route for user profile
-@routes.route('/profile', methods=['GET', 'POST'])
+@routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
-def profile():
+def profile(user_id):
     form = UpdateProfileForm()
+    user = User.query.get_or_404(user_id)
     avatars = os.listdir(os.path.join(current_app.static_folder, 'profile_pics'))
 
-    if form.validate_on_submit():
+    if user.id == current_user.id and form.validate_on_submit():
         avatar = form.selected_avatar.data
         if avatar:
             avatar_url = 'profile_pics/' + avatar
@@ -254,19 +255,19 @@ def profile():
                 db.session.add(profile)
             db.session.commit()
             flash('Your profile has been updated!', 'success')
-            return redirect(url_for('routes.profile'))
+            return redirect(url_for('routes.profile', user_id=current_user.id))
 
-    num_favorites = len(current_user.favorites) if current_user.favorites else 0
-    num_comments = len(current_user.comments) if current_user.comments else 0
+    num_favorites = len(user.favorites) if user.favorites else 0
+    num_comments = len(user.comments) if user.comments else 0
 
-    if current_user.profile and current_user.profile.avatar_url:
-        avatar_path = os.path.join(current_app.static_folder, current_user.profile.avatar_url.replace('/', os.sep))
-    favorite_games = current_user.favorites if current_user.favorites else []
+    favorite_games = user.favorites if user.favorites else []
     for game in favorite_games:
         if game.cover_url:
             game.cover_url = modify_image_url(game.cover_url, 't_cover_big')
 
-    return render_template('profile.html', form=form, user=current_user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars, favorite_games=favorite_games)
+    return render_template('profile.html', form=form, user=user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars, favorite_games=favorite_games)
+
+
 
 # Function to fetch game details from IGDB
 def fetch_game_from_igdb(game_id):

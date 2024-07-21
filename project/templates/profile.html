@@ -4,84 +4,80 @@
 
 {% block content %}
 <div class="container">
-	<h2>Your Profile</h2>
+    <h2>{{ 'Your Profile' if user.id == current_user.id else user.username ~ "'s Profile" }}</h2>
 
-	<div class="row">
-		<div class="col s12 m6">
-			<div class="input-field">
-				<label for="username">
-					<p>Username</p>
-				</label>
-				<input type="text" id="username" value="{{ user.username }}" disabled>
-			</div>
-			<div class="input-field">
-				<label for="email">Email</label>
-				<input type="email" id="email" value="{{ user.email }}" disabled>
-			</div>
-			<div class="input-field">
-				<label for="favorite">Number of Favorites</label>
-				<input type="text" id="favorite" value="{{ num_favorites }}" disabled>
-			</div>
-			<div class="input-field">
-				<label for="comment">Number of Comments</label>
-				<input type="text" id="comment" value="{{ num_comments }}" class="custom-input" disabled>
-			</div>
+    <div class="row">
+        <div class="col s12 m6">
+            <div class="input-field">
+                <label for="username">
+                    <p>Username</p>
+                </label>
+                <input type="text" id="username" value="{{ user.username }}" disabled>
+            </div>
+            <div class="input-field">
+                <label for="email">Email</label>
+                <input type="email" id="email" value="{{ user.email }}" disabled>
+            </div>
+            <div class="input-field">
+                <label for="favorite">Number of Favorites</label>
+                <input type="text" id="favorite" value="{{ num_favorites }}" disabled>
+            </div>
+            <div class="input-field">
+                <label for="comment">Number of Comments</label>
+                <input type="text" id="comment" value="{{ num_comments }}" class="custom-input" disabled>
+            </div>
+        </div>
+        <div class="col s12 m6">
+            <div class="profile-picture">
+                {% if user.profile and user.profile.avatar_url %}
+                <img src="{{ url_for('static', filename=user.profile.avatar_url) }}" alt="Profile Picture" class="responsive-img">
+                {% else %}
+                <img src="{{ url_for('static', filename='profile_pics/default-avatar.png') }}" alt="Default Profile Picture" class="responsive-img">
+                {% endif %}
+                {% if user.id == current_user.id %}
+                <a class="btn-floating btn-large waves-effect waves-light red modal-trigger profile-picture-btn" href="#avatarModal">
+                    <i class="material-icons">add</i>
+                </a>
+                {% endif %}
+            </div>
+            {% if user.id == current_user.id %}
+            <form method="POST" class="center-align" action="{{ url_for('routes.profile', user_id=user.id) }}">
+                {{ form.hidden_tag() }}
+                <input type="hidden" id="selected_avatar" name="selected_avatar">
+                <button type="submit" class="btn" style="margin-bottom: 20px;">Update Profile</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
 
-		</div>
-		<div class="col s12 m6">
-			<div class="profile-picture">
-				<a class="btn-floating btn-large waves-effect waves-light red modal-trigger profile-picture-btn"
-					href="#avatarModal">
-					<i class="material-icons">add</i>
-				</a>
-				{% if current_user.profile and current_user.profile.avatar_url %}
-				<img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}" alt="Profile Picture"
-					class="responsive-img">
-				{% else %}
-				<img src="{{ url_for('static', filename='profile_pics/default-avatar.png') }}"
-					alt="Default Profile Picture" class="responsive-img">
-				{% endif %}
-			</div>
-			<form method="POST" class="center-align" action="{{ url_for('routes.profile') }}">
-				{{ form.hidden_tag() }}
-				<input type="hidden" id="selected_avatar" name="selected_avatar">
-				<button type="submit" class="btn" style="margin-bottom: 20px;">Update Profile</button>
-			</form>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col s12">
+            <h5>{{ 'Your Favorite Games' if user.id == current_user.id else user.username ~ "'s Favorite Games" }}</h5>
+            <div class="carousel">
+                {% for game in favorite_games %}
+                <a class="carousel-item" href="{{ url_for('routes.game_details', game_id=game.id) }}"><img src="{{ game.cover_url }}"></a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-
-	<div class="row">
-		<div class="col s12">
-			<h5>Your Favorite Games</h5>
-			<div class="carousel">
-				{% for game in favorite_games %}
-				<a class="carousel-item" href="{{ url_for('routes.game_details', game_id=game.id) }}"><img
-						src="{{ game.cover_url }}"></a>
-				{% endfor %}
-			</div>
-		</div>
-	</div>
-
-
-
-	<!-- Modal Structure -->
-	<div id="avatarModal" class="modal">
-		<div class="modal-content">
-			<h4>Select an Avatar</h4>
-			<div class="row">
-				{% for avatar in avatars %}
-				<div class="col s3">
-					<img src="{{ url_for('static', filename='profile_pics/' ~ avatar) }}" alt="Avatar"
-						class="responsive-img avatar-option" data-avatar="{{ avatar }}">
-				</div>
-				{% endfor %}
-			</div>
-		</div>
-		<div class="modal-footer">
-			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
-		</div>
-	</div>
+    {% if user.id == current_user.id %}
+    <!-- Modal Structure -->
+    <div id="avatarModal" class="modal">
+        <div class="modal-content">
+            <h4>Select an Avatar</h4>
+            <div class="row">
+                {% for avatar in avatars %}
+                <div class="col s3">
+                    <img src="{{ url_for('static', filename='profile_pics/' ~ avatar) }}" alt="Avatar" class="responsive-img avatar-option" data-avatar="{{ avatar }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
+    {% endif %}
 </div>
-
 {% endblock %}
