@@ -218,6 +218,12 @@ h1, h2, h3 {
     right: 10px;
     z-index: 10;
 }
+.avatar{
+transition: transform 0.5s ease;
+}
+.avatar:hover img {
+    transform: matrix(1.09248, 0, 0, 1.09248, 0, 0);
+}
 
 /* Comment section styling */
 .collection {
