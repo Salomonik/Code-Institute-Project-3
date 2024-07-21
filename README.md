@@ -785,3 +785,7 @@ This project has been a significant learning experience, providing insights into
  ### Conclusion
 
 This project has been a fulfilling journey, contributing to both personal and professional growth as a developer. The lessons learned and achievements made will serve as a solid foundation for future projects and endeavors.
+
+## Acknowledgments
+
+Slack / Reddit(webdev) community for support and knowledge.
