@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import func
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -508,16 +509,26 @@ def delete_game(game_id):
 def add_game():
     form = AddGameForm()
     if form.validate_on_submit():
+        # Ustal najwyższe ID gry w bazie danych, aby nadać nowe ID
+        max_api_id = 1000000  # Zakładamy, że ID gier z API są mniejsze niż 1,000,000
+        
+        # Znajdź najwyższe ID lokalnej gry, które zostało już dodane
+        max_local_id = db.session.query(func.max(Game.id)).filter(Game.id > max_api_id).scalar()
+        
+        # Ustaw ID nowej gry na wartość większą niż maksymalne ID lokalne
+        new_game_id = max_local_id + 1 if max_local_id else max_api_id + 1
+        
+        # Tworzenie nowej gry z ustalonym ID
         new_game = Game(
+            id=new_game_id,
             name=form.name.data,
             description=form.description.data,
             release_date=form.release_date.data,
-            cover_url=form.cover_url.data,
+            cover_url=form.cover_url.data
         )
         db.session.add(new_game)
         db.session.commit()
         flash('Game added successfully!', 'success')
         return redirect(url_for('routes.index'))
-    
     return render_template('add_game.html', form=form)
 
