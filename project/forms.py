@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField,TextAreaField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField,TextAreaField, StringField, TextAreaField, DateField, URLField, SelectMultipleField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional, URL
 from project.models import User
 
 
@@ -34,3 +34,16 @@ class UpdateProfileForm(FlaskForm):
 class CommentForm(FlaskForm):
     content = TextAreaField('Comment', validators=[DataRequired()])
     submit = SubmitField('Post Comment')
+    
+class AddGameForm(FlaskForm):
+    name = StringField('Game Name', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[Optional()])
+    release_date = DateField('Release Date', format='%Y-%m-%d', validators=[Optional()])
+    cover_url = URLField('Cover Image URL', validators=[Optional(), URL()])
+    platforms = SelectMultipleField('Platforms', validators=[Optional()])
+    genres = SelectMultipleField('Genres', validators=[Optional()])
+    game_modes = SelectMultipleField('Game Modes', validators=[Optional()])
+    involved_companies = TextAreaField('Involved Companies', validators=[Optional()])
+    storyline = TextAreaField('Storyline', validators=[Optional()])
+    rating = StringField('Rating', validators=[Optional()])  # Może być FloatField jeśli chcesz przechowywać ocenę jako liczbę zmiennoprzecinkową
+    submit = SubmitField('Add Game')
