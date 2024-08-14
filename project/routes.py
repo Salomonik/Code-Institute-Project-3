@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, session, request, jsonify, url_for
 from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 from project import db
-from project.forms import RegistrationForm, LoginForm, UpdateProfileForm, CommentForm
+from project.forms import RegistrationForm, LoginForm, UpdateProfileForm, CommentForm, AddGameForm
 from project.models import User, Game, Comment, UserProfile, favorites
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
@@ -479,3 +479,29 @@ def delete_game(game_id):
         db.session.rollback()
         flash('Error deleting the game: ' + str(e), 'danger')
         return redirect(url_for('routes.index'))
+
+
+@routes.route('/add_game', methods=['GET', 'POST'])
+@login_required
+def add_game():
+    form = AddGameForm()
+    
+    if form.validate_on_submit():
+        new_game = Game(
+            name=form.name.data,
+            description=form.description.data,
+            release_date=form.release_date.data,
+            cover_url=form.cover_url.data,
+            platforms=form.platforms.data,
+            genres=form.genres.data,
+            game_modes=form.game_modes.data,
+            involved_companies=form.involved_companies.data,
+            storyline=form.storyline.data,
+            rating=form.rating.data
+        )
+        db.session.add(new_game)
+        db.session.commit()
+        flash('Game added successfully!', 'success')
+        return redirect(url_for('routes.index'))
+    
+    return render_template('add_game.html', form=form)
