@@ -100,41 +100,63 @@ def get_games():
     try:
         game_name = request.args.get('game_name')
         platform = request.args.get('platform')
-        url = 'https://api.igdb.com/v4/games'
-        headers = {
-            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
-            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
-            'Accept': 'application/json'
-        }
-        data = (
-            f'search "{game_name}"; '
-            'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
-            'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
-            'game_modes.name, themes.name, first_release_date;'
-        )
         
-        if platform:
-            data += f' where platforms = [{platform}];'
-        
-        # Fetch games based on search criteria
-        response = requests.post(url, headers=headers, data=data)
-        response.raise_for_status()
-        game_info = response.json()
-        
-        # Pobierz listę usuniętych gier
-        deleted_games = Game.query.with_entities(Game.id).filter_by(is_deleted=True).all()
-        deleted_game_ids = {game.id for game in deleted_games}
+        # Najpierw wyszukaj w lokalnej bazie danych
+        local_games = Game.query.filter(
+            Game.name.ilike(f'%{game_name}%')
+        ).all()
 
-        # Filtruj usunięte gry
-        filtered_game_info = [game for game in game_info if game['id'] not in deleted_game_ids]
-        
-        # Modyfikacja URL obrazków dla lepszego wyświetlania
-        modify_images(filtered_game_info)
+        if local_games:
+            # Tworzenie listy słowników dla gier z lokalnej bazy danych
+            filtered_game_info = []
+            for game in local_games:
+                game_dict = {
+                    'id': game.id,
+                    'name': game.name,
+                    'summary': game.description,
+                    'first_release_date': game.release_date.strftime('%Y-%m-%d') if game.release_date else None,
+                    'cover': {'url': game.cover_url} if game.cover_url else None
+                }
+                filtered_game_info.append(game_dict)
+        else:
+            # Jeśli brak gier w lokalnej bazie danych, wykonaj zapytanie do API
+            url = 'https://api.igdb.com/v4/games'
+            headers = {
+                'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
+                'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
+                'Accept': 'application/json'
+            }
+            data = (
+                f'search "{game_name}"; '
+                'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
+                'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
+                'game_modes.name, themes.name, first_release_date;'
+            )
+
+            if platform:
+                data += f' where platforms = [{platform}];'
+
+            response = requests.post(url, headers=headers, data=data)
+            response.raise_for_status()
+            game_info = response.json()
+
+            # Pobierz listę usuniętych gier
+            deleted_games = Game.query.with_entities(Game.id).filter_by(is_deleted=True).all()
+            deleted_game_ids = {game.id for game in deleted_games}
+
+            # Filtruj usunięte gry
+            filtered_game_info = [game for game in game_info if game['id'] not in deleted_game_ids]
+
+            # Modyfikacja URL obrazków dla lepszego wyświetlania
+            modify_images(filtered_game_info)
+
         favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
         return render_template('games.html', game_info=filtered_game_info, favorite_game_ids=favorite_game_ids)
     except Exception as e:
         print("Error fetching game data:", e)
         return render_template('error.html', error=str(e))
+
+
 
 
    
