@@ -366,13 +366,24 @@ def logout():
 @routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def profile(user_id):
-    
-    
-    form = UpdateProfileForm()
     user = User.query.get_or_404(user_id)
+    
+    # Check if the current user is trying to access their own profile
+    if user.id != current_user.id:
+        flash('You are not authorized to access this page.', 'danger')
+        return redirect(url_for('routes.index'))
+
+    form = UpdateProfileForm()
     avatars = os.listdir(os.path.join(current_app.static_folder, 'profile_pics'))
 
-    if user.id == current_user.id and form.validate_on_submit():
+    if form.validate_on_submit():
+        # Update username if the user wants to change it
+        new_username = form.username.data
+        if new_username and new_username != current_user.username:
+            current_user.username = new_username
+            flash('Username updated successfully!', 'success')
+
+        # Update avatar
         avatar = form.selected_avatar.data
         if avatar:
             avatar_url = 'profile_pics/' + avatar
@@ -381,9 +392,9 @@ def profile(user_id):
             else:
                 profile = UserProfile(user_id=current_user.id, avatar_url=avatar_url)
                 db.session.add(profile)
-            db.session.commit()
-            flash('Your profile has been updated!', 'success')
-            return redirect(url_for('routes.profile', user_id=current_user.id))
+
+        db.session.commit()
+        return redirect(url_for('routes.profile', user_id=current_user.id))
 
     num_favorites = len(user.favorites) if user.favorites else 0
     num_comments = len(user.comments) if user.comments else 0
@@ -395,6 +406,33 @@ def profile(user_id):
 
     return render_template('profile.html', form=form, user=user, num_favorites=num_favorites, num_comments=num_comments, avatars=avatars, favorite_games=favorite_games)
 
+@routes.route('/delete_account', methods=['POST'])
+@login_required
+def delete_account():
+    try:
+        user = User.query.get_or_404(current_user.id)
+        
+        # Delete all comments associated with the user
+        Comment.query.filter_by(user_id=user.id).delete()
+
+        # Delete user favorites if necessary
+        db.session.execute(favorites.delete().where(favorites.c.user_id == user.id))
+        
+        # Delete the user profile
+        if user.profile:
+            db.session.delete(user.profile)
+        
+        # Finally, delete the user
+        db.session.delete(user)
+        db.session.commit()
+        
+        logout_user()
+        flash('Your account has been successfully deleted.', 'success')
+        return redirect(url_for('routes.index'))
+    except Exception as e:
+        db.session.rollback()
+        flash('Error deleting your account: ' + str(e), 'danger')
+        return redirect(url_for('routes.profile', user_id=current_user.id))
 
 
 # Function to fetch game details from IGDB
@@ -587,4 +625,24 @@ def add_game():
         flash('Game added successfully!', 'success')
         return redirect(url_for('routes.index'))
     return render_template('add_game.html', form=form)
+
+@routes.route('/update_username/<int:user_id>', methods=['POST'])
+@login_required
+def update_username(user_id):
+    user = User.query.get_or_404(user_id)
+    
+    if user.id != current_user.id:
+        flash('You are not authorized to edit this profile.', 'danger')
+        return redirect(url_for('routes.profile', user_id=user_id))
+
+    new_username = request.form.get('username')
+    if new_username:
+        user.username = new_username
+        db.session.commit()
+        flash('Your username has been updated!', 'success')
+    else:
+        flash('Invalid username.', 'danger')
+
+    return redirect(url_for('routes.profile', user_id=user_id))
+
 

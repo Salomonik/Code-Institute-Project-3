@@ -28,6 +28,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
     
 class UpdateProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=64)])
     selected_avatar = HiddenField('Selected Avatar', validators=[DataRequired()])
     submit = SubmitField('Update')
 
