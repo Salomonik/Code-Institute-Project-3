@@ -364,4 +364,6 @@ footer {
     margin-bottom: 1rem;
 }
 
-
+.content-section{
+    margin-inline: 2rem;
+}
