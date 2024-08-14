@@ -111,21 +111,21 @@ def get_games():
         response.raise_for_status()
         game_info = response.json()
         
-         # Lista gier usuniętych
-        deleted_games = Game.query.filter_by(is_deleted=True).all()
+        # Pobierz listę usuniętych gier
+        deleted_games = Game.query.with_entities(Game.id).filter_by(is_deleted=True).all()
         deleted_game_ids = {game.id for game in deleted_games}
 
         # Filtruj usunięte gry
         filtered_game_info = [game for game in game_info if game['id'] not in deleted_game_ids]
         
-        
-        # Modify image URLs for better display
-        modify_images(game_info)
+        # Modyfikacja URL obrazków dla lepszego wyświetlania
+        modify_images(filtered_game_info)
         favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
-        return render_template('games.html', game_info=game_info, favorite_game_ids=favorite_game_ids)
+        return render_template('games.html', game_info=filtered_game_info, favorite_game_ids=favorite_game_ids)
     except Exception as e:
         print("Error fetching game data:", e)
         return render_template('error.html', error=str(e))
+
 
    
    
