@@ -36,6 +36,7 @@
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
 					<li><a href="{{ url_for('routes.index') }}">Home</a></li>
 					{% if current_user.is_authenticated %}
+					<li><a href="{{ url_for('routes.add_game') }}">Add Game</a></li> <!-- New link for adding games -->
 					<li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
 					<li>
 						<a class="avatar-img" href="{{ url_for('routes.profile', user_id=current_user.id) }}">

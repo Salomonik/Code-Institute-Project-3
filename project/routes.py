@@ -485,19 +485,12 @@ def delete_game(game_id):
 @login_required
 def add_game():
     form = AddGameForm()
-    
     if form.validate_on_submit():
         new_game = Game(
             name=form.name.data,
             description=form.description.data,
             release_date=form.release_date.data,
             cover_url=form.cover_url.data,
-            platforms=form.platforms.data,
-            genres=form.genres.data,
-            game_modes=form.game_modes.data,
-            involved_companies=form.involved_companies.data,
-            storyline=form.storyline.data,
-            rating=form.rating.data
         )
         db.session.add(new_game)
         db.session.commit()
@@ -505,3 +498,4 @@ def add_game():
         return redirect(url_for('routes.index'))
     
     return render_template('add_game.html', form=form)
+

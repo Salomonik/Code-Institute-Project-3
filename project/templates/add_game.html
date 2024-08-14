@@ -5,59 +5,24 @@
 {% block content %}
 <div class="container">
     <h2>Add a New Game</h2>
-    <form method="POST" action="{{ url_for('routes.add_game') }}">
+    <form method="POST">
         {{ form.hidden_tag() }}
-        
         <div class="input-field">
             {{ form.name.label }}
             {{ form.name(class="validate") }}
         </div>
-        
         <div class="input-field">
             {{ form.description.label }}
             {{ form.description(class="materialize-textarea") }}
         </div>
-        
         <div class="input-field">
             {{ form.release_date.label }}
-            {{ form.release_date(class="validate") }}
+            {{ form.release_date(class="validate datepicker") }}
         </div>
-        
         <div class="input-field">
             {{ form.cover_url.label }}
             {{ form.cover_url(class="validate") }}
         </div>
-        
-        <div class="input-field">
-            {{ form.platforms.label }}
-            {{ form.platforms(class="validate") }}
-        </div>
-
-        <div class="input-field">
-            {{ form.genres.label }}
-            {{ form.genres(class="validate") }}
-        </div>
-
-        <div class="input-field">
-            {{ form.game_modes.label }}
-            {{ form.game_modes(class="validate") }}
-        </div>
-
-        <div class="input-field">
-            {{ form.involved_companies.label }}
-            {{ form.involved_companies(class="materialize-textarea") }}
-        </div>
-
-        <div class="input-field">
-            {{ form.storyline.label }}
-            {{ form.storyline(class="materialize-textarea") }}
-        </div>
-
-        <div class="input-field">
-            {{ form.rating.label }}
-            {{ form.rating(class="validate") }}
-        </div>
-
         <div class="input-field">
             {{ form.submit(class="btn") }}
         </div>
