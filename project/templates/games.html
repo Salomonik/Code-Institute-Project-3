@@ -29,6 +29,17 @@
                 </form>
             </div>
             {% endif %}
+             <!-- Delete Button on the Cover -->
+             {% if current_user.is_authenticated %}
+             <form id="delete-game-form-{{ game_details.id }}" class="delete-game-form" method="post"
+                 action="{{ url_for('routes.delete_game', game_id=game_details.id) }}" onsubmit="return confirmDelete();">
+                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                 <button type="submit"
+                     class="btn-floating btn-large waves-effect waves-light red game-card-btn-dlt btn-delete-game">
+                     <i class="material-icons">delete</i>
+                 </button>
+             </form>
+             {% endif %}
             <!-- Game cover image -->
             <div class="card-image waves-effect waves-block waves-light">
                 {% if game.cover %}

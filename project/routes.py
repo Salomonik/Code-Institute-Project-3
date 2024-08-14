@@ -29,7 +29,6 @@ def get_igdb_access_token(client_id, client_secret):
     response.raise_for_status()
     return response.json()['access_token']
 
-# Route for the home page
 @routes.route('/')
 def index():
     try:
@@ -58,14 +57,22 @@ def index():
         response.raise_for_status()
         popular_games = response.json()
         
-        # Modify image URLs for better display
-        modify_images(popular_games)
+        # Pobierz listę usuniętych gier
+        deleted_games = Game.query.with_entities(Game.id).filter_by(is_deleted=True).all()
+        deleted_game_ids = {game.id for game in deleted_games}
+
+        # Filtruj usunięte gry
+        filtered_popular_games = [game for game in popular_games if game['id'] not in deleted_game_ids]
+        
+        # Modyfikacja URL obrazków dla lepszego wyświetlania
+        modify_images(filtered_popular_games)
         favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
 
-        return render_template('index.html', popular_games=popular_games,  favorite_game_ids=favorite_game_ids)
+        return render_template('index.html', popular_games=filtered_popular_games, favorite_game_ids=favorite_game_ids)
     except Exception as e:
         print("Error fetching popular games:", e)
         return render_template('error.html', error=str(e))
+
 
 # Function to modify image URL size
 def modify_image_url(url, size):
