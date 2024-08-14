@@ -3,10 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var modalElems = document.querySelectorAll('.modal');
     M.Modal.init(modalElems);
 
-    var elems = document.querySelectorAll('.datepicker');
-    M.Datepicker.init(elems, {
-        format: 'yyyy-mm-dd'
-    });
+  
 
     // Handle avatar selection
     document.querySelectorAll('.avatar-option').forEach(function (img) {
