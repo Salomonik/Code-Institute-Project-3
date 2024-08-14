@@ -210,42 +210,78 @@ def game_details(game_id):
 # Function to fetch game details from IGDB
 def fetch_game_details(game_id):
     try:
-        url = 'https://api.igdb.com/v4/games'
-        headers = {
-            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
-            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
-            'Accept': 'application/json'
-        }
-        data = (
-            f'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
-            'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
-            'game_modes.name, themes.name, first_release_date; '
-            f'where id = {game_id};'
-        )
+        # Upewnij się, że game_id jest konwertowane na int
+        game_id = int(game_id)
 
-        logging.debug(f"Sending request to IGDB for game_id {game_id}")
-        logging.debug(f"Request data: {data}")
-        
-        response = requests.post(url, headers=headers, data=data)
-        response.raise_for_status()
-        
-        game_details = response.json()
-        logging.debug(f"Response received: {game_details}")
-        
-        if not game_details:
-            logging.error(f"No game details found for game_id {game_id}")
-            return None
-        
-        game_details = game_details[0]  # Assume the response is a list containing one element
-        modify_images([game_details])  # Modify image URLs
-        return game_details
+        # Sprawdź, czy ID jest większe niż 1,000,000
+        if game_id > 1000000:
+            # Pobierz dane z lokalnej bazy danych
+            game = Game.query.get(game_id)
+            if not game or game.is_deleted:
+                logging.error(f"No local game details found for game_id {game_id}")
+                return None
+            
+            # Przygotuj dane w podobnym formacie jak z API IGDB
+            game_details = {
+                'id': game.id,
+                'name': game.name,
+                'summary': game.description,
+                'first_release_date': game.release_date.strftime('%Y-%m-%d') if game.release_date else None,
+                'cover': {'url': game.cover_url} if game.cover_url else None,
+                'genres': [],  # Puste listy, jeśli brak danych
+                'platforms': [],
+                'storyline': game.description,
+                'screenshots': [],
+                'videos': [],
+                'rating': None,
+                'rating_count': None,
+                'involved_companies': [],
+                'game_modes': [],
+                'themes': []
+            }
+            return game_details
+        else:
+            # Pobierz dane z API IGDB
+            url = 'https://api.igdb.com/v4/games'
+            headers = {
+                'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
+                'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
+                'Accept': 'application/json'
+            }
+            data = (
+                f'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
+                'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
+                'game_modes.name, themes.name, first_release_date; '
+                f'where id = {game_id};'
+            )
+
+            logging.debug(f"Sending request to IGDB for game_id {game_id}")
+            logging.debug(f"Request data: {data}")
+            
+            response = requests.post(url, headers=headers, data=data)
+            response.raise_for_status()
+            
+            game_details = response.json()
+            logging.debug(f"Response received: {game_details}")
+            
+            if not game_details:
+                logging.error(f"No game details found for game_id {game_id}")
+                return None
+            
+            game_details = game_details[0]  # Zakładamy, że odpowiedź zawiera jeden element
+            modify_images([game_details])  # Modyfikacja URL obrazków
+            return game_details
     
+    except ValueError as ve:
+        logging.error(f"ValueError: game_id could not be converted to an integer: {ve}")
+        return None
     except requests.exceptions.RequestException as e:
         logging.error(f"RequestException while fetching game details for game_id {game_id}: {e}")
         return None
     except Exception as e:
         logging.error(f"Unexpected error while fetching game details for game_id {game_id}: {e}")
         return None
+
 
 
 # Route to suggest games based on a query
@@ -449,7 +485,19 @@ def toggle_favorite():
 # Custom template filter for date formatting
 @routes.app_template_filter('dateformat')
 def dateformat(value, format='%Y-%m-%d'):
-    return datetime.fromtimestamp(value).strftime(format)
+    if isinstance(value, (int, float)):
+        # If it's a timestamp, convert it directly
+        return datetime.fromtimestamp(value).strftime(format)
+    elif isinstance(value, str):
+        # Try to parse the string as a date
+        try:
+            dt = datetime.strptime(value, '%Y-%m-%d')
+            return dt.strftime(format)
+        except ValueError:
+            # Return the original string if parsing fails
+            return value
+    else:
+        return value
 
 # Route to clear flash messages
 @routes.route('/clear_flash_messages', methods=['POST'])
