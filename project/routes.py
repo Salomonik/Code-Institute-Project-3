@@ -111,6 +111,14 @@ def get_games():
         response.raise_for_status()
         game_info = response.json()
         
+         # Lista gier usuniętych
+        deleted_games = Game.query.filter_by(is_deleted=True).all()
+        deleted_game_ids = {game.id for game in deleted_games}
+
+        # Filtruj usunięte gry
+        filtered_game_info = [game for game in game_info if game['id'] not in deleted_game_ids]
+        
+        
         # Modify image URLs for better display
         modify_images(game_info)
         favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
@@ -119,12 +127,25 @@ def get_games():
         print("Error fetching game data:", e)
         return render_template('error.html', error=str(e))
 
+   
+   
+   
+   # game_details = fetch_game_details(game_id)  # Assume a function `fetch_game_details` handles API logic
 # Route for game details
 @routes.route('/game_details/<int:game_id>', methods=['GET', 'POST'])
 def game_details(game_id):
     form = CommentForm()
-    game_details = fetch_game_details(game_id)  # Assume a function `fetch_game_details` handles API logic
 
+    # Pobierz szczegóły gry z lokalnej bazy danych
+    game = Game.query.filter_by(id=game_id).first()
+
+    # Sprawdź, czy gra istnieje i czy nie jest oznaczona jako usunięta
+    if not game or game.is_deleted:
+        return render_template('404.html'), 404
+
+    # Użyj `fetch_game_details`, aby uzyskać więcej informacji o grze z API lub bazy
+    game_details = fetch_game_details(game_id)
+    
     if form.validate_on_submit():
         if current_user.is_authenticated:
             comment = Comment(content=form.content.data, user_id=current_user.id, game_id=game_id)
@@ -137,7 +158,10 @@ def game_details(game_id):
 
     comments = Comment.query.filter_by(game_id=game_id).order_by(Comment.created_at.desc()).all()
     favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
+
     return render_template('game_details.html', game_details=game_details, form=form, comments=comments, favorite_game_ids=favorite_game_ids)
+
+
 
 # Function to fetch game details from IGDB
 def fetch_game_details(game_id):
@@ -409,8 +433,6 @@ def update_comment(comment_id):
 def delete_game(game_id):
     try:
         game = Game.query.get_or_404(game_id)
-
-        
         game.is_deleted = True
         db.session.commit()
 
