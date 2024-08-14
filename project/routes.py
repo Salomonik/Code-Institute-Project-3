@@ -89,8 +89,14 @@ def modify_image_url(url, size):
 # Function to modify images in game details
 def modify_images(game_details):
     for game in game_details:
-        if 'cover' in game:
+        # Modify API-based game cover images
+        if 'cover' in game and 'url' in game['cover']:
             game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
+        # Modify locally added game cover images
+        elif 'cover_url' in game:
+            game['cover_url'] = modify_image_url(game['cover_url'], 't_cover_big')
+        
+        # Modify screenshots URLs
         if 'screenshots' in game:
             for screenshot in game['screenshots']:
                 screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
@@ -360,6 +366,8 @@ def logout():
 @routes.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def profile(user_id):
+    
+    
     form = UpdateProfileForm()
     user = User.query.get_or_404(user_id)
     avatars = os.listdir(os.path.join(current_app.static_folder, 'profile_pics'))

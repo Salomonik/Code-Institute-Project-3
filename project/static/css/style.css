@@ -191,6 +191,8 @@ h1, h2, h3 {
 .brand-logo img {
     max-width: 65px;
     margin: 0;
+    margin-left: 20px;
+    border-radius: 50%;
 }
 
 /* Avatar styling */
