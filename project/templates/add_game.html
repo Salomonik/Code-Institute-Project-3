@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Add Game{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Add a New Game</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="input-field">
+            {{ form.name.label }}
+            {{ form.name(class="validate") }}
+        </div>
+        <div class="input-field">
+            {{ form.description.label }}
+            {{ form.description(class="materialize-textarea") }}
+        </div>
+        <div class="input-field">
+            {{ form.release_date.label }}
+            {{ form.release_date(class="validate datepicker") }}
+        </div>
+        <div class="input-field">
+            {{ form.cover_url.label }}
+            {{ form.cover_url(class="validate") }}
+        </div>
+        <div class="input-field">
+            {{ form.submit(class="btn") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

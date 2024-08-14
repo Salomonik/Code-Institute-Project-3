@@ -21,25 +21,27 @@
                 <form id="toggle-favorite-form-{{ game.id }}" class="add-to-favorites-form" method="post">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="game_id" value="{{ game.id }}">
-                    <button type="submit" class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite">
-                        <i class="material-icons {% if game.id in favorite_game_ids %}favorite-icon{% else %}favorite-border-icon{% endif %}">
+                    <button type="submit"
+                        class="btn-floating btn-large waves-effect waves-light white game-card-btn btn-add-favorite">
+                        <i
+                            class="material-icons {% if game.id in favorite_game_ids %}favorite-icon{% else %}favorite-border-icon{% endif %}">
                             {% if game.id in favorite_game_ids %}favorite{% else %}favorite_border{% endif %}
                         </i>
                     </button>
                 </form>
             </div>
             {% endif %}
-             <!-- Delete Button on the Cover -->
-             {% if current_user.is_authenticated %}
-             <form id="delete-game-form-{{ game_details.id }}" class="delete-game-form" method="post"
-                 action="{{ url_for('routes.delete_game', game_id=game_details.id) }}" onsubmit="return confirmDelete();">
-                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                 <button type="submit"
-                     class="btn-floating btn-large waves-effect waves-light red game-card-btn-dlt btn-delete-game">
-                     <i class="material-icons">delete</i>
-                 </button>
-             </form>
-             {% endif %}
+            <!-- Delete Button on the Cover -->
+            {% if current_user.is_authenticated %}
+            <form id="delete-game-form-{{ game.id }}" class="delete-game-form" method="post"
+                action="{{ url_for('routes.delete_game', game_id=game.id) }}" onsubmit="return confirmDelete();">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit"
+                    class="btn-floating btn-large waves-effect waves-light red game-card-btn-dlt btn-delete-game">
+                    <i class="material-icons">delete</i>
+                </button>
+            </form>
+            {% endif %}
             <!-- Game cover image -->
             <div class="card-image waves-effect waves-block waves-light">
                 {% if game.cover %}
@@ -47,7 +49,8 @@
                     <img class="activator" src="{{ game.cover.url }}" alt="{{ game.name }} cover">
                 </a>
                 {% else %}
-                <img class="activator" src="{{ url_for('static', filename='images/cover-placeholder.webp') }}" alt="Placeholder">
+                <img class="activator" src="{{ url_for('static', filename='images/cover-placeholder.webp') }}"
+                    alt="Placeholder">
                 {% endif %}
             </div>
             <!-- Game title -->
@@ -64,39 +67,39 @@
 {% endblock %}
 
 <script>
-// JavaScript to handle the favorite button functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const forms = document.querySelectorAll('.add-to-favorites-form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            const gameId = formData.get('game_id');
-            fetch('{{ url_for("routes.toggle_favorite") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': formData.get('csrf_token')
-                },
-                body: JSON.stringify({
-                    game_id: gameId
+    // JavaScript to handle the favorite button functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.add-to-favorites-form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const gameId = formData.get('game_id');
+                fetch('{{ url_for("routes.toggle_favorite") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': formData.get('csrf_token')
+                    },
+                    body: JSON.stringify({
+                        game_id: gameId
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.action === 'added') {
-                    this.querySelector('i').classList.remove('favorite-border-icon');
-                    this.querySelector('i').classList.add('favorite-icon');
-                    this.querySelector('i').textContent = 'favorite';
-                } else if (data.action === 'removed') {
-                    this.querySelector('i').classList.remove('favorite-icon');
-                    this.querySelector('i').classList.add('favorite-border-icon');
-                    this.querySelector('i').textContent = 'favorite_border';
-                }
-                M.toast({html: data.message});
-            })
-            .catch(error => console.error('Error:', error));
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.action === 'added') {
+                            this.querySelector('i').classList.remove('favorite-border-icon');
+                            this.querySelector('i').classList.add('favorite-icon');
+                            this.querySelector('i').textContent = 'favorite';
+                        } else if (data.action === 'removed') {
+                            this.querySelector('i').classList.remove('favorite-icon');
+                            this.querySelector('i').classList.add('favorite-border-icon');
+                            this.querySelector('i').textContent = 'favorite_border';
+                        }
+                        M.toast({ html: data.message });
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
         });
     });
-});
 </script>

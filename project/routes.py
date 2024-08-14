@@ -9,6 +9,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 # Define Blueprint for routing
 routes = Blueprint('routes', __name__)
@@ -141,6 +144,7 @@ def get_games():
 # Route for game details
 @routes.route('/game_details/<int:game_id>', methods=['GET', 'POST'])
 def game_details(game_id):
+    logging.debug(f"Accessing game details for game_id {game_id}")
     form = CommentForm()
 
     # Pobierz szczegóły gry z lokalnej bazy danych
@@ -148,11 +152,19 @@ def game_details(game_id):
 
     # Sprawdź, czy gra istnieje i czy nie jest oznaczona jako usunięta
     if not game or game.is_deleted:
+        logging.warning(f"Game with id {game_id} not found or is marked as deleted")
         return render_template('404.html'), 404
 
     # Użyj `fetch_game_details`, aby uzyskać więcej informacji o grze z API lub bazy
     game_details = fetch_game_details(game_id)
     
+    if game_details is None:
+        logging.error(f"Failed to retrieve game details for game_id {game_id}")
+        flash('Nie udało się pobrać szczegółów gry.', 'danger')
+        return render_template('error.html', error="Nie udało się pobrać szczegółów gry.")
+    
+    logging.debug(f"Game details retrieved successfully for game_id {game_id}")
+
     if form.validate_on_submit():
         if current_user.is_authenticated:
             comment = Comment(content=form.content.data, user_id=current_user.id, game_id=game_id)
@@ -167,6 +179,8 @@ def game_details(game_id):
     favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
 
     return render_template('game_details.html', game_details=game_details, form=form, comments=comments, favorite_game_ids=favorite_game_ids)
+
+
 
 
 
@@ -186,14 +200,30 @@ def fetch_game_details(game_id):
             f'where id = {game_id};'
         )
 
+        logging.debug(f"Sending request to IGDB for game_id {game_id}")
+        logging.debug(f"Request data: {data}")
+        
         response = requests.post(url, headers=headers, data=data)
         response.raise_for_status()
-        game_details = response.json()[0]  # Assume the response is a list containing one element
+        
+        game_details = response.json()
+        logging.debug(f"Response received: {game_details}")
+        
+        if not game_details:
+            logging.error(f"No game details found for game_id {game_id}")
+            return None
+        
+        game_details = game_details[0]  # Assume the response is a list containing one element
         modify_images([game_details])  # Modify image URLs
         return game_details
-    except Exception as e:
-        print("Error fetching game details:", e)
+    
+    except requests.exceptions.RequestException as e:
+        logging.error(f"RequestException while fetching game details for game_id {game_id}: {e}")
         return None
+    except Exception as e:
+        logging.error(f"Unexpected error while fetching game details for game_id {game_id}: {e}")
+        return None
+
 
 # Route to suggest games based on a query
 @routes.route('/suggest_games', methods=['GET'])
