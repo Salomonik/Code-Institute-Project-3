@@ -403,3 +403,20 @@ def update_comment(comment_id):
     comment.updated_at = datetime.now()
     db.session.commit()
     return jsonify({'message': 'Comment updated successfully.', 'content': comment.content}), 200
+
+@routes.route('/delete_game/<int:game_id>', methods=['POST'])
+@login_required
+def delete_game(game_id):
+    try:
+        game = Game.query.get_or_404(game_id)
+
+        
+        game.is_deleted = True
+        db.session.commit()
+
+        flash('Game has been successfully deleted.', 'success')
+        return redirect(url_for('routes.index'))
+    except Exception as e:
+        db.session.rollback()
+        flash('Error deleting the game: ' + str(e), 'danger')
+        return redirect(url_for('routes.index'))

@@ -28,6 +28,7 @@ class Game(db.Model):
     release_date = db.Column(db.Date)
     cover_url = db.Column(db.String(256))
     created_at = db.Column(db.DateTime, default=datetime.now)
+    is_deleted = db.Column(db.Boolean, default=False)
     
     def __repr__(self):
         return f'<Game {self.name}>'
