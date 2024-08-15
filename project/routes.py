@@ -11,6 +11,7 @@ from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
 import logging
+import time
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -20,18 +21,29 @@ routes = Blueprint('routes', __name__)
 # Retrieve environment variables
 CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
+ACCESS_TOKEN = None
+TOKEN_EXPIRY = 0
 
 # Function to get access token from IGDB
 def get_igdb_access_token(client_id, client_secret):
-    url = 'https://id.twitch.tv/oauth2/token'
-    payload = {
-        'client_id': client_id,
-        'client_secret': client_secret,
-        'grant_type': 'client_credentials'
-    }
-    response = requests.post(url, data=payload)
-    response.raise_for_status()
-    return response.json()['access_token']
+    global ACCESS_TOKEN, TOKEN_EXPIRY
+    current_time = time.time()
+    
+    if ACCESS_TOKEN is None or current_time >= TOKEN_EXPIRY:
+        url = 'https://id.twitch.tv/oauth2/token'
+        payload = {
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'grant_type': 'client_credentials'
+        }
+        response = requests.post(url, data=payload)
+        response.raise_for_status()
+        token_data = response.json()
+        
+        ACCESS_TOKEN = token_data['access_token']
+        TOKEN_EXPIRY = current_time + token_data['expires_in'] - 300  # Odśwież 5 minut przed wygaśnięciem
+    
+    return ACCESS_TOKEN
 
 @routes.route('/')
 def index():
@@ -88,15 +100,19 @@ def modify_image_url(url, size):
 
 # Function to modify images in game details
 def modify_images(game_details):
-    # Sprawdź, czy game_details to lista (więcej niż jedna gra)
+    if not game_details:
+        return
+
+    # If game_details is a list (multiple games)
     if isinstance(game_details, list):
         for game in game_details:
-            if 'cover' in game and 'url' in game['cover']:
+            if 'cover' in game and game['cover']:
                 game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
             if 'screenshots' in game:
                 for screenshot in game['screenshots']:
                     screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
-    # Jeśli to pojedyncza gra, zastosuj modyfikację bezpośrednio
+
+    # If game_details is a dictionary (single game)
     elif isinstance(game_details, dict):
         if 'cover' in game_details and 'url' in game_details['cover']:
             game_details['cover']['url'] = modify_image_url(game_details['cover']['url'], 't_cover_big')
@@ -104,41 +120,55 @@ def modify_images(game_details):
             for screenshot in game_details['screenshots']:
                 screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
 
+
 # Route to get games based on search criteria
 @routes.route('/get_games', methods=['GET'])
 def get_games():
     try:
-        game_name = request.args.get('game_name')
+        game_name = request.args.get('game_name', '')
         platform = request.args.get('platform')
         
         # Najpierw wyszukaj w lokalnej bazie danych
-        local_games = Game.query.filter(
-            Game.name.ilike(f'%{game_name}%')
-        ).all()
+        local_games_query = Game.query.filter(
+            Game.name.ilike(f'%{game_name}%'),
+            Game.is_deleted.is_(False)  # Upewnij się, że pobieramy tylko niesunięte gry
+        )
 
-        if local_games:
-            # Tworzenie listy słowników dla gier z lokalnej bazy danych
-            filtered_game_info = []
-            for game in local_games:
-                game_dict = {
-                    'id': game.id,
-                    'name': game.name,
-                    'summary': game.description,
-                    'first_release_date': game.release_date.strftime('%Y-%m-%d') if game.release_date else None,
-                    'cover': {'url': game.cover_url} if game.cover_url else None
-                }
-                filtered_game_info.append(game_dict)
+        if platform:
+            local_games_query = local_games_query.join(Game.platforms).filter(Platform.name == platform)
+        
+        local_games = local_games_query.all()
+
+        # Konwertuj lokalne modele gier na format zgodny z wynikami API
+        local_game_info = []
+        for game in local_games:
+            game_dict = {
+                'id': game.id,
+                'name': game.name,
+                'summary': game.description,
+                'first_release_date': game.release_date.strftime('%Y-%m-%d') if game.release_date else None,
+                'cover': {'url': game.cover_url} if game.cover_url else None
+            }
+            local_game_info.append(game_dict)
+
+        # Jeśli mamy lokalne wyniki, nie musimy odpytywać API
+        if local_game_info:
+            filtered_game_info = local_game_info
         else:
-            # Jeśli brak gier w lokalnej bazie danych, wykonaj zapytanie do API
+            # Jeśli nie ma lokalnych wyników, odpytaj API IGDB
+            client_id = current_app.config['TWITCH_CLIENT_ID']
+            client_secret = current_app.config['TWITCH_CLIENT_SECRET']
+            access_token = get_igdb_access_token(client_id, client_secret)
+            
             url = 'https://api.igdb.com/v4/games'
             headers = {
-                'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
-                'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
+                'Client-ID': client_id,
+                'Authorization': f'Bearer {access_token}',
                 'Accept': 'application/json'
             }
             data = (
                 f'search "{game_name}"; '
-                'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
+                'fields id, name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
                 'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
                 'game_modes.name, themes.name, first_release_date;'
             )
@@ -148,28 +178,25 @@ def get_games():
 
             response = requests.post(url, headers=headers, data=data)
             response.raise_for_status()
-            game_info = response.json()
+            api_games = response.json()
 
             # Pobierz listę usuniętych gier
             deleted_games = Game.query.with_entities(Game.id).filter_by(is_deleted=True).all()
             deleted_game_ids = {game.id for game in deleted_games}
 
             # Filtruj usunięte gry
-            filtered_game_info = [game for game in game_info if game['id'] not in deleted_game_ids]
+            filtered_game_info = [game for game in api_games if game['id'] not in deleted_game_ids]
 
-            # Modyfikacja URL obrazków dla lepszego wyświetlania
+        # Modyfikacja URL obrazków dla lepszego wyświetlania
+        if filtered_game_info:
             modify_images(filtered_game_info)
 
         favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
         return render_template('games.html', game_info=filtered_game_info, favorite_game_ids=favorite_game_ids)
     except Exception as e:
-        print("Error fetching game data:", e)
+        logging.error(f"Error fetching game data: {e}")
         return render_template('error.html', error=str(e))
 
-
-
-
-   
    
    
    # game_details = fetch_game_details(game_id)  # Assume a function `fetch_game_details` handles API logic
@@ -577,6 +604,21 @@ def update_comment(comment_id):
 @login_required
 def delete_game(game_id):
     try:
+        # Add game to favorites (if necessary)
+        add_to_favorites_data = {"game_id": game_id}
+        with current_app.test_request_context(json=add_to_favorites_data):
+            add_to_favorites_response = add_to_favorites()
+            
+            # Ensure the response is correct
+            if isinstance(add_to_favorites_response, tuple):
+                response, status_code = add_to_favorites_response
+                if status_code != 200:
+                    raise Exception(response.get('error'))
+            else:
+                if add_to_favorites_response.status_code != 200:
+                    raise Exception(add_to_favorites_response.get_json().get('error'))
+
+        # Retrieve the game and mark it as deleted
         game = Game.query.get_or_404(game_id)
         game.is_deleted = True
         db.session.commit()
