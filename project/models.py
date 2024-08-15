@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
-    comments = db.relationship('Comment', backref='author', lazy=True, overlaps="user_comments,author")
+    comments = db.relationship('Comment', back_populates='author', lazy=True)
     favorites = db.relationship('Game', secondary=favorites, backref=db.backref('favorited_by', lazy='dynamic'))
     profile = db.relationship('UserProfile', uselist=False, backref='user_profile')
     
@@ -28,6 +28,7 @@ class Game(db.Model):
     release_date = db.Column(db.Date)
     cover_url = db.Column(db.String(256))
     created_at = db.Column(db.DateTime, default=datetime.now)
+    is_local = db.Column(db.Boolean, default=False)
     is_deleted = db.Column(db.Boolean, default=False)
     
     def __repr__(self):
@@ -39,7 +40,7 @@ class Comment(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
-    user = db.relationship('User', backref='user_comments', overlaps="author,comments")
+    author = db.relationship('User', back_populates='comments')
     game = db.relationship('Game', backref='game_comments')
 
 class UserProfile(db.Model):

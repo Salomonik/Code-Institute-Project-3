@@ -176,17 +176,9 @@ def game_details(game_id):
     logging.debug(f"Accessing game details for game_id {game_id}")
     form = CommentForm()
 
-    # Pobierz szczegóły gry z lokalnej bazy danych
-    game = Game.query.filter_by(id=game_id).first()
-
-    # Sprawdź, czy gra istnieje i czy nie jest oznaczona jako usunięta
-    if not game or game.is_deleted:
-        logging.warning(f"Game with id {game_id} not found or is marked as deleted")
-        return render_template('404.html'), 404
-
-    # Użyj `fetch_game_details`, aby uzyskać więcej informacji o grze z API lub bazy
+    # Pobierz szczegóły gry bezpośrednio z API
     game_details = fetch_game_details(game_id)
-    
+
     if game_details is None:
         logging.error(f"Failed to retrieve game details for game_id {game_id}")
         flash('Nie udało się pobrać szczegółów gry.', 'danger')
@@ -212,29 +204,22 @@ def game_details(game_id):
 
 
 
-
 # Function to fetch game details from IGDB
 def fetch_game_details(game_id):
     try:
-        # Upewnij się, że game_id jest konwertowane na int
         game_id = int(game_id)
-
-        # Sprawdź, czy ID jest większe niż 1,000,000
-        if game_id > 1000000:
-            # Pobierz dane z lokalnej bazy danych
-            game = Game.query.get(game_id)
-            if not game or game.is_deleted:
-                logging.error(f"No local game details found for game_id {game_id}")
-                return None
-            
-            # Przygotuj dane w podobnym formacie jak z API IGDB
+        
+        # Najpierw sprawdź lokalną bazę danych
+        game = Game.query.get(game_id)
+        if game and not game.is_deleted:
+            # Przygotuj dane w formacie zgodnym z API IGDB
             game_details = {
                 'id': game.id,
                 'name': game.name,
                 'summary': game.description,
                 'first_release_date': game.release_date.strftime('%Y-%m-%d') if game.release_date else None,
                 'cover': {'url': game.cover_url} if game.cover_url else None,
-                'genres': [],  # Puste listy, jeśli brak danych
+                'genres': [],  # Możesz dodać tutaj więcej szczegółów, jeśli są dostępne w lokalnej bazie
                 'platforms': [],
                 'storyline': game.description,
                 'screenshots': [],
@@ -245,39 +230,41 @@ def fetch_game_details(game_id):
                 'game_modes': [],
                 'themes': []
             }
+            logging.debug(f"Local game details retrieved successfully for game_id {game_id}")
             return game_details
-        else:
-            # Pobierz dane z API IGDB
-            url = 'https://api.igdb.com/v4/games'
-            headers = {
-                'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
-                'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
-                'Accept': 'application/json'
-            }
-            data = (
-                f'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
-                'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
-                'game_modes.name, themes.name, first_release_date; '
-                f'where id = {game_id};'
-            )
 
-            logging.debug(f"Sending request to IGDB for game_id {game_id}")
-            logging.debug(f"Request data: {data}")
-            
-            response = requests.post(url, headers=headers, data=data)
-            response.raise_for_status()
-            
-            game_details = response.json()
-            logging.debug(f"Response received: {game_details}")
-            
-            if not game_details:
-                logging.error(f"No game details found for game_id {game_id}")
-                return None
-            
-            game_details = game_details[0]  # Zakładamy, że odpowiedź zawiera jeden element
-            modify_images([game_details])  # Modyfikacja URL obrazków
-            return game_details
-    
+        # Jeśli gra nie istnieje lokalnie, pobierz dane z API IGDB
+        logging.debug(f"Game with id {game_id} not found locally, fetching from IGDB API")
+
+        url = 'https://api.igdb.com/v4/games'
+        headers = {
+            'Client-ID': current_app.config['TWITCH_CLIENT_ID'],
+            'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}',
+            'Accept': 'application/json'
+        }
+        data = (
+            f'fields name, genres.name, platforms.name, release_dates.human, summary, storyline, cover.url, '
+            'screenshots.url, videos.video_id, rating, rating_count, involved_companies.company.name, '
+            'game_modes.name, themes.name, first_release_date; '
+            f'where id = {game_id};'
+        )
+
+        logging.debug(f"Sending request to IGDB for game_id {game_id}")
+        logging.debug(f"Request data: {data}")
+        
+        response = requests.post(url, headers=headers, data=data)
+        response.raise_for_status()
+        
+        game_details = response.json()
+        logging.debug(f"Response received: {game_details}")
+        
+        if not game_details:
+            logging.error(f"No game details found for game_id {game_id}")
+            return None
+        
+        game_details = game_details[0]  # Zakładamy, że odpowiedź zawiera jeden element
+        return game_details
+
     except ValueError as ve:
         logging.error(f"ValueError: game_id could not be converted to an integer: {ve}")
         return None
@@ -287,7 +274,6 @@ def fetch_game_details(game_id):
     except Exception as e:
         logging.error(f"Unexpected error while fetching game details for game_id {game_id}: {e}")
         return None
-
 
 
 # Route to suggest games based on a query
@@ -607,7 +593,7 @@ def add_game():
         max_api_id = 1000000  # Zakładamy, że ID gier z API są mniejsze niż 1,000,000
         
         # Znajdź najwyższe ID lokalnej gry, które zostało już dodane
-        max_local_id = db.session.query(func.max(Game.id)).filter(Game.id > max_api_id).scalar()
+        max_local_id = db.session.query(func.max(Game.id)).filter(Game.id >= max_api_id).scalar()
         
         # Ustaw ID nowej gry na wartość większą niż maksymalne ID lokalne
         new_game_id = max_local_id + 1 if max_local_id else max_api_id + 1
@@ -618,13 +604,15 @@ def add_game():
             name=form.name.data,
             description=form.description.data,
             release_date=form.release_date.data,
-            cover_url=form.cover_url.data
+            cover_url=form.cover_url.data,
+            is_local=True  # Dodajemy informację, że gra jest lokalna
         )
         db.session.add(new_game)
         db.session.commit()
-        flash('Game added successfully!', 'success')
+        flash('Gra została dodana pomyślnie!', 'success')
         return redirect(url_for('routes.index'))
     return render_template('add_game.html', form=form)
+
 
 @routes.route('/update_username/<int:user_id>', methods=['POST'])
 @login_required
