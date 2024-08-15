@@ -88,17 +88,20 @@ def modify_image_url(url, size):
 
 # Function to modify images in game details
 def modify_images(game_details):
-    for game in game_details:
-        # Modify API-based game cover images
-        if 'cover' in game and 'url' in game['cover']:
-            game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
-        # Modify locally added game cover images
-        elif 'cover_url' in game:
-            game['cover_url'] = modify_image_url(game['cover_url'], 't_cover_big')
-        
-        # Modify screenshots URLs
-        if 'screenshots' in game:
-            for screenshot in game['screenshots']:
+    # Sprawdź, czy game_details to lista (więcej niż jedna gra)
+    if isinstance(game_details, list):
+        for game in game_details:
+            if 'cover' in game and 'url' in game['cover']:
+                game['cover']['url'] = modify_image_url(game['cover']['url'], 't_cover_big')
+            if 'screenshots' in game:
+                for screenshot in game['screenshots']:
+                    screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
+    # Jeśli to pojedyncza gra, zastosuj modyfikację bezpośrednio
+    elif isinstance(game_details, dict):
+        if 'cover' in game_details and 'url' in game_details['cover']:
+            game_details['cover']['url'] = modify_image_url(game_details['cover']['url'], 't_cover_big')
+        if 'screenshots' in game_details:
+            for screenshot in game_details['screenshots']:
                 screenshot['url'] = modify_image_url(screenshot['url'], 't_screenshot_big')
 
 # Route to get games based on search criteria
@@ -198,7 +201,8 @@ def game_details(game_id):
 
     comments = Comment.query.filter_by(game_id=game_id).order_by(Comment.created_at.desc()).all()
     favorite_game_ids = [fav.id for fav in current_user.favorites] if current_user.is_authenticated else []
-
+    
+    
     return render_template('game_details.html', game_details=game_details, form=form, comments=comments, favorite_game_ids=favorite_game_ids)
 
 
@@ -262,7 +266,8 @@ def fetch_game_details(game_id):
             logging.error(f"No game details found for game_id {game_id}")
             return None
         
-        game_details = game_details[0]  # Zakładamy, że odpowiedź zawiera jeden element
+        game_details = game_details[0] 
+        modify_images(game_details)# Zakładamy, że odpowiedź zawiera jeden element
         return game_details
 
     except ValueError as ve:
